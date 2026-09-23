@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apolinário Studio | Entretenimentos &amp; Produções</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; scroll-behavior: smooth; }
+        body { background-color: #060608; color: #ffffff; overflow-x: hidden; transition: filter 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        
+        /* Tela de Carregamento Suprema */
+        #loader-supremo {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: #060608;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        .spinner-futurista {
+            width: 60px; height: 60px;
+            border: 3px solid rgba(229, 9, 20, 0.1);
+            border-radius: 50%;
+            border-top-color: #e50914;
+            animation: spin 1s cubic-bezier(0.55, 0.055, 0.675, 0.19) infinite;
+            box-shadow: 0 0 20px rgba(229, 9, 20, 0.4);
+        }
+        .texto-loader {
+            margin-top: 25px;
+            color: #fff;
+            font-size: 11px;
+            font-family: monospace;
+            letter-spacing: 3px;
+            animation: piscar 1.5s infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes piscar { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+        /* Navbar */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 7%; background: linear-gradient(to bottom, rgba(6,6,8,0.9), rgba(6,6,8,0)); position: fixed; width: 100%; top: 0; z-index: 100; }
+        .logo-container img { height: 50px; max-width: 200px; object-fit: contain; }
+        .logo-fallback { font-size: 24px; font-weight: 900; color: #e50914; text-transform: uppercase; letter-spacing: 2px; }
+        .nav-links a { color: #fff; text-decoration: none; margin-left: 25px; transition: 0.3s; font-size: 15px; font-weight: 500; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+        .nav-links a:hover { color: #e50914; }
+
+        /* Hero Section Cinematográfica */
+        .hero { position: relative; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; overflow: hidden; width: 100%; }
+        .video-background { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -2; transform: translate(-50%, -50%); object-fit: cover; }
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, #060608 10%, rgba(6,6,8,0.4) 50%, #060608 100%), linear-gradient(to right, #060608 20%, rgba(6,6,8,0.1)); z-index: -1; }
+
+        /* Animação de Revelação Sincronizada */
+        .revelacao-lenta {
+            opacity: 0;
+            animation: surgirTexto 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: 3s;
+            padding-left: 7%;
+            position: relative;
+            z-index: 2;
+        }
+        @keyframes surgirTexto {
+            from { opacity: 0; transform: translateY(20px); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        .titulo-efeito { font-size: 4rem; max-width: 800px; line-height: 1.1; margin-bottom: 20px; text-transform: uppercase; font-weight: 900; letter-spacing: -1px; text-shadow: 2px 4px 10px rgba(0,0,0,0.7); }
+        .texto-digitado { color: #e50914; text-shadow: 0 0 10px rgba(229, 9, 20, 0.6); }
+        .cursor-matrix { font-weight: 100; color: #e50914; animation: piscar-cursor 0.7s infinite; }
+        @keyframes piscar-cursor { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+
+        /* Mural Disruptivo */
+        .container { padding: 100px 7%; }
+        h2 { font-size: 2.5rem; margin-bottom: 15px; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; background: linear-gradient(to right, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitulo-unico { color: #888; font-size: 1.2rem; max-width: 600px; line-height: 1.6; border-left: 2px solid #e50914; padding-left: 20px; margin-bottom: 50px; }
+        
+        .mural-disruptivo { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
+        .bloco-supremo.grande { grid-row: span 2; height: 100%; min-height: 500px; }
+        .bloco-supremo { position: relative; background: #09090d; border-radius: 24px; overflow: hidden; height: 300px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
+        
+        .filtro-neon { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 20%, rgba(229, 9, 20, 0.15) 0%, transparent 50%); z-index: 1; pointer-events: none; }
+        .filtro-neon.azul { background: radial-gradient(circle at 10% 20%, rgba(0, 229, 255, 0.15) 0%, transparent 50%); }
+        .filtro-neon.roxo { background: radial-gradient(circle at 10% 20%, rgba(187, 0, 255, 0.15) 0%, transparent 50%); }
+
+        .bloco-supremo img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(40%) brightness(0.6); transition: transform 0.8s ease, filter 0.5s ease; }
+        .bloco-supremo:hover { transform: scale(1.02) translateY(-5px); border-color: rgba(255,255,255,0.2); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        .bloco-supremo:hover img { transform: scale(1.05); filter: grayscale(0%) brightness(0.4); }
+
+        .tag-exclusiva { position: absolute; top: 25px; left: 25px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 6px 16px; font-size: 10px; font-weight: 700; text-transform: uppercase; border-radius: 100px; letter-spacing: 1.5px; z-index: 2; }
+        .conteudo-supremo { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px; background: linear-gradient(to top, #060608 30%, transparent); z-index: 2; }
+        .conteudo-supremo span { font-size: 11px; color: #e50914; font-weight: 800; letter-spacing: 2px; display: block; margin-bottom: 10px; }
+        .conteudo-supremo h3 { font-size: 1.8rem; font-weight: 800; margin-bottom: 12px; }
+        .conteudo-supremo p { font-size: 14px; color: #888; line-height: 1.6; }
+
+        /* Rodapé e Botões de Contato */
+        footer { background: #030304; padding: 60px 7%; text-align: center; border-top: 1px solid #15151a; position: relative; }
+        .logo-rodape-container img { height: 60px; max-width: 250px; object-fit: contain; margin-bottom: 20px; }
+        
+        .btn-whatsapp { background: linear-gradient(135deg, #25d366, #1ebd58); color: white !important; text-decoration: none; padding: 12px 25px; border-radius: 8px; display: flex; align-items: center; gap: 15px; text-align: left; min-width: 280px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); transition: all 0.3s ease; }
+        .btn-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6); }
+        .btn-whatsapp .icon { font-size: 24px; }
+        .btn-whatsapp .text-btn { display: flex; flex-direction: column; }
+        .btn-whatsapp small { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; }
+        .btn-whatsapp strong { font-size: 16px; }
+
+        .coordenada-secreta { position: fixed; bottom: 15px; right: 20px; font-family: monospace; font-size: 10px; color: rgba(229, 9, 20, 0.3); letter-spacing: 2px; pointer-events: none; z-index: 999; animation: glitchTexto 4s infinite; }
+        @keyframes glitchTexto { 0%, 95%, 100% { opacity: 0.3; } 96% { opacity: 1; text-shadow: 2px 0 #00ffff, -2px 0 #ff00ff; } }
+        .transe-psicologico { filter: blur(8px) brightness(0.3) contrast(1.2); }
+    </style>
+</head>
+<body>
+
+    <!-- Tela de Carregamento -->
+    <div id="loader-supremo">
+        <div class="spinner-futurista"></div>
+        <div class="texto-loader">APOLINÁRIO STUDIO // INICIANDO SISTEMA_</div>
+    </div>
+
+    <div class="coordenada-secreta">SYS_NEXUS_//_DATA_LOCKED</div>
+
+    <nav>
+        <div class="logo-container">
+            <img src="logo_topo.png" alt="Apolinário Studio" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <div class="logo-fallback" style="display:none;">Apolinário Studio</div>
+        </div>
+        <div class="nav-links">
+            <a href="#inicio">Início</a>
+            <a href="#producoes">Inovação</a>
+            <a href="#contato">Contato</a>
+        </div>
+    </nav>
+
+    <section class="hero" id="inicio">
+        <video class="video-background" autoplay loop muted playsinline id="player-emocional">
+            <source src="" type="video/mp4">
+        </video>
+        <div class="overlay"></div>
+        
+        <div class="revelacao-lenta">
+            <h1 class="titulo-efeito">
+              Apolinário Studio: <span class="texto-digitado"></span><span class="cursor-matrix">|</span>
+            </h1>
+            <p style="font-size: 1.2rem; color: #aaa; max-width: 600px; margin-bottom: 30px;">
+                Entretenimento puro. Narrativas que manipulam a realidade através do cinema e das mídias digitais.
+            </p>
+        </div>
+    </section>
+
+    <section class="container" id="producoes">
+        <h2>Inovação Suprema</h2>
+        <p class="subtitulo-unico">Formatos disruptivos e narrativas originais concebidas para quebrar os padrões tradicionais do entretenimento.</p>
+        
+        <div class="mural-disruptivo">
+            <div class="bloco-supremo grande">
+                <div class="tag-exclusiva">Conceito Original</div>
