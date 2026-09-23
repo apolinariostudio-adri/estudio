@@ -7,38 +7,6 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; scroll-behavior: smooth; }
         body { background-color: #060608; color: #ffffff; overflow-x: hidden; transition: filter 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
-        
-        /* Tela de Carregamento Suprema */
-        #loader-supremo {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-color: #060608;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.6s ease, visibility 0.6s ease;
-        }
-        .spinner-futurista {
-            width: 60px; height: 60px;
-            border: 3px solid rgba(229, 9, 20, 0.1);
-            border-radius: 50%;
-            border-top-color: #e50914;
-            animation: spin 1s cubic-bezier(0.55, 0.055, 0.675, 0.19) infinite;
-            box-shadow: 0 0 20px rgba(229, 9, 20, 0.4);
-        }
-        .texto-loader {
-            margin-top: 25px;
-            color: #fff;
-            font-size: 11px;
-            font-family: monospace;
-            letter-spacing: 3px;
-            animation: piscar 1.5s infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes piscar { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
         /* Navbar */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 7%; background: linear-gradient(to bottom, rgba(6,6,8,0.9), rgba(6,6,8,0)); position: fixed; width: 100%; top: 0; z-index: 100; }
@@ -51,18 +19,11 @@
         .hero { position: relative; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; overflow: hidden; width: 100%; background-position: center; background-size: cover; background-repeat: no-repeat; }
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, #060608 10%, rgba(6,6,8,0.4) 50%, #060608 100%), linear-gradient(to right, #060608 20%, rgba(6,6,8,0.1)); z-index: -1; }
 
-        /* Animação Atrasada para Revelação */
+        /* Revelação das Letras */
         .revelacao-lenta {
-            opacity: 0;
-            animation: surgirTexto 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-            animation-delay: 1.5s;
             padding-left: 7%;
             position: relative;
             z-index: 2;
-        }
-        @keyframes surgirTexto {
-            from { opacity: 0; transform: translateY(20px); filter: blur(10px); }
-            to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
 
         .titulo-efeito { font-size: 4rem; max-width: 800px; line-height: 1.1; margin-bottom: 20px; text-transform: uppercase; font-weight: 900; letter-spacing: -1px; text-shadow: 2px 4px 10px rgba(0,0,0,0.7); }
@@ -93,7 +54,7 @@
         .conteudo-supremo h3 { font-size: 1.8rem; font-weight: 800; margin-bottom: 12px; }
         .conteudo-supremo p { font-size: 14px; color: #888; line-height: 1.6; }
 
-        /* Rodapé e Botões de Contato */
+        /* Rodapé e Botões */
         footer { background: #030304; padding: 60px 7%; text-align: center; border-top: 1px solid #15151a; position: relative; }
         .logo-rodape-container img { height: 60px; max-width: 250px; object-fit: contain; margin-bottom: 20px; }
         
@@ -111,12 +72,6 @@
 </head>
 <body>
 
-    <!-- Tela de Carregamento -->
-    <div id="loader-supremo">
-        <div class="spinner-futurista"></div>
-        <div class="texto-loader">APOLINÁRIO STUDIO // INICIANDO SISTEMA_</div>
-    </div>
-
     <div class="coordenada-secreta">SYS_NEXUS_//_DATA_LOCKED</div>
 
     <nav>
@@ -132,6 +87,9 @@
     </nav>
 
     <section class="hero" id="inicio">
+        <video class="video-background" autoplay loop muted playsinline id="player-emocional">
+            <source src="" type="video/mp4">
+        </video>
         <div class="overlay"></div>
         
         <div class="revelacao-lenta">
@@ -155,3 +113,34 @@
                 <img src="https://unsplash.com" alt="Cinema">
                 <div class="conteudo-supremo">
                     <span>01 // AUDIOVISUAL NARRATIVO</span>
+                    <h3>Filmes &amp; Séries</h3>
+                    <p>A desconstrução do cinema tradicional. Histórias profundas feitas para telas imersivas.</p>
+                </div>
+            </div>
+
+            <div class="bloco-supremo">
+                <div class="tag-exclusiva">Em Desenvolvimento</div>
+                <div class="filtro-neon azul"></div>
+                <img src="https://unsplash.com" alt="Reality">
+                <div class="conteudo-supremo">
+                    <span>02 // GAME SHOWS</span>
+                    <h3>Realities &amp; Formatos</h3>
+                    <p>Entretenimento psicológico em tempo real, onde a audiência dita as regras do jogo.</p>
+                </div>
+            </div>
+
+            <div class="bloco-supremo">
+                <div class="tag-exclusiva">Laboratório de Ideias</div>
+                <div class="filtro-neon roxo"></div>
+                <img src="https://unsplash.com" alt="Mídias">
+                <div class="conteudo-supremo">
+                    <span>03 // HUB MULTIPLATAFORMA</span>
+                    <h3>Canais &amp; Nichos</h3>
+                    <p>Ecossistemas virais para YouTube, TikTok e Instagram de forma nunca vista.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contato">
+        <div class="logo-rodape-container">
