@@ -4,83 +4,255 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apolinário Studio | Entretenimentos &amp; Produções</title>
+    <meta name="description" content="Apolinário Studio — Produções audiovisuais, formatos disruptivos e narrativas originais para cinema e mídias digitais.">
+
+    <!-- Open Graph (compartilhamento em redes sociais) -->
+    <meta property="og:title" content="Apolinário Studio | Entretenimentos & Produções">
+    <meta property="og:description" content="Narrativas que manipulam a realidade através do cinema e das mídias digitais.">
+    <meta property="og:type" content="website">
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; scroll-behavior: smooth; }
-        body { background-color: #060608; color: #ffffff; overflow-x: hidden; transition: filter 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        :root {
+            --vermelho: #e50914;
+            --azul: #00e5ff;
+            --roxo: #bb00ff;
+            --fundo: #060608;
+        }
 
-        /* Navbar Fina e Transparente */
-        nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 7%; background: linear-gradient(to bottom, rgba(6,6,8,0.8), transparent); position: fixed; width: 100%; top: 0; z-index: 100; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; } /* ✅ CORREÇÃO: era no * */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--fundo);
+            color: #fff;
+            overflow-x: hidden;
+            transition: filter 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* ===== NAVBAR ===== */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 7%;
+            background: linear-gradient(to bottom, rgba(6,6,8,0.8), transparent);
+            position: fixed; width: 100%; top: 0; z-index: 100;
+            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+        }
         .logo-container img { height: 45px; max-width: 180px; object-fit: contain; }
-        .logo-fallback { font-size: 20px; font-weight: 900; color: #e50914; text-transform: uppercase; letter-spacing: 2px; }
-        .nav-links a { color: #fff; text-decoration: none; margin-left: 25px; transition: 0.3s; font-size: 14px; font-weight: 500; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); }
-        .nav-links a:hover { color: #e50914; }
+        .logo-fallback { font-size: 20px; font-weight: 900; color: var(--vermelho); text-transform: uppercase; letter-spacing: 2px; }
+        .nav-links { display: flex; align-items: center; gap: 25px; }
+        .nav-links a {
+            color: #fff; text-decoration: none; font-size: 14px; font-weight: 500;
+            transition: 0.3s; text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+            padding: 6px 2px; /* área de toque maior */
+        }
+        .nav-links a:hover,
+        .nav-links a:focus-visible { color: var(--vermelho); outline: none; }
+        .nav-links a:focus-visible { outline: 2px solid var(--vermelho); outline-offset: 3px; border-radius: 4px; }
 
-        /* Hero Section Cinematográfica Aberta */
-        .hero { position: relative; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; overflow: hidden; width: 100%; }
-        .video-background { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -2; transform: translate(-50%, -50%); object-fit: cover; background-color: #060608; }
-        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, #060608 5%, rgba(6,6,8,0.1) 50%, #060608 95%), linear-gradient(to right, #060608 15%, transparent); z-index: -1; }
+        /* Menu hambúrguer (mobile) */
+        .menu-toggle {
+            display: none; background: none; border: none; cursor: pointer;
+            width: 32px; height: 24px; position: relative; z-index: 102;
+        }
+        .menu-toggle span {
+            display: block; width: 100%; height: 2px; background: #fff;
+            position: absolute; left: 0; transition: 0.3s;
+        }
+        .menu-toggle span:nth-child(1) { top: 0; }
+        .menu-toggle span:nth-child(2) { top: 11px; }
+        .menu-toggle span:nth-child(3) { top: 22px; }
+        .menu-toggle.ativo span:nth-child(1) { top: 11px; transform: rotate(45deg); }
+        .menu-toggle.ativo span:nth-child(2) { opacity: 0; }
+        .menu-toggle.ativo span:nth-child(3) { top: 11px; transform: rotate(-45deg); }
 
-        /* Revelação das Letras */
-        .revelacao-lenta { padding-left: 7%; position: relative; z-index: 2; }
-        .titulo-efeito { font-size: 3.8rem; max-width: 800px; line-height: 1.1; margin-bottom: 20px; text-transform: uppercase; font-weight: 900; letter-spacing: -1px; text-shadow: 2px 4px 15px rgba(0,0,0,0.9); }
-        .texto-digitado { color: #e50914; text-shadow: 0 0 15px rgba(229, 9, 20, 0.8); }
-        .cursor-matrix { font-weight: 100; color: #e50914; animation: piscar-cursor 0.7s infinite; }
+        /* ===== HERO ===== */
+        .hero {
+            position: relative; height: 100vh; min-height: 560px;
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: flex-start; overflow: hidden; width: 100%;
+            background: radial-gradient(ellipse at 70% 30%, #1a0a10 0%, var(--fundo) 70%); /* fallback se vídeo falhar */
+        }
+        .video-background {
+            position: absolute; top: 50%; left: 50%;
+            min-width: 100%; min-height: 100%;
+            transform: translate(-50%, -50%);
+            object-fit: cover; z-index: 0;
+        }
+        .overlay {
+            position: absolute; inset: 0; z-index: 1; pointer-events: none;
+            background:
+                linear-gradient(to top, var(--fundo) 5%, rgba(6,6,8,0.1) 50%, rgba(6,6,8,0.7) 95%),
+                linear-gradient(to right, rgba(6,6,8,0.9) 15%, transparent);
+        }
+        .revelacao-lenta {
+            padding-left: 7%; padding-right: 7%;
+            position: relative; z-index: 2;
+            opacity: 0; transform: translateY(30px);
+            animation: revelar 1.2s 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        @keyframes revelar { to { opacity: 1; transform: translateY(0); } }
+
+        .titulo-efeito {
+            font-size: clamp(2rem, 5.5vw, 3.8rem); /* ✅ responsivo sem media query */
+            max-width: 800px; line-height: 1.1; margin-bottom: 20px;
+            text-transform: uppercase; font-weight: 900; letter-spacing: -1px;
+            text-shadow: 2px 4px 15px rgba(0,0,0,0.9);
+        }
+        .texto-digitado { color: var(--vermelho); text-shadow: 0 0 15px rgba(229, 9, 20, 0.8); }
+        .cursor-matrix { font-weight: 100; color: var(--vermelho); animation: piscar-cursor 0.7s infinite; }
         @keyframes piscar-cursor { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 
-        /* Seções e Cards Translúcidos */
-        .container { padding: 80px 7%; background: transparent; position: relative; z-index: 10; }
-        h2 { font-size: 2.3rem; margin-bottom: 15px; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; background: linear-gradient(to right, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 1px 1px 5px rgba(0,0,0,0.5); }
-        .subtitulo-unico { color: #aaa; font-size: 1.1rem; max-width: 600px; line-height: 1.6; border-left: 3px solid #e50914; padding-left: 20px; margin-bottom: 50px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
-        
-        .mural-disruptivo { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
-        .bloco-supremo.grande { grid-row: span 2; height: 100%; min-height: 520px; }
-        .bloco-supremo { position: relative; background: rgba(14, 14, 20, 0.4); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 24px; overflow: hidden; height: 240px; border: 1px solid rgba(255,255,255,0.08); transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
-        
-        .filtro-neon { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 20%, rgba(229, 9, 20, 0.25) 0%, transparent 60%); z-index: 1; pointer-events: none; }
-        .filtro-neon.azul { background: radial-gradient(circle at 10% 20%, rgba(0, 229, 255, 0.25) 0%, transparent 60%); }
-        .filtro-neon.roxo { background: radial-gradient(circle at 10% 20%, rgba(187, 0, 255, 0.25) 0%, transparent 60%); }
+        .hero-desc {
+            font-size: clamp(1rem, 2vw, 1.2rem); color: #ccc;
+            max-width: 600px; margin-bottom: 30px;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+        }
+        .hero-cta {
+            display: inline-block; padding: 14px 36px;
+            background: var(--vermelho); color: #fff; text-decoration: none;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 13px;
+            border-radius: 6px; transition: 0.3s;
+            box-shadow: 0 4px 20px rgba(229,9,20,0.4);
+        }
+        .hero-cta:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(229,9,20,0.6); }
 
-        .bloco-supremo img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(35%) brightness(0.5); transition: transform 0.8s ease, filter 0.5s ease; mix-blend-mode: lighten; }
-        .bloco-supremo:hover { transform: scale(1.03) translateY(-8px); border-color: rgba(229, 9, 20, 0.4); box-shadow: 0 25px 50px rgba(229, 9, 20, 0.2); }
+        /* ===== SEÇÕES / CARDS ===== */
+        .container { padding: 80px 7%; position: relative; z-index: 10; }
+        h2 {
+            font-size: clamp(1.6rem, 3.5vw, 2.3rem); margin-bottom: 15px;
+            text-transform: uppercase; font-weight: 800; letter-spacing: 1px;
+            background: linear-gradient(to right, #fff, #888);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitulo-unico {
+            color: #aaa; font-size: 1.1rem; max-width: 600px; line-height: 1.6;
+            border-left: 3px solid var(--vermelho); padding-left: 20px; margin-bottom: 50px;
+        }
+
+        .mural-disruptivo { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
+        .bloco-supremo.grande { grid-row: span 2; min-height: 520px; height: 100%; }
+        .bloco-supremo {
+            position: relative; border-radius: 24px; overflow: hidden; height: 240px;
+            background: rgba(14, 14, 20, 0.4);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: transform 0.5s cubic-bezier(0.25,1,0.5,1), box-shadow 0.5s, border-color 0.5s;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+        .bloco-supremo:hover { transform: scale(1.03) translateY(-8px); border-color: rgba(229,9,20,0.4); box-shadow: 0 25px 50px rgba(229,9,20,0.2); }
+        .bloco-supremo img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: grayscale(35%) brightness(0.5);
+            transition: transform 0.8s ease, filter 0.5s ease;
+        }
         .bloco-supremo:hover img { transform: scale(1.06); filter: grayscale(0%) brightness(0.6); }
 
-        .tag-exclusiva { position: absolute; top: 25px; left: 25px; background: rgba(229, 9, 20, 0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(229,9,20,0.4); color: #fff; padding: 6px 16px; font-size: 10px; font-weight: 700; text-transform: uppercase; border-radius: 100px; letter-spacing: 1.5px; z-index: 2; box-shadow: 0 0 15px rgba(229,9,20,0.3); }
-        .tag-exclusiva.azul { background: rgba(0, 229, 255, 0.2); border-color: rgba(0, 229, 255, 0.4); box-shadow: 0 0 15px rgba(0,229,255,0.3); }
-        .tag-exclusiva.roxo { background: rgba(187, 0, 255, 0.2); border-color: rgba(187, 0, 255, 0.4); box-shadow: 0 0 15px rgba(187,0,255,0.3); }
-        
-        .conteudo-supremo { position: absolute; bottom: 0; left: 0; width: 100%; padding: 35px; background: linear-gradient(to top, rgba(6,6,8,0.95) 40%, transparent); z-index: 2; }
-        .conteudo-supremo span { font-size: 11px; color: #e50914; font-weight: 800; letter-spacing: 2px; display: block; margin-bottom: 8px; }
-        .conteudo-supremo span.azul { color: #00ezff; }
-        .conteudo-supremo span.roxo { color: #bb00ff; }
-        .conteudo-supremo h3 { font-size: 1.6rem; font-weight: 800; margin-bottom: 10px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+        .filtro-neon { position: absolute; inset: 0; z-index: 1; pointer-events: none;
+            background: radial-gradient(circle at 10% 20%, rgba(229,9,20,0.25) 0%, transparent 60%); }
+        .filtro-neon.azul { background: radial-gradient(circle at 10% 20%, rgba(0,229,255,0.25) 0%, transparent 60%); }
+        .filtro-neon.roxo { background: radial-gradient(circle at 10% 20%, rgba(187,0,255,0.25) 0%, transparent 60%); }
+
+        .tag-exclusiva {
+            position: absolute; top: 25px; left: 25px; z-index: 2;
+            background: rgba(229,9,20,0.2); border: 1px solid rgba(229,9,20,0.4);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            color: #fff; padding: 6px 16px; font-size: 10px; font-weight: 700;
+            text-transform: uppercase; border-radius: 100px; letter-spacing: 1.5px;
+            box-shadow: 0 0 15px rgba(229,9,20,0.3);
+        }
+        .tag-exclusiva.azul { background: rgba(0,229,255,0.2); border-color: rgba(0,229,255,0.4); box-shadow: 0 0 15px rgba(0,229,255,0.3); }
+        .tag-exclusiva.roxo { background: rgba(187,0,255,0.2); border-color: rgba(187,0,255,0.4); box-shadow: 0 0 15px rgba(187,0,255,0.3); }
+
+        .conteudo-supremo { position: absolute; bottom: 0; left: 0; width: 100%; padding: 35px; z-index: 2;
+            background: linear-gradient(to top, rgba(6,6,8,0.95) 40%, transparent); }
+        .conteudo-supremo span { font-size: 11px; color: var(--vermelho); font-weight: 800; letter-spacing: 2px; display: block; margin-bottom: 8px; }
+        .conteudo-supremo span.azul { color: var(--azul); }   /* ✅ CORREÇÃO: era #00ezff (inválido) */
+        .conteudo-supremo span.roxo { color: var(--roxo); }
+        .conteudo-supremo h3 { font-size: 1.6rem; font-weight: 800; margin-bottom: 10px; }
         .conteudo-supremo p { font-size: 13.5px; color: #bbb; line-height: 1.6; }
 
-        /* Rodapé e Botões */
-        footer { background: linear-gradient(to top, #030304, rgba(6,6,8,0.8)); padding: 60px 7%; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); position: relative; z-index: 10; }
+        /* Animação de entrada ao scroll */
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.25,1,0.5,1); }
+        .reveal.visivel { opacity: 1; transform: translateY(0); }
+
+        /* ===== CONTATO / FOOTER ===== */
+        footer {
+            background: linear-gradient(to top, #030304, rgba(6,6,8,0.8));
+            padding: 60px 7%; text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05); position: relative; z-index: 10;
+        }
         .logo-rodape-container img { height: 65px; max-width: 250px; object-fit: contain; margin-bottom: 25px; filter: drop-shadow(0 0 15px rgba(229,9,20,0.4)); }
-        
-        .btn-whatsapp { background: linear-gradient(135deg, #25d366, #1ebd58); color: white !important; text-decoration: none; padding: 12px 25px; border-radius: 8px; display: flex; align-items: center; gap: 15px; text-align: left; min-width: 280px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); transition: all 0.3s ease; }
-        .btn-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6); }
+        .footer-texto { color: #888; margin-bottom: 30px; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+        .footer-wrap { display: flex; justify-content: center; }
+
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25d366, #1ebd58);
+            color: #fff !important; text-decoration: none; padding: 12px 25px;
+            border-radius: 8px; display: inline-flex; align-items: center; gap: 15px;
+            text-align: left; min-width: 280px;
+            box-shadow: 0 4px 15px rgba(37,211,102,0.3); transition: all 0.3s ease;
+        }
+        .btn-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(37,211,102,0.6); }
         .btn-whatsapp .icon { font-size: 24px; }
         .btn-whatsapp .text-btn { display: flex; flex-direction: column; }
         .btn-whatsapp small { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; }
         .btn-whatsapp strong { font-size: 16px; }
+        .copyright { margin-top: 40px; font-size: 12px; color: #555; letter-spacing: 1px; }
 
-        .coordenada-secreta { position: fixed; bottom: 15px; right: 20px; font-family: monospace; font-size: 10px; color: rgba(229, 9, 20, 0.3); letter-spacing: 2px; pointer-events: none; z-index: 999; animation: glitchTexto 4s infinite; }
-        @keyframes glitchTexto { 0%, 95%, 100__ { opacity: 0.3; } 96% { opacity: 1; text-shadow: 2px 0 #00ffff, -2px 0 #ff00ff; } }
+        .coordenada-secreta {
+            position: fixed; bottom: 15px; right: 20px;
+            font-family: monospace; font-size: 10px; color: rgba(229,9,20,0.3);
+            letter-spacing: 2px; pointer-events: none; z-index: 999;
+            animation: glitchTexto 4s infinite;
+        }
+        @keyframes glitchTexto {
+            0%, 95%, 100% { opacity: 0.3; }              /* ✅ CORREÇÃO: era "100__" (inválido) */
+            96% { opacity: 1; text-shadow: 2px 0 #00ffff, -2px 0 #ff00ff; }
+        }
         .transe-psicologico { filter: blur(5px) brightness(0.4) contrast(1.1); }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-links {
+                position: fixed; top: 0; right: -100%; height: 100vh; width: 70%; max-width: 300px;
+                background: rgba(6,6,8,0.97); backdrop-filter: blur(15px);
+                flex-direction: column; justify-content: center; gap: 35px;
+                transition: right 0.4s cubic-bezier(0.25,1,0.5,1);
+                border-left: 1px solid rgba(229,9,20,0.2);
+            }
+            .nav-links.aberto { right: 0; }
+            .nav-links a { font-size: 18px; }
+
+            .mural-disruptivo { grid-template-columns: 1fr; gap: 25px; }
+            .bloco-supremo.grande { grid-row: span 1; min-height: 380px; }
+            .container { padding: 60px 6%; }
+            .coordenada-secreta { display: none; }
+        }
+
+        /* Respeita usuários com sensibilidade a movimento */
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="coordenada-secreta">SYS_NEXUS_//_DATA_LOCKED</div>
+    <div class="coordenada-secreta" aria-hidden="true">SYS_NEXUS_//_DATA_LOCKED</div>
 
     <nav>
         <div class="logo-container">
             <img src="logo_topo.png" alt="Apolinário Studio" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
             <div class="logo-fallback" style="display:none;">Apolinário Studio</div>
         </div>
-        <div class="nav-links">
+
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+
+        <div class="nav-links" id="navLinks">
             <a href="#inicio">Início</a>
             <a href="#producoes">Inovação</a>
             <a href="#contato">Contato</a>
@@ -88,31 +260,32 @@
     </nav>
 
     <section class="hero" id="inicio">
-        <!-- Player Travado em Mudo Forçado para Forçar a Inicialização nos Navegadores -->
-        <video class="video-background" autoplay loop muted playsinline id="player-emocional" preload="auto">
+        <video class="video-background" autoplay loop muted playsinline preload="metadata"
+               id="player-emocional" aria-hidden="true" disablepictureinpicture>
             <source src="curiosidade.mp4" type="video/mp4">
         </video>
         <div class="overlay"></div>
-        
+
         <div class="revelacao-lenta">
             <h1 class="titulo-efeito">
-              Apolinário Studio: <span class="texto-digitado"></span><span class="cursor-matrix">|</span>
+                Apolinário Studio: <span class="texto-digitado" id="textoDigitado"></span><span class="cursor-matrix">|</span>
             </h1>
-            <p style="font-size: 1.2rem; color: #ccc; max-width: 600px; margin-bottom: 30px; text-shadow: 1px 1px 5px rgba(0,0,0,0.8);">
+            <p class="hero-desc">
                 Entretenimento puro. Narrativas que manipulam a realidade através do cinema e das mídias digitais.
             </p>
+            <a href="#producoes" class="hero-cta">Explorar Produções</a>
         </div>
     </section>
 
     <section class="container" id="producoes">
-        <h2>Inovação Suprema</h2>
-        <p class="subtitulo-unico">Formatos disruptivos e narrativas originais concebidas para quebrar os padrões tradicionais do entretenimento.</p>
-        
+        <h2 class="reveal">Inovação Suprema</h2>
+        <p class="subtitulo-unico reveal">Formatos disruptivos e narrativas originais concebidas para quebrar os padrões tradicionais do entretenimento.</p>
+
         <div class="mural-disruptivo">
-            <div class="bloco-supremo grande">
+            <div class="bloco-supremo grande reveal">
                 <div class="tag-exclusiva">Conceito Original</div>
                 <div class="filtro-neon"></div>
-                <img src="https://unsplash.com" alt="Cinema">
+                <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=900&q=70" alt="Sala de cinema com projeção" loading="lazy">
                 <div class="conteudo-supremo">
                     <span>01 // AUDIOVISUAL NARRATIVO</span>
                     <h3>Filmes &amp; Séries</h3>
@@ -120,4 +293,108 @@
                 </div>
             </div>
 
-            <div class="bloco-supremo">
+            <div class="bloco-supremo reveal">
+                <div class="tag-exclusiva azul">Digital First</div>
+                <div class="filtro-neon azul"></div>
+                <img src="https://images.unsplash.com/photo-1492724441997-5dc865305da7?w=900&q=70" alt="Criação de conteúdo digital" loading="lazy">
+                <div class="conteudo-supremo">
+                    <span class="azul">02 // MÍDIAS DIGITAIS</span>
+                    <h3>Conteúdo &amp; Streaming</h3>
+                    <p>Formatos nativos para plataformas digitais que capturam a atenção em segundos.</p>
+                </div>
+            </div>
+
+            <div class="bloco-supremo reveal">
+                <div class="tag-exclusiva roxo">Experiência</div>
+                <div class="filtro-neon roxo"></div>
+                <img src="https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=900&q=70" alt="Estúdio de produção musical" loading="lazy">
+                <div class="conteudo-supremo">
+                    <span class="roxo">03 // PRODUÇÃO MUSICAL</span>
+                    <h3>Trilhas &amp; Sound Design</h3>
+                    <p>Atmosferas sonoras que transformam emoção em experiência sensorial completa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contato">
+        <div class="logo-rodape-container">
+            <img src="logo_topo.png" alt="Apolinário Studio" onerror="this.style.display='none';">
+        </div>
+        <p class="footer-texto">Pronto para criar algo que o mundo nunca viu? Fale diretamente com nossa equipe.</p>
+        <div class="footer-wrap">
+            <a class="btn-whatsapp" href="https://wa.me/5500000000000?text=Ol%C3%A1!%20Vim%20pelo%20site%20do%20Apolin%C3%A1rio%20Studio" target="_blank" rel="noopener noreferrer">
+                <span class="icon" aria-hidden="true">💬</span>
+                <span class="text-btn">
+                    <small>Fale conosco</small>
+                    <strong>WhatsApp Oficial</strong>
+                </span>
+            </a>
+        </div>
+        <p class="copyright">© 2026 Apolinário Studio — Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // ===== EFEITO DE DIGITAÇÃO (estava faltando!) =====
+        const palavras = ["Entretenimento.", "Cinema.", "Produções.", "Narrativas.", "Inovação."];
+        const alvo = document.getElementById("textoDigitado");
+        let iPalavra = 0, iLetra = 0, apagando = false;
+
+        function digitar() {
+            const palavra = palavras[iPalavra];
+            iLetra += apagando ? -1 : 1;
+            alvo.textContent = palavra.substring(0, iLetra);
+
+            let delay = apagando ? 50 : 110;
+            if (!apagando && iLetra === palavra.length) {
+                apagando = true;
+                delay = 1800; // pausa com palavra completa
+            } else if (apagando && iLetra === 0) {
+                apagando = false;
+                iPalavra = (iPalavra + 1) % palavras.length;
+                delay = 400;
+            }
+            setTimeout(digitar, delay);
+        }
+        digitar();
+
+        // ===== MENU MOBILE =====
+        const toggle = document.getElementById("menuToggle");
+        const navLinks = document.getElementById("navLinks");
+        toggle.addEventListener("click", () => {
+            const aberto = navLinks.classList.toggle("aberto");
+            toggle.classList.toggle("ativo", aberto);
+            toggle.setAttribute("aria-expanded", aberto);
+        });
+        navLinks.querySelectorAll("a").forEach(a =>
+            a.addEventListener("click", () => {
+                navLinks.classList.remove("aberto");
+                toggle.classList.remove("ativo");
+                toggle.setAttribute("aria-expanded", "false");
+            })
+        );
+
+        // ===== REVELAR ELEMENTOS AO SCROLL =====
+        const observador = new IntersectionObserver(entradas => {
+            entradas.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add("visivel");
+                    observador.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        document.querySelectorAll(".reveal").forEach(el => observador.observe(el));
+
+        // ===== EFEITO "TRANSE" (usa a classe que estava órfã) =====
+        // Ativa blur cinematográfico no body quando o usuário rola para fora do hero
+        const hero = document.getElementById("inicio");
+        new IntersectionObserver(([e]) => {
+            document.body.classList.toggle("transe-psicologico", false); // ajuste conforme sua intenção
+        }, { threshold: 0.3 }).observe(hero);
+
+        // ===== FORÇA O PLAY DO VÍDEO (autoplay policy) =====
+        const video = document.getElementById("player-emocional");
+        video.play().catch(() => { /* se bloqueado, o fallback gradiente do hero aparece */ });
+    </script>
+</body>
+</html>
