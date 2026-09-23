@@ -56,7 +56,7 @@
         .revelacao-lenta {
             opacity: 0;
             animation: surgirTexto 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-            animation-delay: 3s;
+            animation-delay: 1.5s;
             padding-left: 7%;
             position: relative;
             z-index: 2;
@@ -94,7 +94,7 @@
         .conteudo-supremo h3 { font-size: 1.8rem; font-weight: 800; margin-bottom: 12px; }
         .conteudo-supremo p { font-size: 14px; color: #888; line-height: 1.6; }
 
-        /* Rodapé e Botões de Contato */
+        /* Rodapé, Botões Duplos e Mensagens Cripto */
         footer { background: #030304; padding: 60px 7%; text-align: center; border-top: 1px solid #15151a; position: relative; }
         .logo-rodape-container img { height: 60px; max-width: 250px; object-fit: contain; margin-bottom: 20px; }
         
@@ -108,6 +108,8 @@
         .coordenada-secreta { position: fixed; bottom: 15px; right: 20px; font-family: monospace; font-size: 10px; color: rgba(229, 9, 20, 0.3); letter-spacing: 2px; pointer-events: none; z-index: 999; animation: glitchTexto 4s infinite; }
         @keyframes glitchTexto { 0%, 95%, 100% { opacity: 0.3; } 96% { opacity: 1; text-shadow: 2px 0 #00ffff, -2px 0 #ff00ff; } }
         .transe-psicologico { filter: blur(8px) brightness(0.3) contrast(1.2); }
+
+        @media (max-width: 768px) { .mural-disruptivo { grid-template-columns: 1fr; } .bloco-supremo.grande { min-height: 350px; } .bloco-supremo { height: 350px; } }
     </style>
 </head>
 <body>
@@ -150,8 +152,3 @@
 
     <section class="container" id="producoes">
         <h2>Inovação Suprema</h2>
-        <p class="subtitulo-unico">Formatos disruptivos e narrativas originais concebidas para quebrar os padrões tradicionais do entretenimento.</p>
-        
-        <div class="mural-disruptivo">
-            <div class="bloco-supremo grande">
-                <div class="tag-exclusiva">Conceito Original</div>
