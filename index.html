@@ -48,11 +48,10 @@
         .nav-links a:hover { color: #e50914; }
 
         /* Hero Section Cinematográfica */
-        .hero { position: relative; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; overflow: hidden; width: 100%; }
-        .video-background { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -2; transform: translate(-50%, -50%); object-fit: cover; }
+        .hero { position: relative; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; overflow: hidden; width: 100%; background-position: center; background-size: cover; background-repeat: no-repeat; }
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, #060608 10%, rgba(6,6,8,0.4) 50%, #060608 100%), linear-gradient(to right, #060608 20%, rgba(6,6,8,0.1)); z-index: -1; }
 
-        /* Animação de Revelação Sincronizada */
+        /* Animação Atrasada para Revelação */
         .revelacao-lenta {
             opacity: 0;
             animation: surgirTexto 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -71,7 +70,7 @@
         .cursor-matrix { font-weight: 100; color: #e50914; animation: piscar-cursor 0.7s infinite; }
         @keyframes piscar-cursor { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 
-        /* Mural Disruptivo */
+        /* Seções e Mural Disruptivo */
         .container { padding: 100px 7%; }
         h2 { font-size: 2.5rem; margin-bottom: 15px; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; background: linear-gradient(to right, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .subtitulo-unico { color: #888; font-size: 1.2rem; max-width: 600px; line-height: 1.6; border-left: 2px solid #e50914; padding-left: 20px; margin-bottom: 50px; }
@@ -94,7 +93,7 @@
         .conteudo-supremo h3 { font-size: 1.8rem; font-weight: 800; margin-bottom: 12px; }
         .conteudo-supremo p { font-size: 14px; color: #888; line-height: 1.6; }
 
-        /* Rodapé, Botões Duplos e Mensagens Cripto */
+        /* Rodapé e Botões de Contato */
         footer { background: #030304; padding: 60px 7%; text-align: center; border-top: 1px solid #15151a; position: relative; }
         .logo-rodape-container img { height: 60px; max-width: 250px; object-fit: contain; margin-bottom: 20px; }
         
@@ -108,8 +107,6 @@
         .coordenada-secreta { position: fixed; bottom: 15px; right: 20px; font-family: monospace; font-size: 10px; color: rgba(229, 9, 20, 0.3); letter-spacing: 2px; pointer-events: none; z-index: 999; animation: glitchTexto 4s infinite; }
         @keyframes glitchTexto { 0%, 95%, 100% { opacity: 0.3; } 96% { opacity: 1; text-shadow: 2px 0 #00ffff, -2px 0 #ff00ff; } }
         .transe-psicologico { filter: blur(8px) brightness(0.3) contrast(1.2); }
-
-        @media (max-width: 768px) { .mural-disruptivo { grid-template-columns: 1fr; } .bloco-supremo.grande { min-height: 350px; } .bloco-supremo { height: 350px; } }
     </style>
 </head>
 <body>
@@ -135,9 +132,6 @@
     </nav>
 
     <section class="hero" id="inicio">
-        <video class="video-background" autoplay loop muted playsinline id="player-emocional">
-            <source src="" type="video/mp4">
-        </video>
         <div class="overlay"></div>
         
         <div class="revelacao-lenta">
@@ -152,3 +146,12 @@
 
     <section class="container" id="producoes">
         <h2>Inovação Suprema</h2>
+        <p class="subtitulo-unico">Formatos disruptivos e narrativas originais concebidas para quebrar os padrões tradicionais do entretenimento.</p>
+        
+        <div class="mural-disruptivo">
+            <div class="bloco-supremo grande">
+                <div class="tag-exclusiva">Conceito Original</div>
+                <div class="filtro-neon"></div>
+                <img src="https://unsplash.com" alt="Cinema">
+                <div class="conteudo-supremo">
+                    <span>01 // AUDIOVISUAL NARRATIVO</span>
