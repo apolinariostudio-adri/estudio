@@ -46,8 +46,11 @@
             position: fixed; inset: 0; z-index: 99999; background: #000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             gap: 25px; transition: opacity 0.9s ease, visibility 0.9s;
+            animation: preAutoHide 0.8s ease 7s forwards;
         }
-        #preloader.oculto { opacity: 0; visibility: hidden; }
+        /* SISTEMA ANTI-TRAVA: mesmo sem JavaScript, some sozinho em 7s */
+        @keyframes preAutoHide { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+        #preloader.oculto { opacity: 0; visibility: hidden; pointer-events: none; }
         .pre-nome {
             font-size: clamp(1.2rem, 4vw, 2rem); font-weight: 900; letter-spacing: 12px;
             text-transform: uppercase; color: #fff; text-align: center;
@@ -218,7 +221,7 @@
             border-left: 3px solid var(--vermelho); padding-left: 20px; margin-bottom: 50px;
         }
 
-        /* ===== MANIFESTO (HIERARQUIA EXAGERADA — TENDÊNCIA 2026) ===== */
+        /* ===== MANIFESTO ===== */
         .manifesto {
             padding: 130px 7%; position: relative; z-index: 10; text-align: center;
             background: radial-gradient(ellipse at 50% 120%, rgba(229,9,20,0.12), transparent 60%);
@@ -326,7 +329,6 @@
         }
         .palco-cinema video { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
 
-        /* Equalizer vivo no player */
         .viz-player {
             position: absolute; bottom: 62px; left: 20px; z-index: 7;
             display: flex; align-items: flex-end; gap: 3px; height: 22px; opacity: 0; transition: 0.4s;
@@ -503,6 +505,7 @@
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
             *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+            #preloader { animation-delay: 0.5s; }
         }
     </style>
 </head>
@@ -515,6 +518,44 @@
         <div class="pre-barra"><div class="pre-barra-fill" id="preBarraFill"></div></div>
         <div class="pre-contador" id="preContador">000%</div>
     </div>
+
+    <!-- SCRIPT DO PRELOADER (isolado no topo: mesmo que o resto falhe, ele funciona) -->
+    <script>
+    (function () {
+        var preloader   = document.getElementById("preloader");
+        var preFill     = document.getElementById("preBarraFill");
+        var preContador = document.getElementById("preContador");
+        var progresso = 0;
+        var terminado = false;
+
+        var timer = setInterval(function () {
+            progresso = Math.min(progresso + Math.random() * 9, 92);
+            pintar();
+        }, 140);
+
+        function pintar() {
+            preFill.style.width = progresso + "%";
+            preContador.textContent = String(Math.floor(progresso)).padStart(3, "0") + "%";
+        }
+
+        function finalizar() {
+            if (terminado) return;
+            terminado = true;
+            clearInterval(timer);
+            progresso = 100;
+            pintar();
+            setTimeout(function () {
+                preloader.classList.add("oculto");
+                var hv = document.getElementById("player-emocional");
+                if (hv) hv.play().catch(function(){});
+            }, 700);
+        }
+
+        // Trava de segurança dupla
+        setTimeout(finalizar, 5000);
+        window.addEventListener("load", function () { setTimeout(finalizar, 2200); });
+    })();
+    </script>
 
     <!-- Cursor customizado -->
     <div class="cursor-dot" id="cursorDot"></div>
@@ -531,4 +572,557 @@
     <!-- ===== NAVBAR ===== -->
     <nav>
         <div class="logo-container">
-            <img src="logo_topo.png" alt="
+            <img src="logo_topo.png" alt="Apolinário Studio" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <div class="logo-fallback" style="display:none;">Apolinário Studio</div>
+        </div>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+
+        <div class="nav-links" id="navLinks">
+            <a href="#inicio">Início</a>
+            <a href="#manifesto">Manifesto</a>
+            <a href="#producoes">Inovação</a>
+            <a href="#amostras">Amostras</a>
+            <a href="#contato">Contato</a>
+        </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="inicio">
+        <video class="video-background" autoplay loop muted playsinline preload="metadata" id="player-emocional" aria-hidden="true" disablepictureinpicture>
+            <source src="catarse.mp4" type="video/mp4">
+        </video>
+        <div class="overlay"></div>
+
+        <div class="revelacao-lenta" id="revelacaoLenta">
+            <h1 class="titulo-efeito">
+                Apolinário Studio: <span class="texto-digitado" id="textoDigitado"></span><span class="cursor-matrix">|</span>
+            </h1>
+            <p class="hero-desc">
+                Entretenimento puro. Narrativas que manipulam a realidade através do cinema e das mídias digitais.
+            </p>
+            <a href="#amostras" class="hero-cta">▶ Assistir Amostras</a>
+        </div>
+    </section>
+
+    <!-- ===== MARQUEE DAS 5 EMOÇÕES ===== -->
+    <div class="marquee-emocoes" aria-hidden="true">
+        <div class="marquee-track">
+            <span>Catarse <i>✦</i> Curiosidade <i>✦</i> Felicidade <i>✦</i> Perda <i>✦</i> Tristeza <i>✦</i></span>
+            <span>Catarse <i>✦</i> Curiosidade <i>✦</i> Felicidade <i>✦</i> Perda <i>✦</i> Tristeza <i>✦</i></span>
+        </div>
+    </div>
+
+    <!-- ===== MANIFESTO ===== -->
+    <section class="manifesto" id="manifesto">
+        <div class="manifesto-selo reveal">◆ Um legado em construção ◆</div>
+        <h2 class="manifesto-titulo reveal scramble" data-texto="NÓS NÃO CRIAMOS VÍDEOS. NÓS ESCULPIMOS EMOÇÕES.">
+            NÓS NÃO CRIAMOS VÍDEOS.<br>
+            NÓS <span class="destaque">ESCULPIMOS</span> <span class="destaque">EMOÇÕES.</span>
+        </h2>
+        <p class="manifesto-sub reveal">
+            Cada frame é uma decisão. Cada corte, uma cicatriz. Cada som, um arrepio.
+            O Apolinário Studio não produz conteúdo — produz memória. E memória não envelhece:
+            ela se torna eternidade.
+        </p>
+        <div class="manifesto-assinatura reveal">APOLINÁRIO STUDIO <b>//</b> ENTRETENIMENTOS &amp; PRODUÇÕES <b>//</b> LEGADO 001</div>
+    </section>
+
+    <!-- ===== INOVAÇÃO ===== -->
+    <section class="container" id="producoes">
+        <h2 class="reveal">Inovação Suprema</h2>
+        <p class="subtitulo-unico reveal">Formatos disruptivos e narrativas originais concebidas para quebrar os padrões tradicionais do entretenimento.</p>
+
+        <div class="mural-disruptivo">
+            <div class="bloco-supremo grande reveal">
+                <div class="tag-exclusiva">Conceito Original</div>
+                <div class="filtro-neon"></div>
+                <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=900&q=70" alt="Sala de cinema" loading="lazy">
+                <div class="conteudo-supremo">
+                    <span>01 // AUDIOVISUAL NARRATIVO</span>
+                    <h3>Filmes &amp; Séries</h3>
+                    <p>A desconstrução do cinema tradicional. Histórias profundas feitas para telas imersivas.</p>
+                </div>
+            </div>
+
+            <div class="bloco-supremo reveal">
+                <div class="tag-exclusiva azul">Digital First</div>
+                <div class="filtro-neon azul"></div>
+                <img src="https://images.unsplash.com/photo-1492724441997-5dc865305da7?w=900&q=70" alt="Conteúdo digital" loading="lazy">
+                <div class="conteudo-supremo">
+                    <span class="azul">02 // MÍDIAS DIGITAIS</span>
+                    <h3>Conteúdo &amp; Streaming</h3>
+                    <p>Formatos nativos para plataformas digitais que capturam a atenção em segundos.</p>
+                </div>
+            </div>
+
+            <div class="bloco-supremo reveal">
+                <div class="tag-exclusiva roxo">Experiência</div>
+                <div class="filtro-neon roxo"></div>
+                <img src="https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=900&q=70" alt="Estúdio musical" loading="lazy">
+                <div class="conteudo-supremo">
+                    <span class="roxo">03 // PRODUÇÃO MUSICAL</span>
+                    <h3>Trilhas &amp; Sound Design</h3>
+                    <p>Atmosferas sonoras que transformam emoção em experiência sensorial completa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== VITRINE DE AMOSTRAS ===== -->
+    <section class="container" id="amostras">
+        <h2 class="reveal">Amostras Exclusivas</h2>
+        <p class="subtitulo-unico reveal">Cinco emoções. Cinco fragmentos do nosso universo. Cada amostra: 10 segundos de imersão total com áudio. Clique para a experiência cinematográfica completa.</p>
+
+        <div class="vitrine-amostas">
+            <div class="card-amostra reveal" data-video="catarse.mp4" data-titulo="Catarse — A Liberação">
+                <span class="duracao-badge">0:10 ● REC</span>
+                <video src="catarse.mp4" muted loop playsinline preload="metadata"></video>
+                <div class="play-overlay">
+                    <div class="icone-play">▶</div>
+                    <div class="titulo-amostra">Catarse — A Liberação</div>
+                </div>
+            </div>
+
+            <div class="card-amostra reveal" data-video="curiosidade.mp4" data-titulo="Curiosidade — O Chamado">
+                <span class="duracao-badge">0:10 ● REC</span>
+                <video src="curiosidade.mp4" muted loop playsinline preload="metadata"></video>
+                <div class="play-overlay">
+                    <div class="icone-play">▶</div>
+                    <div class="titulo-amostra">Curiosidade — O Chamado</div>
+                </div>
+            </div>
+
+            <div class="card-amostra reveal" data-video="felicidade.mp4" data-titulo="Felicidade — O Êxtase">
+                <span class="duracao-badge">0:10 ● REC</span>
+                <video src="felicidade.mp4" muted loop playsinline preload="metadata"></video>
+                <div class="play-overlay">
+                    <div class="icone-play">▶</div>
+                    <div class="titulo-amostra">Felicidade — O Êxtase</div>
+                </div>
+            </div>
+
+            <div class="card-amostra reveal" data-video="perda.mp4" data-titulo="Perda — O Vazio">
+                <span class="duracao-badge">0:10 ● REC</span>
+                <video src="perda.mp4" muted loop playsinline preload="metadata"></video>
+                <div class="play-overlay">
+                    <div class="icone-play">▶</div>
+                    <div class="titulo-amostra">Perda — O Vazio</div>
+                </div>
+            </div>
+
+            <div class="card-amostra reveal" data-video="tristeza.mp4" data-titulo="Tristeza — O Abismo">
+                <span class="duracao-badge">0:10 ● REC</span>
+                <video src="tristeza.mp4" muted loop playsinline preload="metadata"></video>
+                <div class="play-overlay">
+                    <div class="icone-play">▶</div>
+                    <div class="titulo-amostra">Tristeza — O Abismo</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER / CONTATO ===== -->
+    <footer id="contato">
+        <div class="logo-rodape-container">
+            <img src="logo_topo.png" alt="Apolinário Studio" onerror="this.style.display='none';">
+        </div>
+        <p class="footer-texto">Pronto para criar algo que o mundo nunca viu? Fale diretamente com nossa equipe.</p>
+        <div class="footer-wrap">
+            <a class="btn-whatsapp" href="https://wa.me/5511987422647?text=Ol%C3%A1!%20Vim%20pelo%20site%20do%20Apolin%C3%A1rio%20Studio" target="_blank" rel="noopener noreferrer">
+                <span class="icon" aria-hidden="true">💬</span>
+                <span class="text-btn">
+                    <small>WhatsApp 01</small>
+                    <strong>(11) 98742-2647</strong>
+                </span>
+            </a>
+            <a class="btn-whatsapp" href="https://wa.me/5515998064681?text=Ol%C3%A1!%20Vim%20pelo%20site%20do%20Apolin%C3%A1rio%20Studio" target="_blank" rel="noopener noreferrer">
+                <span class="icon" aria-hidden="true">💬</span>
+                <span class="text-btn">
+                    <small>WhatsApp 02</small>
+                    <strong>(15) 99806-4681</strong>
+                </span>
+            </a>
+        </div>
+        <p class="copyright">© 2026 Apolinário Studio — Todos os direitos reservados. <span class="legado">// O LEGADO É ETERNO</span></p>
+    </footer>
+
+    <!-- ===== MODAL PLAYER ===== -->
+    <div class="modal-cinema" id="modalCinema" role="dialog" aria-modal="true" aria-label="Player de vídeo">
+        <div class="palco-cinema" id="palcoCinema">
+            <button class="fechar-cinema" id="fecharCinema" aria-label="Fechar player">✕</button>
+            <div class="palco-inner">
+                <video id="videoModal" playsinline preload="auto"></video>
+                <div class="indicador-rec"><span class="ponto-rec"></span> SYS_NEXUS // PLAYING</div>
+
+                <div class="viz-player" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+                <div class="countdown-cinema" id="countdownCinema">
+                    <div class="circulo-guia"></div>
+                    <div class="numero" id="numeroCountdown">3</div>
+                </div>
+
+                <div class="controles-cinema">
+                    <div class="barra-progresso" id="barraProgresso">
+                        <div class="barra-preenchida" id="barraPreenchida"></div>
+                    </div>
+                    <div class="linha-controles">
+                        <button class="btn-ctrl" id="btnPlayPause" aria-label="Play/Pause">▶</button>
+                        <div class="grupo-volume" id="grupoVolume">
+                            <button class="btn-ctrl" id="btnMute" aria-label="Mudo">🔇</button>
+                            <input type="range" class="slider-volume" id="sliderVolume" min="0" max="1" step="0.01" value="0.8" aria-label="Volume">
+                        </div>
+                        <span class="tempo-player" id="tempoPlayer">0:00 / 0:10</span>
+                        <span class="titulo-player" id="tituloPlayer"></span>
+                        <button class="btn-ctrl" id="btnFullscreen" aria-label="Tela cheia">⛶</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== BOTÃO GLOBAL DE SOM ===== -->
+    <button class="btn-som-global" id="btnSomGlobal" aria-label="Ativar som do site">
+        <span class="ondas"><i></i><i></i><i></i><i></i></span>
+        <span id="textoSomGlobal">Ativar Som</span>
+    </button>
+
+    <script>
+    // ================================================
+    // 🎬 APOLINÁRIO STUDIO — SISTEMA PRINCIPAL v4.0
+    // ================================================
+
+    // ----- CURSOR CINEMATOGRÁFICO -----
+    var cursorDot  = document.getElementById("cursorDot");
+    var cursorRing = document.getElementById("cursorRing");
+    var mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+    document.addEventListener("mousemove", function (e) {
+        mouseX = e.clientX; mouseY = e.clientY;
+        cursorDot.style.left = mouseX + "px";
+        cursorDot.style.top  = mouseY + "px";
+    });
+    (function animarRing() {
+        ringX += (mouseX - ringX) * 0.15;
+        ringY += (mouseY - ringY) * 0.15;
+        cursorRing.style.left = ringX + "px";
+        cursorRing.style.top  = ringY + "px";
+        requestAnimationFrame(animarRing);
+    })();
+    document.querySelectorAll("a, button, .card-amostra, .barra-progresso, input").forEach(function (el) {
+        el.addEventListener("mouseenter", function () { cursorRing.classList.add("grande"); });
+        el.addEventListener("mouseleave", function () { cursorRing.classList.remove("grande"); });
+    });
+
+    // ----- BARRA DE PROGRESSO DE SCROLL -----
+    var scrollProgress = document.getElementById("scrollProgress");
+    window.addEventListener("scroll", function () {
+        var total = document.body.scrollHeight - window.innerHeight;
+        if (total > 0) scrollProgress.style.width = ((window.scrollY / total) * 100) + "%";
+    }, { passive: true });
+
+    // ----- EFEITO DE DIGITAÇÃO -----
+    var palavras = ["Entretenimento.", "Cinema.", "Produções.", "Narrativas.", "Emoção.", "Legado."];
+    var alvo = document.getElementById("textoDigitado");
+    var iPalavra = 0, iLetra = 0, apagando = false;
+    function digitar() {
+        var palavra = palavras[iPalavra];
+        iLetra += apagando ? -1 : 1;
+        alvo.textContent = palavra.substring(0, iLetra);
+        var delay = apagando ? 50 : 110;
+        if (!apagando && iLetra === palavra.length) { apagando = true; delay = 1800; }
+        else if (apagando && iLetra === 0) { apagando = false; iPalavra = (iPalavra + 1) % palavras.length; delay = 400; }
+        setTimeout(digitar, delay);
+    }
+    digitar();
+
+    // ----- PARALLAX DO HERO -----
+    var revelacaoLenta = document.getElementById("revelacaoLenta");
+    var heroSec = document.getElementById("inicio");
+    var heroVideo = document.getElementById("player-emocional");
+    if (window.matchMedia("(hover: hover)").matches) {
+        heroSec.addEventListener("mousemove", function (e) {
+            var x = (e.clientX / window.innerWidth - 0.5) * 18;
+            var y = (e.clientY / window.innerHeight - 0.5) * 12;
+            revelacaoLenta.style.transform = "translate(" + (-x) + "px," + (-y) + "px)";
+        });
+    }
+
+    // ----- MENU MOBILE -----
+    var toggle = document.getElementById("menuToggle");
+    var navLinks = document.getElementById("navLinks");
+    toggle.addEventListener("click", function () {
+        var aberto = navLinks.classList.toggle("aberto");
+        toggle.classList.toggle("ativo", aberto);
+        toggle.setAttribute("aria-expanded", aberto);
+    });
+    navLinks.querySelectorAll("a").forEach(function (a) {
+        a.addEventListener("click", function () {
+            navLinks.classList.remove("aberto");
+            toggle.classList.remove("ativo");
+            toggle.setAttribute("aria-expanded", "false");
+        });
+    });
+
+    // ----- EFEITO SCRAMBLE -----
+    var charsScramble = "!<>-_\\/[]{}=+*^?#01";
+    function scramble(el) {
+        var htmlOriginal = el.innerHTML;
+        var texto = el.dataset.texto || el.textContent;
+        var frame = 0;
+        var queue = Array.from(texto).map(function (c, i) {
+            return { c: c, inicio: Math.floor(Math.random() * 20), fim: Math.floor(Math.random() * 20) + i };
+        });
+        var intervalo = setInterval(function () {
+            var saida = "";
+            var prontos = 0;
+            queue.forEach(function (q) {
+                if (frame >= q.fim) { saida += q.c; prontos++; }
+                else if (frame >= q.inicio) { saida += charsScramble[Math.floor(Math.random() * charsScramble.length)]; }
+                else { saida += " "; }
+            });
+            el.textContent = saida;
+            if (prontos === queue.length) { clearInterval(intervalo); el.innerHTML = htmlOriginal; }
+            frame++;
+        }, 35);
+    }
+
+    // ----- REVELAR AO SCROLL -----
+    var observador = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (e) {
+            if (e.isIntersecting) {
+                e.target.classList.add("visivel");
+                if (e.target.classList.contains("scramble")) scramble(e.target);
+                observador.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.15 });
+    document.querySelectorAll(".reveal").forEach(function (el) { observador.observe(el); });
+
+    // ================================================
+    // 🎥 PLAYER CINEMATOGRÁFICO
+    // ================================================
+    var modal        = document.getElementById("modalCinema");
+    var palco        = document.getElementById("palcoCinema");
+    var palcoInner   = palco.querySelector(".palco-inner");
+    var videoModal   = document.getElementById("videoModal");
+    var countdown    = document.getElementById("countdownCinema");
+    var numeroCD     = document.getElementById("numeroCountdown");
+    var btnPlay      = document.getElementById("btnPlayPause");
+    var btnMute      = document.getElementById("btnMute");
+    var sliderVol    = document.getElementById("sliderVolume");
+    var barra        = document.getElementById("barraProgresso");
+    var preenchida   = document.getElementById("barraPreenchida");
+    var tempoPlayer  = document.getElementById("tempoPlayer");
+    var tituloPlayer = document.getElementById("tituloPlayer");
+    var btnFull      = document.getElementById("btnFullscreen");
+    var btnFechar    = document.getElementById("fecharCinema");
+    var btnSomGlobal = document.getElementById("btnSomGlobal");
+    var textoSom     = document.getElementById("textoSomGlobal");
+
+    var somGlobalAtivo = false;
+    var indiceAtual = 0;
+    var timerCountdown = null;
+    var cards = Array.prototype.slice.call(document.querySelectorAll(".card-amostra"));
+
+    function fmt(s) {
+        return Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0");
+    }
+
+    cards.forEach(function (card, idx) {
+        var v = card.querySelector("video");
+        card.addEventListener("mouseenter", function () { if (window.innerWidth > 768) v.play().catch(function(){}); });
+        card.addEventListener("mouseleave", function () { v.pause(); v.currentTime = 0; });
+        card.addEventListener("click", function () { abrirPlayer(card.dataset.video, card.dataset.titulo, idx); });
+    });
+
+    function abrirPlayer(src, titulo, indice) {
+        indiceAtual = indice;
+        tituloPlayer.textContent = titulo;
+        modal.classList.add("aberto");
+        document.body.style.overflow = "hidden";
+        heroVideo.pause();
+        videoModal.src = src;
+        videoModal.volume = sliderVol.value;
+        videoModal.muted = !somGlobalAtivo;
+        atualizarIconeVolume();
+        atualizarVizPlayer();
+
+        if (timerCountdown) clearInterval(timerCountdown);
+        countdown.classList.remove("oculto");
+        var n = 3;
+        numeroCD.textContent = n;
+        timerCountdown = setInterval(function () {
+            n--;
+            if (n > 0) { numeroCD.textContent = n; }
+            else {
+                clearInterval(timerCountdown);
+                countdown.classList.add("oculto");
+                videoModal.play().catch(function(){});
+            }
+        }, 800);
+    }
+
+    function fecharPlayer() {
+        if (timerCountdown) clearInterval(timerCountdown);
+        videoModal.pause();
+        videoModal.removeAttribute("src");
+        videoModal.load();
+        modal.classList.remove("aberto");
+        palco.classList.remove("tocando", "pausado");
+        document.body.style.overflow = "";
+        heroVideo.play().catch(function(){});
+    }
+
+    function alternarPlay() {
+        if (countdown && !countdown.classList.contains("oculto")) return;
+        if (videoModal.paused) videoModal.play().catch(function(){}); else videoModal.pause();
+    }
+    btnPlay.addEventListener("click", alternarPlay);
+    videoModal.addEventListener("click", alternarPlay);
+    videoModal.addEventListener("play",  function () { btnPlay.textContent = "⏸"; palco.classList.add("tocando"); palco.classList.remove("pausado"); });
+    videoModal.addEventListener("pause", function () { btnPlay.textContent = "▶"; palco.classList.remove("tocando"); palco.classList.add("pausado"); });
+
+    videoModal.addEventListener("ended", function () {
+        var proximo = (indiceAtual + 1) % cards.length;
+        abrirPlayer(cards[proximo].dataset.video, cards[proximo].dataset.titulo, proximo);
+    });
+
+    videoModal.addEventListener("timeupdate", function () {
+        var dur = videoModal.duration || 10;
+        preenchida.style.width = ((videoModal.currentTime / dur) * 100) + "%";
+        tempoPlayer.textContent = fmt(videoModal.currentTime) + " / " + fmt(dur);
+    });
+    barra.addEventListener("click", function (e) {
+        var rect = barra.getBoundingClientRect();
+        videoModal.currentTime = ((e.clientX - rect.left) / rect.width) * (videoModal.duration || 10);
+    });
+
+    function atualizarIconeVolume() {
+        btnMute.textContent = (videoModal.muted || videoModal.volume === 0) ? "🔇" : (videoModal.volume < 0.5 ? "🔉" : "🔊");
+    }
+    function atualizarVizPlayer() {
+        palco.classList.toggle("som-on", somGlobalAtivo && !videoModal.muted);
+    }
+    function ativarSomGlobal() {
+        somGlobalAtivo = true;
+        btnSomGlobal.classList.add("som-ativo");
+        textoSom.textContent = "Som Ativo";
+        videoModal.muted = false;
+        heroVideo.muted = false;
+        atualizarIconeVolume();
+        atualizarVizPlayer();
+    }
+    btnMute.addEventListener("click", function () {
+        videoModal.muted = !videoModal.muted;
+        if (!videoModal.muted && !somGlobalAtivo) ativarSomGlobal();
+        atualizarIconeVolume();
+        atualizarVizPlayer();
+    });
+    sliderVol.addEventListener("input", function () {
+        videoModal.volume = sliderVol.value;
+        videoModal.muted = sliderVol.value == 0;
+        if (sliderVol.value > 0 && !somGlobalAtivo) ativarSomGlobal();
+        atualizarIconeVolume();
+        atualizarVizPlayer();
+    });
+
+    btnSomGlobal.addEventListener("click", function () {
+        if (somGlobalAtivo) {
+            somGlobalAtivo = false;
+            btnSomGlobal.classList.remove("som-ativo");
+            textoSom.textContent = "Ativar Som";
+            videoModal.muted = true;
+            heroVideo.muted = true;
+        } else {
+            ativarSomGlobal();
+        }
+        atualizarIconeVolume();
+        atualizarVizPlayer();
+    });
+
+    btnFull.addEventListener("click", function () {
+        if (!document.fullscreenElement) {
+            if (palcoInner.requestFullscreen) palcoInner.requestFullscreen();
+        } else if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    });
+
+    btnFechar.addEventListener("click", fecharPlayer);
+    modal.addEventListener("click", function (e) { if (e.target === modal) fecharPlayer(); });
+
+    // ----- ATALHOS + EASTER EGG "APOLINARIO" -----
+    var glitchFlash = document.getElementById("glitchFlash");
+    var sequencia = "";
+    document.addEventListener("keydown", function (e) {
+        if (e.key && e.key.length === 1) {
+            sequencia = (sequencia + e.key.toUpperCase()).slice(-10);
+            if (sequencia === "APOLINARIO") {
+                sequencia = "";
+                document.body.classList.add("glitch-total");
+                glitchFlash.classList.add("ativo");
+                setTimeout(function () {
+                    document.body.classList.remove("glitch-total");
+                    glitchFlash.classList.remove("ativo");
+                }, 2600);
+            }
+        }
+
+        if (!modal.classList.contains("aberto")) return;
+        switch (e.key) {
+            case "Escape":     fecharPlayer(); break;
+            case " ":          e.preventDefault(); alternarPlay(); break;
+            case "ArrowRight": videoModal.currentTime = Math.min(videoModal.duration || 10, videoModal.currentTime + 2); break;
+            case "ArrowLeft":  videoModal.currentTime = Math.max(0, videoModal.currentTime - 2); break;
+            case "m": case "M": btnMute.click(); break;
+            case "f": case "F": btnFull.click(); break;
+            case "ArrowUp":    e.preventDefault(); sliderVol.value = Math.min(1, Number(sliderVol.value) + 0.1); sliderVol.dispatchEvent(new Event("input")); break;
+            case "ArrowDown":  e.preventDefault(); sliderVol.value = Math.max(0, Number(sliderVol.value) - 0.1); sliderVol.dispatchEvent(new Event("input")); break;
+        }
+    });
+
+    // ================================================
+    // 🎞️ HERO ROTATIVO (5 vídeos na RAIZ)
+    // ================================================
+    var fontesHero = ["catarse.mp4", "curiosidade.mp4", "felicidade.mp4", "perda.mp4", "tristeza.mp4"];
+    var heroAtual = 0;
+
+    var navCaps = document.createElement("div");
+    navCaps.className = "capitulos-hero";
+    fontesHero.forEach(function (_, i) {
+        var b = document.createElement("button");
+        b.className = "cap-hero" + (i === 0 ? " ativo" : "");
+        b.setAttribute("aria-label", "Amostra " + (i + 1));
+        b.addEventListener("click", function () { trocarHero(i, true); });
+        navCaps.appendChild(b);
+    });
+    heroSec.appendChild(navCaps);
+
+    function trocarHero(i, manual) {
+        heroAtual = i;
+        heroVideo.style.opacity = 0;
+        setTimeout(function () {
+            heroVideo.src = fontesHero[i];
+            heroVideo.muted = !somGlobalAtivo;
+            heroVideo.play().catch(function(){});
+            heroVideo.style.opacity = 1;
+        }, manual ? 200 : 600);
+        document.querySelectorAll(".cap-hero").forEach(function (c, idx) {
+            c.classList.remove("ativo");
+            if (idx === i) { void c.offsetWidth; c.classList.add("ativo"); }
+        });
+    }
+
+    setInterval(function () {
+        if (document.visibilityState === "visible" && !modal.classList.contains("aberto") && !heroVideo.paused) {
+            trocarHero((heroAtual + 1) % fontesHero.length, false);
+        }
+    }, 10000);
+
+    heroVideo.play().catch(function () {});
+    </script>
+</body>
+</html>
