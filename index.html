@@ -20,10 +20,54 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--fundo); color: #fff;
             overflow-x: hidden;
-            transition: filter 0.8s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* ===== FILM GRAIN (textura de película de cinema) ===== */
+        /* ===== CURSOR CINEMATOGRÁFICO ===== */
+        @media (hover: hover) and (pointer: fine) {
+            body, a, button, .card-amostra, .barra-progresso, input { cursor: none !important; }
+        }
+        .cursor-dot, .cursor-ring {
+            position: fixed; top: 0; left: 0; pointer-events: none; z-index: 10001;
+            border-radius: 50%; transform: translate(-50%, -50%);
+        }
+        .cursor-dot { width: 6px; height: 6px; background: var(--vermelho); box-shadow: 0 0 10px var(--vermelho); }
+        .cursor-ring {
+            width: 34px; height: 34px; border: 1.5px solid rgba(229,9,20,0.6);
+            transition: width 0.25s, height 0.25s, border-color 0.25s, background 0.25s;
+        }
+        .cursor-ring.grande {
+            width: 60px; height: 60px; border-color: var(--vermelho);
+            background: rgba(229,9,20,0.12); box-shadow: 0 0 25px rgba(229,9,20,0.4);
+        }
+        @media (hover: none) { .cursor-dot, .cursor-ring { display: none; } }
+
+        /* ===== PRELOADER DE ESTÚDIO ===== */
+        #preloader {
+            position: fixed; inset: 0; z-index: 99999; background: #000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            gap: 25px; transition: opacity 0.9s ease, visibility 0.9s;
+        }
+        #preloader.oculto { opacity: 0; visibility: hidden; }
+        .pre-nome {
+            font-size: clamp(1.2rem, 4vw, 2rem); font-weight: 900; letter-spacing: 12px;
+            text-transform: uppercase; color: #fff; text-align: center;
+            animation: preBrilho 2s ease-in-out infinite;
+        }
+        .pre-nome b { color: var(--vermelho); }
+        @keyframes preBrilho { 0%,100% { text-shadow: 0 0 20px rgba(229,9,20,0.3); } 50% { text-shadow: 0 0 45px rgba(229,9,20,0.9); } }
+        .pre-apresenta { font-size: 10px; letter-spacing: 6px; color: #666; text-transform: uppercase; font-family: monospace; }
+        .pre-barra { width: 180px; height: 2px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+        .pre-barra-fill { height: 100%; width: 0%; background: var(--vermelho); box-shadow: 0 0 10px var(--vermelho); transition: width 0.3s; }
+        .pre-contador { font-family: monospace; font-size: 12px; color: var(--vermelho); letter-spacing: 3px; }
+
+        /* ===== BARRA DE PROGRESSO DE SCROLL ===== */
+        .scroll-progress {
+            position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+            background: linear-gradient(to right, var(--vermelho), #ff5a3c);
+            box-shadow: 0 0 12px var(--vermelho); z-index: 9999; transition: width 0.1s;
+        }
+
+        /* ===== FILM GRAIN ===== */
         body::after {
             content: ""; position: fixed; inset: -100%; z-index: 998;
             pointer-events: none; opacity: 0.05;
@@ -35,6 +79,24 @@
             50% { transform: translate(3%,-2%); } 75% { transform: translate(-3%,-3%); }
             100% { transform: translate(2%,2%); }
         }
+
+        /* ===== GLITCH TOTAL (EASTER EGG) ===== */
+        body.glitch-total { animation: glitchBody 0.35s steps(2) 6; }
+        @keyframes glitchBody {
+            0%   { filter: none; transform: translate(0,0); }
+            25%  { filter: hue-rotate(90deg) contrast(1.6); transform: translate(-4px, 2px); }
+            50%  { filter: invert(0.12) saturate(3); transform: translate(4px, -2px); }
+            75%  { filter: hue-rotate(-60deg); transform: translate(-2px, -3px); }
+            100% { filter: none; transform: translate(0,0); }
+        }
+        .glitch-flash {
+            position: fixed; inset: 0; z-index: 99998; pointer-events: none;
+            background: rgba(229,9,20,0.15); display: none;
+            font-family: monospace; color: var(--vermelho);
+            justify-content: center; align-items: center;
+            font-size: clamp(1rem, 4vw, 2rem); letter-spacing: 8px; text-transform: uppercase;
+        }
+        .glitch-flash.ativo { display: flex; animation: glitchTexto 0.4s infinite; }
 
         /* ===== NAVBAR ===== */
         nav {
@@ -57,10 +119,7 @@
             display: none; background: none; border: none; cursor: pointer;
             width: 32px; height: 24px; position: relative; z-index: 102;
         }
-        .menu-toggle span {
-            display: block; width: 100%; height: 2px; background: #fff;
-            position: absolute; left: 0; transition: 0.3s;
-        }
+        .menu-toggle span { display: block; width: 100%; height: 2px; background: #fff; position: absolute; left: 0; transition: 0.3s; }
         .menu-toggle span:nth-child(1) { top: 0; }
         .menu-toggle span:nth-child(2) { top: 11px; }
         .menu-toggle span:nth-child(3) { top: 22px; }
@@ -92,6 +151,7 @@
             padding-left: 7%; padding-right: 7%; position: relative; z-index: 2;
             opacity: 0; transform: translateY(30px);
             animation: revelar 1.2s 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            will-change: transform;
         }
         @keyframes revelar { to { opacity: 1; transform: translateY(0); } }
 
@@ -119,23 +179,30 @@
         }
         .hero-cta:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(229,9,20,0.6); }
 
-        /* Marcadores de capítulo no hero (5 vídeos) */
-        .capitulos-hero {
-            position: absolute; bottom: 40px; left: 7%; z-index: 5;
-            display: flex; gap: 12px;
-        }
+        .capitulos-hero { position: absolute; bottom: 40px; left: 7%; z-index: 5; display: flex; gap: 12px; }
         .cap-hero {
             width: 60px; height: 3px; background: rgba(255,255,255,0.25);
             border: none; cursor: pointer; border-radius: 3px; overflow: hidden;
             position: relative; transition: 0.3s; padding: 0;
         }
-        .cap-hero::after {
-            content: ""; position: absolute; inset: 0; width: 0%;
-            background: var(--vermelho); box-shadow: 0 0 8px var(--vermelho);
-        }
+        .cap-hero::after { content: ""; position: absolute; inset: 0; width: 0%; background: var(--vermelho); box-shadow: 0 0 8px var(--vermelho); }
         .cap-hero.ativo::after { animation: preencherCap 10s linear forwards; }
         .cap-hero:hover { background: rgba(255,255,255,0.5); }
         @keyframes preencherCap { to { width: 100%; } }
+
+        /* ===== MARQUEE DAS EMOÇÕES ===== */
+        .marquee-emocoes {
+            overflow: hidden; white-space: nowrap; padding: 22px 0;
+            border-top: 1px solid rgba(229,9,20,0.25); border-bottom: 1px solid rgba(229,9,20,0.25);
+            background: rgba(229,9,20,0.04); position: relative; z-index: 10;
+        }
+        .marquee-track { display: inline-block; animation: marquee 22s linear infinite; }
+        .marquee-track span {
+            font-size: clamp(1rem, 2.5vw, 1.5rem); font-weight: 900; text-transform: uppercase;
+            letter-spacing: 6px; color: rgba(255,255,255,0.85); margin: 0 30px;
+        }
+        .marquee-track span i { color: var(--vermelho); font-style: normal; margin: 0 8px; text-shadow: 0 0 15px var(--vermelho); }
+        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
         /* ===== SEÇÕES ===== */
         .container { padding: 80px 7%; position: relative; z-index: 10; }
@@ -151,6 +218,37 @@
             border-left: 3px solid var(--vermelho); padding-left: 20px; margin-bottom: 50px;
         }
 
+        /* ===== MANIFESTO (HIERARQUIA EXAGERADA — TENDÊNCIA 2026) ===== */
+        .manifesto {
+            padding: 130px 7%; position: relative; z-index: 10; text-align: center;
+            background: radial-gradient(ellipse at 50% 120%, rgba(229,9,20,0.12), transparent 60%);
+        }
+        .manifesto-selo {
+            display: inline-block; font-family: monospace; font-size: 10px; letter-spacing: 5px;
+            color: var(--vermelho); border: 1px solid rgba(229,9,20,0.4); padding: 8px 20px;
+            border-radius: 100px; margin-bottom: 45px; text-transform: uppercase;
+            box-shadow: 0 0 20px rgba(229,9,20,0.2); animation: preBrilho 3s infinite;
+        }
+        .manifesto-titulo {
+            font-size: clamp(2.2rem, 8vw, 7rem); font-weight: 900; line-height: 1.02;
+            text-transform: uppercase; letter-spacing: -3px; max-width: 1200px; margin: 0 auto 35px;
+            text-shadow: 0 10px 60px rgba(0,0,0,0.9);
+        }
+        .manifesto-titulo .destaque {
+            color: transparent; -webkit-text-stroke: 2px var(--vermelho);
+            display: inline-block; transition: 0.4s;
+        }
+        .manifesto-titulo .destaque:hover { color: var(--vermelho); text-shadow: 0 0 60px rgba(229,9,20,0.9); }
+        .manifesto-sub {
+            font-size: clamp(0.95rem, 1.8vw, 1.15rem); color: #999; max-width: 620px;
+            margin: 0 auto; line-height: 1.8; letter-spacing: 0.5px;
+        }
+        .manifesto-assinatura {
+            margin-top: 55px; font-family: monospace; font-size: 11px;
+            letter-spacing: 6px; color: #555; text-transform: uppercase;
+        }
+        .manifesto-assinatura b { color: var(--vermelho); }
+
         .mural-disruptivo { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
         .bloco-supremo.grande { grid-row: span 2; min-height: 520px; height: 100%; }
         .bloco-supremo {
@@ -162,38 +260,31 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.5);
         }
         .bloco-supremo:hover { transform: scale(1.03) translateY(-8px); border-color: rgba(229,9,20,0.4); box-shadow: 0 25px 50px rgba(229,9,20,0.2); }
-        .bloco-supremo img {
-            width: 100%; height: 100%; object-fit: cover;
-            filter: grayscale(35%) brightness(0.5);
-            transition: transform 0.8s ease, filter 0.5s ease;
-        }
+        .bloco-supremo img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(35%) brightness(0.5); transition: transform 0.8s ease, filter 0.5s ease; }
         .bloco-supremo:hover img { transform: scale(1.06); filter: grayscale(0%) brightness(0.6); }
 
-        .filtro-neon { position: absolute; inset: 0; z-index: 1; pointer-events: none;
-            background: radial-gradient(circle at 10% 20%, rgba(229,9,20,0.25) 0%, transparent 60%); }
+        .filtro-neon { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(circle at 10% 20%, rgba(229,9,20,0.25) 0%, transparent 60%); }
         .filtro-neon.azul { background: radial-gradient(circle at 10% 20%, rgba(0,229,255,0.25) 0%, transparent 60%); }
         .filtro-neon.roxo { background: radial-gradient(circle at 10% 20%, rgba(187,0,255,0.25) 0%, transparent 60%); }
 
         .tag-exclusiva {
             position: absolute; top: 25px; left: 25px; z-index: 2;
             background: rgba(229,9,20,0.2); border: 1px solid rgba(229,9,20,0.4);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            color: #fff; padding: 6px 16px; font-size: 10px; font-weight: 700;
-            text-transform: uppercase; border-radius: 100px; letter-spacing: 1.5px;
+            backdrop-filter: blur(10px); color: #fff; padding: 6px 16px; font-size: 10px;
+            font-weight: 700; text-transform: uppercase; border-radius: 100px; letter-spacing: 1.5px;
             box-shadow: 0 0 15px rgba(229,9,20,0.3);
         }
         .tag-exclusiva.azul { background: rgba(0,229,255,0.2); border-color: rgba(0,229,255,0.4); box-shadow: 0 0 15px rgba(0,229,255,0.3); }
         .tag-exclusiva.roxo { background: rgba(187,0,255,0.2); border-color: rgba(187,0,255,0.4); box-shadow: 0 0 15px rgba(187,0,255,0.3); }
 
-        .conteudo-supremo { position: absolute; bottom: 0; left: 0; width: 100%; padding: 35px; z-index: 2;
-            background: linear-gradient(to top, rgba(6,6,8,0.95) 40%, transparent); }
+        .conteudo-supremo { position: absolute; bottom: 0; left: 0; width: 100%; padding: 35px; z-index: 2; background: linear-gradient(to top, rgba(6,6,8,0.95) 40%, transparent); }
         .conteudo-supremo span { font-size: 11px; color: var(--vermelho); font-weight: 800; letter-spacing: 2px; display: block; margin-bottom: 8px; }
         .conteudo-supremo span.azul { color: var(--azul); }
         .conteudo-supremo span.roxo { color: var(--roxo); }
         .conteudo-supremo h3 { font-size: 1.6rem; font-weight: 800; margin-bottom: 10px; }
         .conteudo-supremo p { font-size: 13.5px; color: #bbb; line-height: 1.6; }
 
-        /* ===== VITRINE DE AMOSTRAS (5 VÍDEOS) ===== */
+        /* ===== VITRINE DE AMOSTRAS ===== */
         .vitrine-amostas { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
         .card-amostra {
             position: relative; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden;
@@ -211,11 +302,10 @@
         .card-amostra .icone-play {
             width: 56px; height: 56px; border-radius: 50%;
             background: rgba(229,9,20,0.85); display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 0 25px rgba(229,9,20,0.6); transition: 0.3s;
-            font-size: 20px; padding-left: 4px;
+            box-shadow: 0 0 25px rgba(229,9,20,0.6); transition: 0.3s; font-size: 20px; padding-left: 4px;
         }
         .card-amostra:hover .icone-play { transform: scale(1.15); box-shadow: 0 0 40px rgba(229,9,20,0.9); }
-        .card-amostra .titulo-amostra { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 6px #000; }
+        .card-amostra .titulo-amostra { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 6px #000; text-align: center; padding: 0 10px; }
         .duracao-badge {
             position: absolute; top: 12px; right: 12px; z-index: 3;
             background: rgba(0,0,0,0.7); border: 1px solid rgba(229,9,20,0.4);
@@ -223,11 +313,8 @@
             font-family: monospace; letter-spacing: 1px; color: var(--vermelho);
         }
 
-        /* ===== MODAL PLAYER CINEMÁTICO ===== */
-        .modal-cinema {
-            position: fixed; inset: 0; z-index: 2000; display: none;
-            background: rgba(0,0,0,0.97); justify-content: center; align-items: center;
-        }
+        /* ===== MODAL PLAYER ===== */
+        .modal-cinema { position: fixed; inset: 0; z-index: 2000; display: none; background: rgba(0,0,0,0.97); justify-content: center; align-items: center; }
         .modal-cinema.aberto { display: flex; animation: fadeInModal 0.4s ease; }
         @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
 
@@ -239,10 +326,26 @@
         }
         .palco-cinema video { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
 
-        .countdown-cinema {
-            position: absolute; inset: 0; z-index: 10; display: flex;
-            justify-content: center; align-items: center; background: #050507;
+        /* Equalizer vivo no player */
+        .viz-player {
+            position: absolute; bottom: 62px; left: 20px; z-index: 7;
+            display: flex; align-items: flex-end; gap: 3px; height: 22px; opacity: 0; transition: 0.4s;
         }
+        .palco-cinema.som-on .viz-player { opacity: 1; }
+        .viz-player i {
+            width: 3px; background: var(--vermelho); border-radius: 2px; height: 20%;
+            box-shadow: 0 0 6px var(--vermelho);
+            animation: vizDanca 0.7s ease-in-out infinite alternate;
+        }
+        .viz-player i:nth-child(1) { animation-duration: 0.5s; }
+        .viz-player i:nth-child(2) { animation-duration: 0.8s; animation-delay: 0.1s; }
+        .viz-player i:nth-child(3) { animation-duration: 0.6s; animation-delay: 0.2s; }
+        .viz-player i:nth-child(4) { animation-duration: 0.9s; animation-delay: 0.05s; }
+        .viz-player i:nth-child(5) { animation-duration: 0.55s; animation-delay: 0.15s; }
+        .viz-player i:nth-child(6) { animation-duration: 0.75s; animation-delay: 0.25s; }
+        @keyframes vizDanca { from { height: 15%; } to { height: 100%; } }
+
+        .countdown-cinema { position: absolute; inset: 0; z-index: 10; display: flex; justify-content: center; align-items: center; background: #050507; }
         .countdown-cinema .numero {
             font-size: 8rem; font-weight: 900; color: var(--vermelho);
             text-shadow: 0 0 40px rgba(229,9,20,0.8); font-family: monospace;
@@ -291,10 +394,7 @@
             transition: width 0.35s cubic-bezier(0.25,1,0.5,1); outline: none;
         }
         .grupo-volume:hover .slider-volume { width: 90px; }
-        .slider-volume::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 12px; height: 12px;
-            background: var(--vermelho); border-radius: 50%; box-shadow: 0 0 8px var(--vermelho);
-        }
+        .slider-volume::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: var(--vermelho); border-radius: 50%; box-shadow: 0 0 8px var(--vermelho); }
         .slider-volume::-moz-range-thumb { width: 12px; height: 12px; background: var(--vermelho); border: none; border-radius: 50%; }
 
         .titulo-player { font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-right: auto; color: #ddd; }
@@ -311,7 +411,7 @@
         .palco-cinema.tocando .indicador-rec { opacity: 1; }
         .ponto-rec { width: 8px; height: 8px; background: var(--vermelho); border-radius: 50%; animation: piscar-cursor 1s infinite; box-shadow: 0 0 8px var(--vermelho); }
 
-        /* ===== BOTÃO GLOBAL ATIVAR SOM ===== */
+        /* ===== BOTÃO GLOBAL DE SOM ===== */
         .btn-som-global {
             position: fixed; bottom: 25px; left: 25px; z-index: 900;
             background: rgba(10,10,15,0.85); backdrop-filter: blur(12px);
@@ -324,10 +424,7 @@
         }
         .btn-som-global:hover { border-color: var(--vermelho); box-shadow: 0 0 40px rgba(229,9,20,0.5); }
         .btn-som-global .ondas { display: flex; align-items: flex-end; gap: 2px; height: 16px; }
-        .btn-som-global .ondas i {
-            width: 3px; background: var(--vermelho); border-radius: 2px;
-            animation: ondaSom 0.9s ease-in-out infinite; height: 30%;
-        }
+        .btn-som-global .ondas i { width: 3px; background: var(--vermelho); border-radius: 2px; animation: ondaSom 0.9s ease-in-out infinite; height: 30%; }
         .btn-som-global .ondas i:nth-child(2) { animation-delay: 0.15s; }
         .btn-som-global .ondas i:nth-child(3) { animation-delay: 0.3s; }
         .btn-som-global .ondas i:nth-child(4) { animation-delay: 0.45s; }
@@ -358,6 +455,7 @@
         .btn-whatsapp small { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; }
         .btn-whatsapp strong { font-size: 16px; }
         .copyright { margin-top: 40px; font-size: 12px; color: #555; letter-spacing: 1px; }
+        .copyright .legado { color: var(--vermelho); font-family: monospace; letter-spacing: 3px; }
 
         .coordenada-secreta {
             position: fixed; bottom: 15px; right: 20px;
@@ -370,7 +468,6 @@
             96% { opacity: 1; text-shadow: 2px 0 #00ffff, -2px 0 #ff00ff; }
         }
 
-        /* Animação de entrada ao scroll */
         .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.25,1,0.5,1); }
         .reveal.visivel { opacity: 1; transform: translateY(0); }
 
@@ -389,11 +486,13 @@
             .mural-disruptivo { grid-template-columns: 1fr; gap: 25px; }
             .bloco-supremo.grande { grid-row: span 1; min-height: 380px; }
             .container { padding: 60px 6%; }
+            .manifesto { padding: 90px 6%; }
             .coordenada-secreta { display: none; }
             .palco-cinema { width: 96vw; aspect-ratio: 16/9; }
             .fechar-cinema { top: 10px; right: 10px; background: rgba(0,0,0,0.6); }
             .controles-cinema { opacity: 1; padding-top: 25px; }
             .titulo-player { display: none; }
+            .viz-player { display: none; }
             .btn-som-global { padding: 10px 16px; font-size: 10px; bottom: 15px; left: 15px; }
             .countdown-cinema .numero { font-size: 4.5rem; }
             .capitulos-hero { left: 6%; bottom: 25px; }
@@ -409,460 +508,27 @@
 </head>
 <body>
 
+    <!-- ===== PRELOADER DE ESTÚDIO ===== -->
+    <div id="preloader">
+        <div class="pre-apresenta">Apolinário Studio apresenta</div>
+        <div class="pre-nome">APOLINÁRIO <b>STUDIO</b></div>
+        <div class="pre-barra"><div class="pre-barra-fill" id="preBarraFill"></div></div>
+        <div class="pre-contador" id="preContador">000%</div>
+    </div>
+
+    <!-- Cursor customizado -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- Barra de progresso de scroll -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Flash do easter egg -->
+    <div class="glitch-flash" id="glitchFlash">⚠ SYS_NEXUS DESBLOQUEADO ⚠</div>
+
     <div class="coordenada-secreta" aria-hidden="true">SYS_NEXUS_//_DATA_LOCKED</div>
 
     <!-- ===== NAVBAR ===== -->
     <nav>
         <div class="logo-container">
-            <img src="logo_topo.png" alt="Apolinário Studio" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-            <div class="logo-fallback" style="display:none;">Apolinário Studio</div>
-        </div>
-
-        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">
-            <span></span><span></span><span></span>
-        </button>
-
-        <div class="nav-links" id="navLinks">
-            <a href="#inicio">Início</a>
-            <a href="#producoes">Inovação</a>
-            <a href="#amostras">Amostras</a>
-            <a href="#contato">Contato</a>
-        </div>
-    </nav>
-
-    <!-- ===== HERO ===== -->
-    <section class="hero" id="inicio">
-        <video class="video-background" autoplay loop muted playsinline preload="metadata" id="player-emocional" aria-hidden="true" disablepictureinpicture>
-            <source src="videos/catarse.mp4" type="video/mp4">
-        </video>
-        <div class="overlay"></div>
-
-        <div class="revelacao-lenta">
-            <h1 class="titulo-efeito">
-                Apolinário Studio: <span class="texto-digitado" id="textoDigitado"></span><span class="cursor-matrix">|</span>
-            </h1>
-            <p class="hero-desc">
-                Entretenimento puro. Narrativas que manipulam a realidade através do cinema e das mídias digitais.
-            </p>
-            <a href="#amostras" class="hero-cta">▶ Assistir Amostras</a>
-        </div>
-    </section>
-
-    <!-- ===== INOVAÇÃO ===== -->
-    <section class="container" id="producoes">
-        <h2 class="reveal">Inovação Suprema</h2>
-        <p class="subtitulo-unico reveal">Formatos disruptivos e narrativas originais concebidas para quebrar os padrões tradicionais do entretenimento.</p>
-
-        <div class="mural-disruptivo">
-            <div class="bloco-supremo grande reveal">
-                <div class="tag-exclusiva">Conceito Original</div>
-                <div class="filtro-neon"></div>
-                <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=900&q=70" alt="Sala de cinema" loading="lazy">
-                <div class="conteudo-supremo">
-                    <span>01 // AUDIOVISUAL NARRATIVO</span>
-                    <h3>Filmes &amp; Séries</h3>
-                    <p>A desconstrução do cinema tradicional. Histórias profundas feitas para telas imersivas.</p>
-                </div>
-            </div>
-
-            <div class="bloco-supremo reveal">
-                <div class="tag-exclusiva azul">Digital First</div>
-                <div class="filtro-neon azul"></div>
-                <img src="https://images.unsplash.com/photo-1492724441997-5dc865305da7?w=900&q=70" alt="Conteúdo digital" loading="lazy">
-                <div class="conteudo-supremo">
-                    <span class="azul">02 // MÍDIAS DIGITAIS</span>
-                    <h3>Conteúdo &amp; Streaming</h3>
-                    <p>Formatos nativos para plataformas digitais que capturam a atenção em segundos.</p>
-                </div>
-            </div>
-
-            <div class="bloco-supremo reveal">
-                <div class="tag-exclusiva roxo">Experiência</div>
-                <div class="filtro-neon roxo"></div>
-                <img src="https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=900&q=70" alt="Estúdio musical" loading="lazy">
-                <div class="conteudo-supremo">
-                    <span class="roxo">03 // PRODUÇÃO MUSICAL</span>
-                    <h3>Trilhas &amp; Sound Design</h3>
-                    <p>Atmosferas sonoras que transformam emoção em experiência sensorial completa.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ===== VITRINE DE AMOSTRAS (5 VÍDEOS) ===== -->
-    <section class="container" id="amostras">
-        <h2 class="reveal">Amostras Exclusivas</h2>
-        <p class="subtitulo-unico reveal">Cinco emoções. Cinco fragmentos do nosso universo. Cada amostra: 10 segundos de imersão total com áudio. Clique para a experiência cinematográfica completa.</p>
-
-        <div class="vitrine-amostas">
-            <div class="card-amostra reveal" data-video="videos/catarse.mp4" data-titulo="Catarse — A Liberação">
-                <span class="duracao-badge">0:10 ● REC</span>
-                <video src="videos/catarse.mp4" muted loop playsinline preload="metadata"></video>
-                <div class="play-overlay">
-                    <div class="icone-play">▶</div>
-                    <div class="titulo-amostra">Catarse — A Liberação</div>
-                </div>
-            </div>
-
-            <div class="card-amostra reveal" data-video="videos/curiosidade.mp4" data-titulo="Curiosidade — O Chamado">
-                <span class="duracao-badge">0:10 ● REC</span>
-                <video src="videos/curiosidade.mp4" muted loop playsinline preload="metadata"></video>
-                <div class="play-overlay">
-                    <div class="icone-play">▶</div>
-                    <div class="titulo-amostra">Curiosidade — O Chamado</div>
-                </div>
-            </div>
-
-            <div class="card-amostra reveal" data-video="videos/felicidade.mp4" data-titulo="Felicidade — O Êxtase">
-                <span class="duracao-badge">0:10 ● REC</span>
-                <video src="videos/felicidade.mp4" muted loop playsinline preload="metadata"></video>
-                <div class="play-overlay">
-                    <div class="icone-play">▶</div>
-                    <div class="titulo-amostra">Felicidade — O Êxtase</div>
-                </div>
-            </div>
-
-            <div class="card-amostra reveal" data-video="videos/perda.mp4" data-titulo="Perda — O Vazio">
-                <span class="duracao-badge">0:10 ● REC</span>
-                <video src="videos/perda.mp4" muted loop playsinline preload="metadata"></video>
-                <div class="play-overlay">
-                    <div class="icone-play">▶</div>
-                    <div class="titulo-amostra">Perda — O Vazio</div>
-                </div>
-            </div>
-
-            <div class="card-amostra reveal" data-video="videos/tristeza.mp4" data-titulo="Tristeza — O Abismo">
-                <span class="duracao-badge">0:10 ● REC</span>
-                <video src="videos/tristeza.mp4" muted loop playsinline preload="metadata"></video>
-                <div class="play-overlay">
-                    <div class="icone-play">▶</div>
-                    <div class="titulo-amostra">Tristeza — O Abismo</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ===== FOOTER / CONTATO ===== -->
-    <footer id="contato">
-        <div class="logo-rodape-container">
-            <img src="logo_topo.png" alt="Apolinário Studio" onerror="this.style.display='none';">
-        </div>
-        <p class="footer-texto">Pronto para criar algo que o mundo nunca viu? Fale diretamente com nossa equipe.</p>
-        <div class="footer-wrap">
-            <a class="btn-whatsapp" href="https://wa.me/5511987422647?text=Ol%C3%A1!%20Vim%20pelo%20site%20do%20Apolin%C3%A1rio%20Studio" target="_blank" rel="noopener noreferrer">
-                <span class="icon" aria-hidden="true">💬</span>
-                <span class="text-btn">
-                    <small>WhatsApp 01</small>
-                    <strong>(11) 98742-2647</strong>
-                </span>
-            </a>
-            <a class="btn-whatsapp" href="https://wa.me/5515998064681?text=Ol%C3%A1!%20Vim%20pelo%20site%20do%20Apolin%C3%A1rio%20Studio" target="_blank" rel="noopener noreferrer">
-                <span class="icon" aria-hidden="true">💬</span>
-                <span class="text-btn">
-                    <small>WhatsApp 02</small>
-                    <strong>(15) 99806-4681</strong>
-                </span>
-            </a>
-        </div>
-        <p class="copyright">© 2026 Apolinário Studio — Todos os direitos reservados.</p>
-    </footer>
-
-    <!-- ===== MODAL PLAYER CINEMÁTICO ===== -->
-    <div class="modal-cinema" id="modalCinema" role="dialog" aria-modal="true" aria-label="Player de vídeo">
-        <div class="palco-cinema" id="palcoCinema">
-            <button class="fechar-cinema" id="fecharCinema" aria-label="Fechar player">✕</button>
-            <div class="palco-inner">
-                <video id="videoModal" playsinline preload="auto"></video>
-                <div class="indicador-rec"><span class="ponto-rec"></span> SYS_NEXUS // PLAYING</div>
-
-                <div class="countdown-cinema" id="countdownCinema">
-                    <div class="circulo-guia"></div>
-                    <div class="numero" id="numeroCountdown">3</div>
-                </div>
-
-                <div class="controles-cinema">
-                    <div class="barra-progresso" id="barraProgresso">
-                        <div class="barra-preenchida" id="barraPreenchida"></div>
-                    </div>
-                    <div class="linha-controles">
-                        <button class="btn-ctrl" id="btnPlayPause" aria-label="Play/Pause">▶</button>
-                        <div class="grupo-volume" id="grupoVolume">
-                            <button class="btn-ctrl" id="btnMute" aria-label="Mudo">🔇</button>
-                            <input type="range" class="slider-volume" id="sliderVolume" min="0" max="1" step="0.01" value="0.8" aria-label="Volume">
-                        </div>
-                        <span class="tempo-player" id="tempoPlayer">0:00 / 0:10</span>
-                        <span class="titulo-player" id="tituloPlayer"></span>
-                        <button class="btn-ctrl" id="btnFullscreen" aria-label="Tela cheia">⛶</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== BOTÃO GLOBAL ATIVAR SOM ===== -->
-    <button class="btn-som-global" id="btnSomGlobal" aria-label="Ativar som do site">
-        <span class="ondas"><i></i><i></i><i></i><i></i></span>
-        <span id="textoSomGlobal">Ativar Som</span>
-    </button>
-
-    <script>
-    // ================================================
-    // 🎬 APOLINÁRIO STUDIO — SCRIPT COMPLETO
-    // ================================================
-
-    // ----- EFEITO DE DIGITAÇÃO -----
-    const palavras = ["Entretenimento.", "Cinema.", "Produções.", "Narrativas.", "Emoção."];
-    const alvo = document.getElementById("textoDigitado");
-    let iPalavra = 0, iLetra = 0, apagando = false;
-    function digitar() {
-        const palavra = palavras[iPalavra];
-        iLetra += apagando ? -1 : 1;
-        alvo.textContent = palavra.substring(0, iLetra);
-        let delay = apagando ? 50 : 110;
-        if (!apagando && iLetra === palavra.length) { apagando = true; delay = 1800; }
-        else if (apagando && iLetra === 0) { apagando = false; iPalavra = (iPalavra + 1) % palavras.length; delay = 400; }
-        setTimeout(digitar, delay);
-    }
-    digitar();
-
-    // ----- MENU MOBILE -----
-    const toggle = document.getElementById("menuToggle");
-    const navLinks = document.getElementById("navLinks");
-    toggle.addEventListener("click", () => {
-        const aberto = navLinks.classList.toggle("aberto");
-        toggle.classList.toggle("ativo", aberto);
-        toggle.setAttribute("aria-expanded", aberto);
-    });
-    navLinks.querySelectorAll("a").forEach(a =>
-        a.addEventListener("click", () => {
-            navLinks.classList.remove("aberto");
-            toggle.classList.remove("ativo");
-            toggle.setAttribute("aria-expanded", "false");
-        })
-    );
-
-    // ----- REVELAR AO SCROLL -----
-    const observador = new IntersectionObserver(entradas => {
-        entradas.forEach(e => {
-            if (e.isIntersecting) { e.target.classList.add("visivel"); observador.unobserve(e.target); }
-        });
-    }, { threshold: 0.15 });
-    document.querySelectorAll(".reveal").forEach(el => observador.observe(el));
-
-    // ================================================
-    // 🎥 PLAYER CINEMATOGRÁFICO
-    // ================================================
-    const modal        = document.getElementById("modalCinema");
-    const palco        = document.getElementById("palcoCinema");
-    const palcoInner   = palco.querySelector(".palco-inner");
-    const videoModal   = document.getElementById("videoModal");
-    const countdown    = document.getElementById("countdownCinema");
-    const numeroCD     = document.getElementById("numeroCountdown");
-    const btnPlay      = document.getElementById("btnPlayPause");
-    const btnMute      = document.getElementById("btnMute");
-    const sliderVol    = document.getElementById("sliderVolume");
-    const barra        = document.getElementById("barraProgresso");
-    const preenchida   = document.getElementById("barraPreenchida");
-    const tempoPlayer  = document.getElementById("tempoPlayer");
-    const tituloPlayer = document.getElementById("tituloPlayer");
-    const btnFull      = document.getElementById("btnFullscreen");
-    const btnFechar    = document.getElementById("fecharCinema");
-    const btnSomGlobal = document.getElementById("btnSomGlobal");
-    const textoSom     = document.getElementById("textoSomGlobal");
-    const heroVideo    = document.getElementById("player-emocional");
-
-    let somGlobalAtivo = false;
-    let indiceAtual = 0;
-    let timerCountdown = null;
-    const cards = [...document.querySelectorAll(".card-amostra")];
-
-    const fmt = s => `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`;
-
-    // ----- CARDS: preview no hover + clique abre player -----
-    cards.forEach((card, idx) => {
-        const v = card.querySelector("video");
-        card.addEventListener("mouseenter", () => { if (window.innerWidth > 768) v.play().catch(()=>{}); });
-        card.addEventListener("mouseleave", () => { v.pause(); v.currentTime = 0; });
-        card.addEventListener("click", () => abrirPlayer(card.dataset.video, card.dataset.titulo, idx));
-    });
-
-    function abrirPlayer(src, titulo, indice) {
-        indiceAtual = indice;
-        tituloPlayer.textContent = titulo;
-        modal.classList.add("aberto");
-        document.body.style.overflow = "hidden";
-        heroVideo.pause();
-        videoModal.src = src;
-        videoModal.volume = sliderVol.value;
-        videoModal.muted = !somGlobalAtivo;
-        atualizarIconeVolume();
-
-        // COUNTDOWN 3-2-1
-        if (timerCountdown) clearInterval(timerCountdown);
-        countdown.classList.remove("oculto");
-        let n = 3;
-        numeroCD.textContent = n;
-        timerCountdown = setInterval(() => {
-            n--;
-            if (n > 0) { numeroCD.textContent = n; }
-            else {
-                clearInterval(timerCountdown);
-                countdown.classList.add("oculto");
-                videoModal.play().catch(()=>{});
-            }
-        }, 800);
-    }
-
-    function fecharPlayer() {
-        if (timerCountdown) clearInterval(timerCountdown);
-        videoModal.pause();
-        videoModal.removeAttribute("src");
-        videoModal.load();
-        modal.classList.remove("aberto");
-        palco.classList.remove("tocando", "pausado");
-        document.body.style.overflow = "";
-        heroVideo.play().catch(()=>{});
-    }
-
-    // ----- PLAY / PAUSE -----
-    function alternarPlay() {
-        if (countdown && !countdown.classList.contains("oculto")) return;
-        if (videoModal.paused) videoModal.play().catch(()=>{}); else videoModal.pause();
-    }
-    btnPlay.addEventListener("click", alternarPlay);
-    videoModal.addEventListener("click", alternarPlay);
-    videoModal.addEventListener("play",  () => { btnPlay.textContent = "⏸"; palco.classList.add("tocando"); palco.classList.remove("pausado"); });
-    videoModal.addEventListener("pause", () => { btnPlay.textContent = "▶"; palco.classList.remove("tocando"); palco.classList.add("pausado"); });
-
-    // ----- MODO BINGE: terminou, toca o próximo -----
-    videoModal.addEventListener("ended", () => {
-        const proximo = (indiceAtual + 1) % cards.length;
-        abrirPlayer(cards[proximo].dataset.video, cards[proximo].dataset.titulo, proximo);
-    });
-
-    // ----- PROGRESSO -----
-    videoModal.addEventListener("timeupdate", () => {
-        const dur = videoModal.duration || 10;
-        preenchida.style.width = ((videoModal.currentTime / dur) * 100) + "%";
-        tempoPlayer.textContent = `${fmt(videoModal.currentTime)} / ${fmt(dur)}`;
-    });
-    barra.addEventListener("click", e => {
-        const rect = barra.getBoundingClientRect();
-        videoModal.currentTime = ((e.clientX - rect.left) / rect.width) * (videoModal.duration || 10);
-    });
-
-    // ----- VOLUME -----
-    function atualizarIconeVolume() {
-        btnMute.textContent = (videoModal.muted || videoModal.volume === 0) ? "🔇" : (videoModal.volume < 0.5 ? "🔉" : "🔊");
-    }
-    function ativarSomGlobal() {
-        somGlobalAtivo = true;
-        btnSomGlobal.classList.add("som-ativo");
-        textoSom.textContent = "Som Ativo";
-        videoModal.muted = false;
-        heroVideo.muted = false;
-        atualizarIconeVolume();
-    }
-    btnMute.addEventListener("click", () => {
-        videoModal.muted = !videoModal.muted;
-        if (!videoModal.muted && !somGlobalAtivo) ativarSomGlobal();
-        atualizarIconeVolume();
-    });
-    sliderVol.addEventListener("input", () => {
-        videoModal.volume = sliderVol.value;
-        videoModal.muted = sliderVol.value == 0;
-        if (sliderVol.value > 0 && !somGlobalAtivo) ativarSomGlobal();
-        atualizarIconeVolume();
-    });
-
-    // ----- BOTÃO GLOBAL DE SOM -----
-    btnSomGlobal.addEventListener("click", () => {
-        if (somGlobalAtivo) {
-            somGlobalAtivo = false;
-            btnSomGlobal.classList.remove("som-ativo");
-            textoSom.textContent = "Ativar Som";
-            videoModal.muted = true;
-            heroVideo.muted = true;
-        } else {
-            ativarSomGlobal();
-        }
-        atualizarIconeVolume();
-    });
-
-    // ----- FULLSCREEN -----
-    btnFull.addEventListener("click", () => {
-        if (!document.fullscreenElement) (palcoInner.requestFullscreen || palcoInner.webkitRequestFullscreen)?.call(palcoInner);
-        else document.exitFullscreen?.();
-    });
-
-    // ----- FECHAR -----
-    btnFechar.addEventListener("click", fecharPlayer);
-    modal.addEventListener("click", e => { if (e.target === modal) fecharPlayer(); });
-
-    // ----- ATALHOS DE TECLADO -----
-    document.addEventListener("keydown", e => {
-        if (!modal.classList.contains("aberto")) return;
-        switch (e.key) {
-            case "Escape":     fecharPlayer(); break;
-            case " ":          e.preventDefault(); alternarPlay(); break;
-            case "ArrowRight": videoModal.currentTime = Math.min(videoModal.duration || 10, videoModal.currentTime + 2); break;
-            case "ArrowLeft":  videoModal.currentTime = Math.max(0, videoModal.currentTime - 2); break;
-            case "m": case "M": btnMute.click(); break;
-            case "f": case "F": btnFull.click(); break;
-            case "ArrowUp":    e.preventDefault(); sliderVol.value = Math.min(1, +sliderVol.value + 0.1); sliderVol.dispatchEvent(new Event("input")); break;
-            case "ArrowDown":  e.preventDefault(); sliderVol.value = Math.max(0, +sliderVol.value - 0.1); sliderVol.dispatchEvent(new Event("input")); break;
-        }
-    });
-
-    // ================================================
-    // 🎞️ HERO ROTATIVO (os 5 vídeos viram fundo)
-    // ================================================
-    const fontesHero = [
-        "videos/catarse.mp4",
-        "videos/curiosidade.mp4",
-        "videos/felicidade.mp4",
-        "videos/perda.mp4",
-        "videos/tristeza.mp4"
-    ];
-    let heroAtual = 0;
-
-    // Cria os marcadores de capítulo
-    const heroSec = document.getElementById("inicio");
-    const navCaps = document.createElement("div");
-    navCaps.className = "capitulos-hero";
-    fontesHero.forEach((_, i) => {
-        const b = document.createElement("button");
-        b.className = "cap-hero" + (i === 0 ? " ativo" : "");
-        b.setAttribute("aria-label", `Amostra ${i+1}`);
-        b.addEventListener("click", () => trocarHero(i, true));
-        navCaps.appendChild(b);
-    });
-    heroSec.appendChild(navCaps);
-
-    function trocarHero(i, manual = false) {
-        heroAtual = i;
-        heroVideo.style.opacity = 0;
-        setTimeout(() => {
-            heroVideo.src = fontesHero[i];
-            heroVideo.muted = !somGlobalAtivo;
-            heroVideo.play().catch(()=>{});
-            heroVideo.style.opacity = 1;
-        }, manual ? 200 : 600);
-        document.querySelectorAll(".cap-hero").forEach((c, idx) => {
-            c.classList.remove("ativo");
-            if (idx === i) { void c.offsetWidth; c.classList.add("ativo"); }
-        });
-    }
-
-    // Troca automática a cada 10s
-    setInterval(() => {
-        if (document.visibilityState === "visible" && !modal.classList.contains("aberto") && !heroVideo.paused) {
-            trocarHero((heroAtual + 1) % fontesHero.length);
-        }
-    }, 10000);
-
-    // Garante o play do hero
-    heroVideo.play().catch(() => {});
-    </script>
-</body>
-</html>
+            <img src="logo_topo.png" alt="
