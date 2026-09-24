@@ -48,7 +48,6 @@
             gap: 25px; transition: opacity 0.9s ease, visibility 0.9s;
             animation: preAutoHide 0.8s ease 7s forwards;
         }
-        /* SISTEMA ANTI-TRAVA: mesmo sem JavaScript, some sozinho em 7s */
         @keyframes preAutoHide { to { opacity: 0; visibility: hidden; pointer-events: none; } }
         #preloader.oculto { opacity: 0; visibility: hidden; pointer-events: none; }
         .pre-nome {
@@ -316,6 +315,23 @@
             font-family: monospace; letter-spacing: 1px; color: var(--vermelho);
         }
 
+        /* ===== BOTÃO DE SOM INDIVIDUAL DO CARD (NOVO - controle individual) ===== */
+        .btn-som-card {
+            position: absolute; bottom: 12px; right: 12px; z-index: 4;
+            width: 40px; height: 40px; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            color: #fff; font-size: 16px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.25s;
+        }
+        .btn-som-card:hover { border-color: var(--vermelho); transform: scale(1.12); }
+        .btn-som-card.ligado {
+            border-color: var(--vermelho); background: rgba(229,9,20,0.3);
+            box-shadow: 0 0 18px rgba(229,9,20,0.7);
+        }
+        @media (hover: none) { .btn-som-card { width: 46px; height: 46px; font-size: 18px; } }
+
         /* ===== MODAL PLAYER ===== */
         .modal-cinema { position: fixed; inset: 0; z-index: 2000; display: none; background: rgba(0,0,0,0.97); justify-content: center; align-items: center; }
         .modal-cinema.aberto { display: flex; animation: fadeInModal 0.4s ease; }
@@ -519,7 +535,7 @@
         <div class="pre-contador" id="preContador">000%</div>
     </div>
 
-    <!-- SCRIPT DO PRELOADER (isolado no topo: mesmo que o resto falhe, ele funciona) -->
+    <!-- SCRIPT DO PRELOADER (isolado: funciona mesmo se o resto falhar) -->
     <script>
     (function () {
         var preloader   = document.getElementById("preloader");
@@ -547,11 +563,10 @@
             setTimeout(function () {
                 preloader.classList.add("oculto");
                 var hv = document.getElementById("player-emocional");
-                if (hv) hv.play().catch(function(){});
+                if (hv) { var p = hv.play(); if (p && p.catch) p.catch(function(){}); }
             }, 700);
         }
 
-        // Trava de segurança dupla
         setTimeout(finalizar, 5000);
         window.addEventListener("load", function () { setTimeout(finalizar, 2200); });
     })();
@@ -589,9 +604,12 @@
         </div>
     </nav>
 
-    <!-- ===== HERO ===== -->
+    <!-- ===== HERO (autoplay muted garantido por ATRIBUTOS no HTML) ===== -->
     <section class="hero" id="inicio">
-        <video class="video-background" autoplay loop muted playsinline preload="metadata" id="player-emocional" aria-hidden="true" disablepictureinpicture>
+        <video class="video-background" id="player-emocional"
+               autoplay muted loop playsinline webkit-playsinline
+               preload="metadata" disablepictureinpicture disableRemotePlayback
+               aria-hidden="true">
             <source src="catarse.mp4" type="video/mp4">
         </video>
         <div class="overlay"></div>
@@ -671,7 +689,7 @@
         </div>
     </section>
 
-    <!-- ===== VITRINE DE AMOSTRAS ===== -->
+    <!-- ===== VITRINE DE AMOSTRAS (cards com autoplay muted + botão de som individual) ===== -->
     <section class="container" id="amostras">
         <h2 class="reveal">Amostras Exclusivas</h2>
         <p class="subtitulo-unico reveal">Cinco emoções. Cinco fragmentos do nosso universo. Cada amostra: 10 segundos de imersão total com áudio. Clique para a experiência cinematográfica completa.</p>
@@ -679,47 +697,52 @@
         <div class="vitrine-amostas">
             <div class="card-amostra reveal" data-video="catarse.mp4" data-titulo="Catarse — A Liberação">
                 <span class="duracao-badge">0:10 ● REC</span>
-                <video src="catarse.mp4" muted loop playsinline preload="metadata"></video>
+                <video src="catarse.mp4" muted loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>
                 <div class="play-overlay">
                     <div class="icone-play">▶</div>
                     <div class="titulo-amostra">Catarse — A Liberação</div>
                 </div>
+                <button class="btn-som-card" aria-label="Ativar som deste vídeo">🔇</button>
             </div>
 
             <div class="card-amostra reveal" data-video="curiosidade.mp4" data-titulo="Curiosidade — O Chamado">
                 <span class="duracao-badge">0:10 ● REC</span>
-                <video src="curiosidade.mp4" muted loop playsinline preload="metadata"></video>
+                <video src="curiosidade.mp4" muted loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>
                 <div class="play-overlay">
                     <div class="icone-play">▶</div>
                     <div class="titulo-amostra">Curiosidade — O Chamado</div>
                 </div>
+                <button class="btn-som-card" aria-label="Ativar som deste vídeo">🔇</button>
             </div>
 
             <div class="card-amostra reveal" data-video="felicidade.mp4" data-titulo="Felicidade — O Êxtase">
                 <span class="duracao-badge">0:10 ● REC</span>
-                <video src="felicidade.mp4" muted loop playsinline preload="metadata"></video>
+                <video src="felicidade.mp4" muted loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>
                 <div class="play-overlay">
                     <div class="icone-play">▶</div>
                     <div class="titulo-amostra">Felicidade — O Êxtase</div>
                 </div>
+                <button class="btn-som-card" aria-label="Ativar som deste vídeo">🔇</button>
             </div>
 
             <div class="card-amostra reveal" data-video="perda.mp4" data-titulo="Perda — O Vazio">
                 <span class="duracao-badge">0:10 ● REC</span>
-                <video src="perda.mp4" muted loop playsinline preload="metadata"></video>
+                <video src="perda.mp4" muted loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>
                 <div class="play-overlay">
                     <div class="icone-play">▶</div>
                     <div class="titulo-amostra">Perda — O Vazio</div>
                 </div>
+                <button class="btn-som-card" aria-label="Ativar som deste vídeo">🔇</button>
             </div>
 
             <div class="card-amostra reveal" data-video="tristeza.mp4" data-titulo="Tristeza — O Abismo">
                 <span class="duracao-badge">0:10 ● REC</span>
-                <video src="tristeza.mp4" muted loop playsinline preload="metadata"></video>
+                <video src="tristeza.mp4" muted loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>
                 <div class="play-overlay">
                     <div class="icone-play">▶</div>
                     <div class="titulo-amostra">Tristeza — O Abismo</div>
                 </div>
+                <button class="btn-som-card" aria-label="Ativar som deste vídeo">🔇</button>
             </div>
         </div>
     </section>
@@ -754,7 +777,7 @@
         <div class="palco-cinema" id="palcoCinema">
             <button class="fechar-cinema" id="fecharCinema" aria-label="Fechar player">✕</button>
             <div class="palco-inner">
-                <video id="videoModal" playsinline preload="auto"></video>
+                <video id="videoModal" muted playsinline webkit-playsinline preload="auto" disableRemotePlayback></video>
                 <div class="indicador-rec"><span class="ponto-rec"></span> SYS_NEXUS // PLAYING</div>
 
                 <div class="viz-player" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
@@ -791,8 +814,12 @@
 
     <script>
     // ================================================
-    // 🎬 APOLINÁRIO STUDIO — SISTEMA PRINCIPAL v4.0
+    // 🎬 APOLINÁRIO STUDIO — v4.1
+    // Correção EXCLUSIVA do sistema de reprodução
     // ================================================
+
+    // ----- PRELOADER: referências usadas pelo script principal -----
+    // (o contador roda no script isolado do topo; aqui só complementos)
 
     // ----- CURSOR CINEMATOGRÁFICO -----
     var cursorDot  = document.getElementById("cursorDot");
@@ -841,7 +868,6 @@
     // ----- PARALLAX DO HERO -----
     var revelacaoLenta = document.getElementById("revelacaoLenta");
     var heroSec = document.getElementById("inicio");
-    var heroVideo = document.getElementById("player-emocional");
     if (window.matchMedia("(hover: hover)").matches) {
         heroSec.addEventListener("mousemove", function (e) {
             var x = (e.clientX / window.innerWidth - 0.5) * 18;
@@ -901,54 +927,158 @@
     }, { threshold: 0.15 });
     document.querySelectorAll(".reveal").forEach(function (el) { observador.observe(el); });
 
-    // ================================================
-    // 🎥 PLAYER CINEMATOGRÁFICO
-    // ================================================
-    var modal        = document.getElementById("modalCinema");
-    var palco        = document.getElementById("palcoCinema");
-    var palcoInner   = palco.querySelector(".palco-inner");
-    var videoModal   = document.getElementById("videoModal");
-    var countdown    = document.getElementById("countdownCinema");
-    var numeroCD     = document.getElementById("numeroCountdown");
-    var btnPlay      = document.getElementById("btnPlayPause");
-    var btnMute      = document.getElementById("btnMute");
-    var sliderVol    = document.getElementById("sliderVolume");
-    var barra        = document.getElementById("barraProgresso");
-    var preenchida   = document.getElementById("barraPreenchida");
+    // ================================================================
+    // 🎥 NOVO SISTEMA DE REPRODUÇÃO v4.1
+    // Regras: autoplay muted | 1 áudio por vez | pausa dos demais
+    // ================================================================
+    var heroVideo  = document.getElementById("player-emocional");
+    var videoModal = document.getElementById("videoModal");
+    var modal      = document.getElementById("modalCinema");
+    var palco      = document.getElementById("palcoCinema");
+    var palcoInner = palco.querySelector(".palco-inner");
+    var countdown  = document.getElementById("countdownCinema");
+    var numeroCD   = document.getElementById("numeroCountdown");
+    var btnPlay    = document.getElementById("btnPlayPause");
+    var btnMute    = document.getElementById("btnMute");
+    var sliderVol  = document.getElementById("sliderVolume");
+    var barra      = document.getElementById("barraProgresso");
+    var preenchida = document.getElementById("barraPreenchida");
     var tempoPlayer  = document.getElementById("tempoPlayer");
     var tituloPlayer = document.getElementById("tituloPlayer");
-    var btnFull      = document.getElementById("btnFullscreen");
-    var btnFechar    = document.getElementById("fecharCinema");
+    var btnFull    = document.getElementById("btnFullscreen");
+    var btnFechar  = document.getElementById("fecharCinema");
     var btnSomGlobal = document.getElementById("btnSomGlobal");
-    var textoSom     = document.getElementById("textoSomGlobal");
+    var textoSom   = document.getElementById("textoSomGlobal");
 
-    var somGlobalAtivo = false;
-    var indiceAtual = 0;
-    var timerCountdown = null;
     var cards = Array.prototype.slice.call(document.querySelectorAll(".card-amostra"));
+    var cardVideos = cards.map(function (c) { return c.querySelector("video"); });
+    var todosVideos = [heroVideo].concat(cardVideos, [videoModal]);
+
+    var comSomAtual = null;      // único vídeo com áudio liberado
+    var modalAberto = false;
+    var cardsVisiveis = [];
+    var timerCountdown = null;
+    var indiceAtual = 0;
 
     function fmt(s) {
         return Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0");
     }
 
-    cards.forEach(function (card, idx) {
-        var v = card.querySelector("video");
-        card.addEventListener("mouseenter", function () { if (window.innerWidth > 768) v.play().catch(function(){}); });
-        card.addEventListener("mouseleave", function () { v.pause(); v.currentTime = 0; });
-        card.addEventListener("click", function () { abrirPlayer(card.dataset.video, card.dataset.titulo, idx); });
+    // Play à prova de falhas (iOS/Android): se bloquear, tenta de novo no "canplay"
+    function playSeguro(v) {
+        if (!v) return;
+        var p = v.play();
+        if (p && p.catch) {
+            p.catch(function () {
+                v.addEventListener("canplay", function retry() {
+                    var p2 = v.play();
+                    if (p2 && p2.catch) p2.catch(function () {});
+                    v.removeEventListener("canplay", retry);
+                });
+            });
+        }
+    }
+
+    // ----- GERENCIADOR CENTRAL DE ÁUDIO: só UM vídeo com som -----
+    function darSomPara(v) {
+        comSomAtual = v;
+        todosVideos.forEach(function (x) { x.muted = (x !== v); });
+        sincronizarUI();
+    }
+    function silenciarTudo() {
+        comSomAtual = null;
+        todosVideos.forEach(function (x) { x.muted = true; });
+        sincronizarUI();
+    }
+
+    // ----- PAUSA/PLAY DOS CARDS CONFORME VISIBILIDADE -----
+    function syncCards() {
+        cards.forEach(function (c, i) {
+            var v = cardVideos[i];
+            var visivel = cardsVisiveis.indexOf(v) !== -1;
+            if (modalAberto || document.hidden || !visivel) {
+                v.pause();                       // pausa o áudio/vídeo dos demais
+            } else {
+                playSeguro(v);                   // autoplay muted ao entrar na tela
+            }
+        });
+    }
+
+    var obsCards = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (e) {
+            var v = e.target.querySelector("video");
+            var idx = cardsVisiveis.indexOf(v);
+            if (e.isIntersecting && idx === -1) cardsVisiveis.push(v);
+            if (!e.isIntersecting && idx !== -1) cardsVisiveis.splice(idx, 1);
+        });
+        syncCards();
+    }, { threshold: 0.35 });
+    cards.forEach(function (c) { obsCards.observe(c); });
+
+    // ----- SINCRONIZA TODOS OS BOTÕES/ÍCONES DE SOM -----
+    function sincronizarUI() {
+        if (comSomAtual) {
+            btnSomGlobal.classList.add("som-ativo");
+            textoSom.textContent = "Som Ativo";
+        } else {
+            btnSomGlobal.classList.remove("som-ativo");
+            textoSom.textContent = "Ativar Som";
+        }
+        cards.forEach(function (c, i) {
+            var b = c.querySelector(".btn-som-card");
+            var v = cardVideos[i];
+            if (!b) return;
+            b.textContent = v.muted ? "🔇" : "🔊";
+            b.classList.toggle("ligado", !v.muted);
+            b.setAttribute("aria-label", v.muted ? "Ativar som deste vídeo" : "Silenciar este vídeo");
+        });
+        btnMute.textContent = (videoModal.muted || videoModal.volume === 0) ? "🔇" : (videoModal.volume < 0.5 ? "🔉" : "🔊");
+        palco.classList.toggle("som-on", !videoModal.muted && videoModal.volume > 0);
+    }
+
+    // ----- BOTÃO DE SOM INDIVIDUAL DE CADA CARD -----
+    cards.forEach(function (c, i) {
+        var b = c.querySelector(".btn-som-card");
+        var v = cardVideos[i];
+        if (!b) return;
+        b.addEventListener("click", function (e) {
+            e.stopPropagation();               // não abre o modal
+            if (v.muted) {
+                darSomPara(v);                 // muta TODOS os outros na hora
+                playSeguro(v);
+            } else {
+                v.muted = true;
+                if (comSomAtual === v) comSomAtual = null;
+                sincronizarUI();
+            }
+        });
+        c.addEventListener("click", function () {
+            abrirPlayer(c.dataset.video, c.dataset.titulo, i);
+        });
     });
 
+    // ----- PLAYER MODAL -----
     function abrirPlayer(src, titulo, indice) {
         indiceAtual = indice;
         tituloPlayer.textContent = titulo;
+        modalAberto = true;
         modal.classList.add("aberto");
         document.body.style.overflow = "hidden";
-        heroVideo.pause();
+
+        heroVideo.pause();                     // pausa o fundo
+        syncCards();                           // pausa todos os cards
+
         videoModal.src = src;
         videoModal.volume = sliderVol.value;
-        videoModal.muted = !somGlobalAtivo;
-        atualizarIconeVolume();
-        atualizarVizPlayer();
+
+        // Se o card clicado estava COM SOM, transfere o áudio para o player
+        if (comSomAtual === cardVideos[indice]) {
+            comSomAtual = videoModal;
+            todosVideos.forEach(function (x) { x.muted = (x !== videoModal); });
+        } else {
+            videoModal.muted = true;           // abre mudo (política mobile)
+        }
+        sincronizarUI();
 
         if (timerCountdown) clearInterval(timerCountdown);
         countdown.classList.remove("oculto");
@@ -960,7 +1090,7 @@
             else {
                 clearInterval(timerCountdown);
                 countdown.classList.add("oculto");
-                videoModal.play().catch(function(){});
+                playSeguro(videoModal);
             }
         }, 800);
     }
@@ -970,21 +1100,31 @@
         videoModal.pause();
         videoModal.removeAttribute("src");
         videoModal.load();
+        modalAberto = false;
         modal.classList.remove("aberto");
         palco.classList.remove("tocando", "pausado");
         document.body.style.overflow = "";
-        heroVideo.play().catch(function(){});
+
+        // O áudio volta para o vídeo de fundo, se havia som ativo no player
+        if (comSomAtual === videoModal) comSomAtual = heroVideo;
+        videoModal.muted = true;
+        todosVideos.forEach(function (x) { x.muted = (x === comSomAtual); });
+
+        playSeguro(heroVideo);
+        syncCards();
+        sincronizarUI();
     }
 
     function alternarPlay() {
         if (countdown && !countdown.classList.contains("oculto")) return;
-        if (videoModal.paused) videoModal.play().catch(function(){}); else videoModal.pause();
+        if (videoModal.paused) playSeguro(videoModal); else videoModal.pause();
     }
     btnPlay.addEventListener("click", alternarPlay);
     videoModal.addEventListener("click", alternarPlay);
     videoModal.addEventListener("play",  function () { btnPlay.textContent = "⏸"; palco.classList.add("tocando"); palco.classList.remove("pausado"); });
     videoModal.addEventListener("pause", function () { btnPlay.textContent = "▶"; palco.classList.remove("tocando"); palco.classList.add("pausado"); });
 
+    // Modo binge: terminou, toca o próximo
     videoModal.addEventListener("ended", function () {
         var proximo = (indiceAtual + 1) % cards.length;
         abrirPlayer(cards[proximo].dataset.video, cards[proximo].dataset.titulo, proximo);
@@ -1000,49 +1140,39 @@
         videoModal.currentTime = ((e.clientX - rect.left) / rect.width) * (videoModal.duration || 10);
     });
 
-    function atualizarIconeVolume() {
-        btnMute.textContent = (videoModal.muted || videoModal.volume === 0) ? "🔇" : (videoModal.volume < 0.5 ? "🔉" : "🔊");
-    }
-    function atualizarVizPlayer() {
-        palco.classList.toggle("som-on", somGlobalAtivo && !videoModal.muted);
-    }
-    function ativarSomGlobal() {
-        somGlobalAtivo = true;
-        btnSomGlobal.classList.add("som-ativo");
-        textoSom.textContent = "Som Ativo";
-        videoModal.muted = false;
-        heroVideo.muted = false;
-        atualizarIconeVolume();
-        atualizarVizPlayer();
-    }
+    // ----- VOLUME DO PLAYER (também passa pelo gerenciador) -----
     btnMute.addEventListener("click", function () {
-        videoModal.muted = !videoModal.muted;
-        if (!videoModal.muted && !somGlobalAtivo) ativarSomGlobal();
-        atualizarIconeVolume();
-        atualizarVizPlayer();
+        if (videoModal.muted) { darSomPara(videoModal); }
+        else {
+            videoModal.muted = true;
+            if (comSomAtual === videoModal) comSomAtual = null;
+            sincronizarUI();
+        }
     });
     sliderVol.addEventListener("input", function () {
         videoModal.volume = sliderVol.value;
-        videoModal.muted = sliderVol.value == 0;
-        if (sliderVol.value > 0 && !somGlobalAtivo) ativarSomGlobal();
-        atualizarIconeVolume();
-        atualizarVizPlayer();
-    });
-
-    btnSomGlobal.addEventListener("click", function () {
-        if (somGlobalAtivo) {
-            somGlobalAtivo = false;
-            btnSomGlobal.classList.remove("som-ativo");
-            textoSom.textContent = "Ativar Som";
-            videoModal.muted = true;
-            heroVideo.muted = true;
+        if (sliderVol.value > 0) {
+            if (videoModal.muted) darSomPara(videoModal);
+            else sincronizarUI();
         } else {
-            ativarSomGlobal();
+            videoModal.muted = true;
+            if (comSomAtual === videoModal) comSomAtual = null;
+            sincronizarUI();
         }
-        atualizarIconeVolume();
-        atualizarVizPlayer();
     });
 
+    // ----- BOTÃO GLOBAL: som ambiente (hero) ou do player se aberto -----
+    btnSomGlobal.addEventListener("click", function () {
+        if (comSomAtual) {
+            silenciarTudo();
+        } else {
+            var v = modalAberto ? videoModal : heroVideo;
+            darSomPara(v);
+            playSeguro(v);
+        }
+    });
+
+    // ----- FULLSCREEN -----
     btnFull.addEventListener("click", function () {
         if (!document.fullscreenElement) {
             if (palcoInner.requestFullscreen) palcoInner.requestFullscreen();
@@ -1054,7 +1184,7 @@
     btnFechar.addEventListener("click", fecharPlayer);
     modal.addEventListener("click", function (e) { if (e.target === modal) fecharPlayer(); });
 
-    // ----- ATALHOS + EASTER EGG "APOLINARIO" -----
+    // ----- ATALHOS + EASTER EGG -----
     var glitchFlash = document.getElementById("glitchFlash");
     var sequencia = "";
     document.addEventListener("keydown", function (e) {
@@ -1070,7 +1200,6 @@
                 }, 2600);
             }
         }
-
         if (!modal.classList.contains("aberto")) return;
         switch (e.key) {
             case "Escape":     fecharPlayer(); break;
@@ -1084,9 +1213,7 @@
         }
     });
 
-    // ================================================
-    // 🎞️ HERO ROTATIVO (5 vídeos na RAIZ)
-    // ================================================
+    // ----- HERO ROTATIVO (mantém o estado de som correto ao trocar) -----
     var fontesHero = ["catarse.mp4", "curiosidade.mp4", "felicidade.mp4", "perda.mp4", "tristeza.mp4"];
     var heroAtual = 0;
 
@@ -1106,8 +1233,8 @@
         heroVideo.style.opacity = 0;
         setTimeout(function () {
             heroVideo.src = fontesHero[i];
-            heroVideo.muted = !somGlobalAtivo;
-            heroVideo.play().catch(function(){});
+            heroVideo.muted = (comSomAtual !== heroVideo);  // respeita o gerenciador
+            playSeguro(heroVideo);
             heroVideo.style.opacity = 1;
         }, manual ? 200 : 600);
         document.querySelectorAll(".cap-hero").forEach(function (c, idx) {
@@ -1117,12 +1244,35 @@
     }
 
     setInterval(function () {
-        if (document.visibilityState === "visible" && !modal.classList.contains("aberto") && !heroVideo.paused) {
+        if (document.visibilityState === "visible" && !modalAberto && !heroVideo.paused) {
             trocarHero((heroAtual + 1) % fontesHero.length, false);
         }
     }, 10000);
 
-    heroVideo.play().catch(function () {});
+    // ----- PAUSA TUDO QUANDO A ABA FICA OCULTA (bateria/dados) -----
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            heroVideo.pause();
+            cardVideos.forEach(function (v) { v.pause(); });
+        } else if (!modalAberto) {
+            playSeguro(heroVideo);
+            syncCards();
+        }
+    });
+
+    // ----- DESBLOQUEIO DE AUTOPLAY NO 1º TOQUE (iOS/Android) -----
+    function desbloquearAutoplay() {
+        playSeguro(heroVideo);
+        syncCards();
+    }
+    ["touchend", "click", "keydown"].forEach(function (ev) {
+        document.addEventListener(ev, desbloquearAutoplay, { once: true, passive: true });
+    });
+
+    // ----- INICIALIZAÇÃO -----
+    heroVideo.muted = true;   // garante mudo antes de qualquer play
+    playSeguro(heroVideo);
+    sincronizarUI();
     </script>
 </body>
 </html>
