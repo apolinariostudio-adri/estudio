@@ -63,7 +63,7 @@
         .pre-barra-fill { height: 100%; width: 0%; background: var(--vermelho); box-shadow: 0 0 10px var(--vermelho); transition: width 0.3s; }
         .pre-contador { font-family: monospace; font-size: 12px; color: var(--vermelho); letter-spacing: 3px; }
 
-        /* ===== NOVO v6.1: PORTA DE ENTRADA COM SOM ===== */
+        /* ===== PORTA DE ENTRADA COM SOM ===== */
         #gateSom {
             position: fixed; inset: 0; z-index: 99995; display: none;
             background: rgba(2,2,4,0.96); backdrop-filter: blur(10px);
@@ -556,9 +556,8 @@
 
     <div class="scroll-progress" id="scrollProgress"></div>
     <div class="glitch-flash" id="glitchFlash">⚠ SYS_NEXUS DESBLOQUEADO ⚠</div>
-    <div class="coordenada-secreta" aria-hidden="true">SYS_NEXUS_//_DATA_LOCKED</div>
+    <div class="coordenada-secreta" aria-hidden="true">SYS_NEXUS_//_v6.2</div>
 
-    <!-- ===== NOVO v6.1: PORTA DE ENTRADA COM SOM ===== -->
     <div id="gateSom" role="dialog" aria-modal="true" aria-label="Escolha de som">
         <div class="gate-caixa">
             <span class="portal-tag">SYS_NEXUS // PORTA DE ENTRADA</span>
@@ -574,7 +573,7 @@
 
     <div id="portalHumor" role="dialog" aria-modal="true" aria-label="Escolha seu humor">
         <div class="portal-caixa">
-            <span class="portal-tag">SYS_NEXUS // CURADORIA EMPÁTICA v6.1</span>
+            <span class="portal-tag">SYS_NEXUS // CURADORIA EMPÁTICA</span>
             <h2 class="portal-pergunta">Antes de entrar:<br>como você <b>sente</b> hoje?</h2>
             <p class="portal-sub">Este site não exibe conteúdo — ele responde emoções.<br>Sua escolha define por qual sentimento a experiência começa.</p>
             <div class="portal-opcoes">
@@ -808,13 +807,11 @@
 
     <script>
     // ================================================
-    // 🎬 APOLINÁRIO STUDIO — v6.1 "PORTA DE ENTRADA COM SOM"
+    // 🎬 APOLINÁRIO STUDIO — v6.2 (som: porta de entrada + memória permanente)
     // ================================================
 
     function getLS(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
     function setLS(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
-    function getSS(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
-    function setSS(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
 
     // ----- EMOÇÕES -----
     var EMOCOES = {
@@ -973,11 +970,11 @@
     var textoSom   = document.getElementById("textoSomGlobal");
     var toastAviso = document.getElementById("toastAviso");
     var vitrine    = document.getElementById("vitrineAmostas");
+    var gateSom    = document.getElementById("gateSom");
+    var portalHumor = document.getElementById("portalHumor");
 
     var BASE_VIDEOS = ["catarse.mp4", "curiosidade.mp4", "felicidade.mp4", "perda.mp4", "tristeza.mp4"];
     var fontesHero = BASE_VIDEOS.slice();
-    var portalHumor = document.getElementById("portalHumor");
-    var gateSom = document.getElementById("gateSom");
 
     function rotacionar(arr, n) { return arr.slice(n).concat(arr.slice(0, n)); }
     function aplicarHumor(idx) {
@@ -1005,8 +1002,10 @@
         portalHumor.classList.add("aberto");
     });
 
-    function maybePortalHumor() {
-        if (humorEscolhido === null) portalHumor.classList.add("aberto");
+    function talvezPortal() {
+        if (humorEscolhido === null && !portalHumor.classList.contains("aberto")) {
+            portalHumor.classList.add("aberto");
+        }
     }
 
     var cards = [], cardVideos = [], todosVideos = [];
@@ -1296,63 +1295,77 @@
     modal.addEventListener("click", function (e) { if (e.target === modal) fecharPlayer(); });
 
     // ================================================
-    // 🔊 v6.1 PORTA DE ENTRADA COM SOM
+    // 🔊 v6.2 — PORTA DE ENTRADA + MEMÓRIA PERMANENTE DO SOM
     // ================================================
-    var prefSom = getSS("apolinario_som_pref"); // 'som' | 'silencio' | null
+    var prefSom = getLS("apolinario_som_pref"); // 'som' | 'silencio' | null
+    var gateResolvido = false;
     var permitirAutoNoToque = false;
 
+    function guardarPrefSom(v) { setLS("apolinario_som_pref", v); prefSom = v; }
     function mostrarToast(el) {
         el.classList.add("visivel");
         setTimeout(function () { el.classList.remove("visivel"); }, 4000);
     }
-
     function fecharGateSom() { gateSom.classList.remove("aberto"); }
 
+    function tentarSomDireto() {
+        heroVideo.muted = false;
+        var p = heroVideo.play();
+        if (p && p.then) {
+            p.then(function () {
+                darSomPara(heroVideo);
+                mostrarToast(toastAviso);
+            }).catch(function () {
+                heroVideo.muted = true;
+                playSeguro(heroVideo);
+                permitirAutoNoToque = true;
+            });
+        } else {
+            permitirAutoNoToque = true;
+        }
+    }
+
     document.getElementById("gateBtnSom").addEventListener("click", function () {
-        setSS("apolinario_som_pref", "som");
+        guardarPrefSom("som");
+        gateResolvido = true;
         fecharGateSom();
         darSomPara(modalAberto ? videoModal : heroVideo);
         playSeguro(heroVideo);
         mostrarToast(toastAviso);
-        maybePortalHumor();
+        talvezPortal();
     });
     document.getElementById("gateBtnSil").addEventListener("click", function () {
-        setSS("apolinario_som_pref", "silencio");
+        guardarPrefSom("silencio");
+        gateResolvido = true;
         fecharGateSom();
-        maybePortalHumor();
+        talvezPortal();
     });
 
-    // Quando a abertura termina: decide o fluxo de som
+    function abrirGateSePrecisa() {
+        if (prefSom === null && !gateResolvido && !gateSom.classList.contains("aberto")) {
+            gateSom.classList.add("aberto");
+        }
+    }
+
     window.addEventListener("apolinarioPreFim", function () {
         if (prefSom === null) {
-            // Primeira vez nesta sessão: mostra a porta de entrada
-            setTimeout(function () { gateSom.classList.add("aberto"); }, 400);
+            abrirGateSePrecisa();               // mostra a porta IMEDIATAMENTE
+            setTimeout(abrirGateSePrecisa, 1500); // trava de segurança 1
+            setTimeout(abrirGateSePrecisa, 4000); // trava de segurança 2
         } else if (prefSom === "som") {
-            // Já escolheu som antes: tenta abrir direto com som (funciona se o navegador confiar no site)
-            heroVideo.muted = false;
-            var p = heroVideo.play();
-            var ok = false;
-            if (p && p.then) {
-                p.then(function () {
-                    ok = true;
-                    darSomPara(heroVideo);
-                    mostrarToast(toastAviso);
-                }).catch(function () {
-                    heroVideo.muted = true;
-                    playSeguro(heroVideo);
-                    permitirAutoNoToque = true; // liga no primeiro toque, sem perguntar
-                });
-            } else {
-                permitirAutoNoToque = true;
-            }
-            setTimeout(maybePortalHumor, 600);
+            tentarSomDireto();                   // já escolheu som antes: tenta abrir com som direto
+            setTimeout(talvezPortal, 600);
         } else {
-            // Escolheu silêncio: respeita
-            setTimeout(maybePortalHumor, 600);
+            setTimeout(talvezPortal, 600);       // escolheu silêncio: respeita
         }
     });
 
-    // Se o som ficou pendente (navegador bloqueou), liga no primeiro toque do usuário
+    // Trava de segurança 3 (independente do preloader)
+    window.addEventListener("load", function () {
+        setTimeout(abrirGateSePrecisa, 3500);
+    });
+
+    // Se o navegador bloqueou mesmo assim: som no primeiro toque, sem procurar botão
     ["touchend", "click", "keydown"].forEach(function (ev) {
         document.addEventListener(ev, function () {
             playSeguro(heroVideo);
@@ -1553,6 +1566,7 @@
     heroVideo.muted = true;
     setEmocao(nomeDeSrc(fontesHero[0]));
     if (humorEscolhido !== null) trocarHero(0, true);
+    if (prefSom === "som") tentarSomDireto(); // visitante recorrente que já escolheu som
     playSeguro(heroVideo);
     sincronizarUI();
     </script>
