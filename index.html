@@ -23,7 +23,7 @@
             overflow-x: hidden;
         }
 
-        /* ===== CURSOR CINEMATOGRÁFICO ===== */
+        /* ===== CURSOR ===== */
         @media (hover: hover) and (pointer: fine) {
             body, a, button, .card-amostra, .barra-progresso, input { cursor: none !important; }
         }
@@ -63,7 +63,7 @@
         .pre-barra-fill { height: 100%; width: 0%; background: var(--vermelho); box-shadow: 0 0 10px var(--vermelho); transition: width 0.3s; }
         .pre-contador { font-family: monospace; font-size: 12px; color: var(--vermelho); letter-spacing: 3px; }
 
-        /* ===== NOVO: PULSO EMOCIONAL DO SITE (respira na cor da emoção) ===== */
+        /* ===== PULSO EMOCIONAL ===== */
         .pulso-site {
             position: fixed; inset: 0; pointer-events: none; z-index: 3;
             box-shadow: inset 0 0 140px var(--vermelho);
@@ -72,22 +72,26 @@
         }
         @keyframes pulsoSite { from { opacity: 0.05; } to { opacity: 0.16; } }
 
+        #hudWrap { position: fixed; top: 70px; right: 20px; z-index: 90; text-align: right; pointer-events: none; }
         #hudEmocao {
-            position: fixed; top: 72px; right: 20px; z-index: 90;
-            font-family: monospace; font-size: 10px; letter-spacing: 3px;
-            color: var(--vermelho); text-transform: uppercase;
-            text-shadow: 0 0 12px var(--vermelho);
-            pointer-events: none; transition: color 0.6s;
+            display: block; font-family: monospace; font-size: 10px; letter-spacing: 3px;
+            color: var(--vermelho); text-shadow: 0 0 12px var(--vermelho);
+            text-transform: uppercase; transition: color 0.6s;
         }
+        #fraseEmocao {
+            display: block; margin-top: 6px; font-size: 11px; font-style: italic;
+            color: #777; max-width: 230px; margin-left: auto; opacity: 0; transition: opacity 0.9s;
+        }
+        #fraseEmocao.visivel { opacity: 1; }
 
-        /* ===== NOVO: ESPECTRO DE ÁUDIO REAL (canvas) ===== */
+        /* ===== ESPECTRO REAL ===== */
         #espectro {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 46px;
             z-index: 890; pointer-events: none; opacity: 0; transition: opacity 0.6s;
         }
         body.som-live #espectro { opacity: 0.9; }
 
-        /* ===== NOVO: LETTERBOX (MODO DIRETOR) ===== */
+        /* ===== LETTERBOX (MODO DIRETOR) ===== */
         .lb { position: fixed; left: 0; width: 100%; height: 0; background: #000; z-index: 950; pointer-events: none; transition: height 0.9s cubic-bezier(0.25,1,0.5,1); }
         .lb.top { top: 0; }
         .lb.bottom { bottom: 0; }
@@ -95,16 +99,19 @@
         body.modo-diretor .lb.top { border-bottom: 1px solid rgba(229,9,20,0.35); }
         body.modo-diretor .lb.bottom { border-top: 1px solid rgba(229,9,20,0.35); }
         body.modo-diretor::after { opacity: 0.12; }
-        #toastDiretor {
-            position: fixed; top: 12vh; left: 50%; transform: translateX(-50%) translateY(-20px);
-            z-index: 960; background: rgba(0,0,0,0.85); border: 1px solid var(--vermelho);
-            color: var(--vermelho); font-family: monospace; font-size: 12px; letter-spacing: 3px;
-            padding: 12px 26px; border-radius: 6px; opacity: 0; pointer-events: none;
-            transition: 0.5s; text-transform: uppercase; white-space: nowrap;
-        }
-        #toastDiretor.visivel { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        /* ===== NOVO: PORTAL DE HUMOR ===== */
+        /* ===== TOASTS FLUTUANTES ===== */
+        .toast-flutuante {
+            position: fixed; top: 12vh; left: 50%; transform: translateX(-50%) translateY(-20px);
+            z-index: 9960; background: rgba(0,0,0,0.88); border: 1px solid var(--vermelho);
+            color: #fff; font-family: monospace; font-size: 12px; letter-spacing: 2px;
+            padding: 12px 26px; border-radius: 6px; opacity: 0; pointer-events: none;
+            transition: 0.5s; text-transform: uppercase; max-width: 92vw;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .toast-flutuante.visivel { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* ===== PORTAL DE HUMOR ===== */
         #portalHumor {
             position: fixed; inset: 0; z-index: 99990; display: none;
             background: rgba(3,3,5,0.94); backdrop-filter: blur(14px);
@@ -120,17 +127,11 @@
         .portal-btn {
             background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.15);
             color: #fff; padding: 14px 26px; border-radius: 100px; cursor: pointer;
-            font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-            transition: 0.3s;
+            font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; transition: 0.3s;
         }
-        .portal-btn:hover { transform: translateY(-3px) scale(1.05); }
-        .portal-btn[data-humor="0"]:hover { border-color: #e50914; box-shadow: 0 0 25px rgba(229,9,20,0.5); color: #e50914; }
-        .portal-btn[data-humor="1"]:hover { border-color: #00e5ff; box-shadow: 0 0 25px rgba(0,229,255,0.5); color: #00e5ff; }
-        .portal-btn[data-humor="2"]:hover { border-color: #ffb300; box-shadow: 0 0 25px rgba(255,179,0,0.5); color: #ffb300; }
-        .portal-btn[data-humor="3"]:hover { border-color: #bb00ff; box-shadow: 0 0 25px rgba(187,0,255,0.5); color: #bb00ff; }
-        .portal-btn[data-humor="4"]:hover { border-color: #4d7cff; box-shadow: 0 0 25px rgba(77,124,255,0.5); color: #4d7cff; }
+        .portal-btn:hover { transform: translateY(-3px) scale(1.05); border-color: var(--vermelho); color: var(--vermelho); box-shadow: 0 0 25px rgba(229,9,20,0.4); }
 
-        /* ===== NOVO: CÁPSULA DO TEMPO ===== */
+        /* ===== CÁPSULA ===== */
         .capsula-sec { padding-top: 40px; }
         .capsula {
             position: relative; max-width: 760px; margin: 0 auto; text-align: center;
@@ -143,14 +144,11 @@
         .capsula-titulo { font-size: clamp(1.4rem, 3.5vw, 2.2rem); font-weight: 900; text-transform: uppercase; margin-bottom: 25px; }
         .capsula-texto { color: #bbb; line-height: 1.9; font-size: 15px; font-style: italic; transition: filter 1.2s ease; }
         .capsula-texto.selado { filter: blur(9px); user-select: none; pointer-events: none; }
-        .capsula-contagem {
-            margin: 30px 0 18px; font-family: monospace; font-size: clamp(1.1rem, 3vw, 1.7rem);
-            color: var(--vermelho); letter-spacing: 4px; text-shadow: 0 0 18px var(--vermelho);
-        }
+        .capsula-contagem { margin: 30px 0 18px; font-family: monospace; font-size: clamp(1.1rem, 3vw, 1.7rem); color: var(--vermelho); letter-spacing: 4px; text-shadow: 0 0 18px var(--vermelho); }
         .capsula-nota { font-size: 12px; color: #666; line-height: 1.8; }
         .capsula-nota b { color: #999; }
 
-        /* ===== BARRA DE PROGRESSO DE SCROLL ===== */
+        /* ===== SCROLL PROGRESS ===== */
         .scroll-progress {
             position: fixed; top: 0; left: 0; height: 3px; width: 0%;
             background: linear-gradient(to right, var(--vermelho), #ff5a3c);
@@ -170,7 +168,7 @@
             100% { transform: translate(2%,2%); }
         }
 
-        /* ===== GLITCH TOTAL (EASTER EGG) ===== */
+        /* ===== GLITCH ===== */
         body.glitch-total { animation: glitchBody 0.35s steps(2) 6; }
         @keyframes glitchBody {
             0%   { filter: none; transform: translate(0,0); }
@@ -206,10 +204,7 @@
         }
         .nav-links a:hover { color: var(--vermelho); }
 
-        .menu-toggle {
-            display: none; background: none; border: none; cursor: pointer;
-            width: 32px; height: 24px; position: relative; z-index: 102;
-        }
+        .menu-toggle { display: none; background: none; border: none; cursor: pointer; width: 32px; height: 24px; position: relative; z-index: 102; }
         .menu-toggle span { display: block; width: 100%; height: 2px; background: #fff; position: absolute; left: 0; transition: 0.3s; }
         .menu-toggle span:nth-child(1) { top: 0; }
         .menu-toggle span:nth-child(2) { top: 11px; }
@@ -229,8 +224,7 @@
             position: absolute; top: 50%; left: 50%;
             min-width: 100%; min-height: 100%;
             transform: translate(-50%, -50%);
-            object-fit: cover; z-index: 0;
-            transition: opacity 0.8s ease;
+            object-fit: cover; z-index: 0; transition: opacity 0.8s ease;
         }
         .overlay {
             position: absolute; inset: 0; z-index: 1; pointer-events: none;
@@ -245,7 +239,6 @@
             will-change: transform;
         }
         @keyframes revelar { to { opacity: 1; transform: translateY(0); } }
-
         .titulo-efeito {
             font-size: clamp(2rem, 5.5vw, 3.8rem);
             max-width: 800px; line-height: 1.1; margin-bottom: 20px;
@@ -255,7 +248,6 @@
         .texto-digitado { color: var(--vermelho); text-shadow: 0 0 15px rgba(229, 9, 20, 0.8); }
         .cursor-matrix { font-weight: 100; color: var(--vermelho); animation: piscar-cursor 0.7s infinite; }
         @keyframes piscar-cursor { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
-
         .hero-desc {
             font-size: clamp(1rem, 2vw, 1.2rem); color: #ccc;
             max-width: 600px; margin-bottom: 30px;
@@ -269,7 +261,6 @@
             box-shadow: 0 4px 20px rgba(229,9,20,0.4);
         }
         .hero-cta:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(229,9,20,0.6); }
-
         .capitulos-hero { position: absolute; bottom: 40px; left: 7%; z-index: 5; display: flex; gap: 12px; }
         .cap-hero {
             width: 60px; height: 3px; background: rgba(255,255,255,0.25);
@@ -288,10 +279,7 @@
             background: rgba(229,9,20,0.04); position: relative; z-index: 10;
         }
         .marquee-track { display: inline-block; animation: marquee 22s linear infinite; }
-        .marquee-track span {
-            font-size: clamp(1rem, 2.5vw, 1.5rem); font-weight: 900; text-transform: uppercase;
-            letter-spacing: 6px; color: rgba(255,255,255,0.85); margin: 0 30px;
-        }
+        .marquee-track span { font-size: clamp(1rem, 2.5vw, 1.5rem); font-weight: 900; text-transform: uppercase; letter-spacing: 6px; color: rgba(255,255,255,0.85); margin: 0 30px; }
         .marquee-track span i { color: var(--vermelho); font-style: normal; margin: 0 8px; text-shadow: 0 0 15px var(--vermelho); }
         @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
@@ -304,70 +292,30 @@
             -webkit-background-clip: text; background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .subtitulo-unico {
-            color: #aaa; font-size: 1.1rem; max-width: 600px; line-height: 1.6;
-            border-left: 3px solid var(--vermelho); padding-left: 20px; margin-bottom: 50px;
-        }
+        .subtitulo-unico { color: #aaa; font-size: 1.1rem; max-width: 600px; line-height: 1.6; border-left: 3px solid var(--vermelho); padding-left: 20px; margin-bottom: 50px; }
 
         /* ===== MANIFESTO ===== */
-        .manifesto {
-            padding: 130px 7%; position: relative; z-index: 10; text-align: center;
-            background: radial-gradient(ellipse at 50% 120%, rgba(229,9,20,0.12), transparent 60%);
-        }
-        .manifesto-selo {
-            display: inline-block; font-family: monospace; font-size: 10px; letter-spacing: 5px;
-            color: var(--vermelho); border: 1px solid rgba(229,9,20,0.4); padding: 8px 20px;
-            border-radius: 100px; margin-bottom: 45px; text-transform: uppercase;
-            box-shadow: 0 0 20px rgba(229,9,20,0.2); animation: preBrilho 3s infinite;
-        }
-        .manifesto-titulo {
-            font-size: clamp(2.2rem, 8vw, 7rem); font-weight: 900; line-height: 1.02;
-            text-transform: uppercase; letter-spacing: -3px; max-width: 1200px; margin: 0 auto 35px;
-            text-shadow: 0 10px 60px rgba(0,0,0,0.9);
-        }
-        .manifesto-titulo .destaque {
-            color: transparent; -webkit-text-stroke: 2px var(--vermelho);
-            display: inline-block; transition: 0.4s;
-        }
+        .manifesto { padding: 130px 7%; position: relative; z-index: 10; text-align: center; background: radial-gradient(ellipse at 50% 120%, rgba(229,9,20,0.12), transparent 60%); }
+        .manifesto-selo { display: inline-block; font-family: monospace; font-size: 10px; letter-spacing: 5px; color: var(--vermelho); border: 1px solid rgba(229,9,20,0.4); padding: 8px 20px; border-radius: 100px; margin-bottom: 45px; text-transform: uppercase; box-shadow: 0 0 20px rgba(229,9,20,0.2); animation: preBrilho 3s infinite; }
+        .manifesto-titulo { font-size: clamp(2.2rem, 8vw, 7rem); font-weight: 900; line-height: 1.02; text-transform: uppercase; letter-spacing: -3px; max-width: 1200px; margin: 0 auto 35px; text-shadow: 0 10px 60px rgba(0,0,0,0.9); }
+        .manifesto-titulo .destaque { color: transparent; -webkit-text-stroke: 2px var(--vermelho); display: inline-block; transition: 0.4s; }
         .manifesto-titulo .destaque:hover { color: var(--vermelho); text-shadow: 0 0 60px rgba(229,9,20,0.9); }
-        .manifesto-sub {
-            font-size: clamp(0.95rem, 1.8vw, 1.15rem); color: #999; max-width: 620px;
-            margin: 0 auto; line-height: 1.8; letter-spacing: 0.5px;
-        }
-        .manifesto-assinatura {
-            margin-top: 55px; font-family: monospace; font-size: 11px;
-            letter-spacing: 6px; color: #555; text-transform: uppercase;
-        }
+        .manifesto-sub { font-size: clamp(0.95rem, 1.8vw, 1.15rem); color: #999; max-width: 620px; margin: 0 auto; line-height: 1.8; letter-spacing: 0.5px; }
+        .manifesto-assinatura { margin-top: 55px; font-family: monospace; font-size: 11px; letter-spacing: 6px; color: #555; text-transform: uppercase; }
         .manifesto-assinatura b { color: var(--vermelho); }
 
         .mural-disruptivo { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
         .bloco-supremo.grande { grid-row: span 2; min-height: 520px; height: 100%; }
-        .bloco-supremo {
-            position: relative; border-radius: 24px; overflow: hidden; height: 240px;
-            background: rgba(14, 14, 20, 0.4);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.08);
-            transition: transform 0.5s cubic-bezier(0.25,1,0.5,1), box-shadow 0.5s, border-color 0.5s;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-        }
+        .bloco-supremo { position: relative; border-radius: 24px; overflow: hidden; height: 240px; background: rgba(14, 14, 20, 0.4); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.08); transition: transform 0.5s cubic-bezier(0.25,1,0.5,1), box-shadow 0.5s, border-color 0.5s; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
         .bloco-supremo:hover { transform: scale(1.03) translateY(-8px); border-color: rgba(229,9,20,0.4); box-shadow: 0 25px 50px rgba(229,9,20,0.2); }
         .bloco-supremo img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(35%) brightness(0.5); transition: transform 0.8s ease, filter 0.5s ease; }
         .bloco-supremo:hover img { transform: scale(1.06); filter: grayscale(0%) brightness(0.6); }
-
         .filtro-neon { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(circle at 10% 20%, rgba(229,9,20,0.25) 0%, transparent 60%); }
         .filtro-neon.azul { background: radial-gradient(circle at 10% 20%, rgba(0,229,255,0.25) 0%, transparent 60%); }
         .filtro-neon.roxo { background: radial-gradient(circle at 10% 20%, rgba(187,0,255,0.25) 0%, transparent 60%); }
-
-        .tag-exclusiva {
-            position: absolute; top: 25px; left: 25px; z-index: 2;
-            background: rgba(229,9,20,0.2); border: 1px solid rgba(229,9,20,0.4);
-            backdrop-filter: blur(10px); color: #fff; padding: 6px 16px; font-size: 10px;
-            font-weight: 700; text-transform: uppercase; border-radius: 100px; letter-spacing: 1.5px;
-            box-shadow: 0 0 15px rgba(229,9,20,0.3);
-        }
+        .tag-exclusiva { position: absolute; top: 25px; left: 25px; z-index: 2; background: rgba(229,9,20,0.2); border: 1px solid rgba(229,9,20,0.4); backdrop-filter: blur(10px); color: #fff; padding: 6px 16px; font-size: 10px; font-weight: 700; text-transform: uppercase; border-radius: 100px; letter-spacing: 1.5px; box-shadow: 0 0 15px rgba(229,9,20,0.3); }
         .tag-exclusiva.azul { background: rgba(0,229,255,0.2); border-color: rgba(0,229,255,0.4); box-shadow: 0 0 15px rgba(0,229,255,0.3); }
         .tag-exclusiva.roxo { background: rgba(187,0,255,0.2); border-color: rgba(187,0,255,0.4); box-shadow: 0 0 15px rgba(187,0,255,0.3); }
-
         .conteudo-supremo { position: absolute; bottom: 0; left: 0; width: 100%; padding: 35px; z-index: 2; background: linear-gradient(to top, rgba(6,6,8,0.95) 40%, transparent); }
         .conteudo-supremo span { font-size: 11px; color: var(--vermelho); font-weight: 800; letter-spacing: 2px; display: block; margin-bottom: 8px; }
         .conteudo-supremo span.azul { color: var(--azul); }
@@ -377,71 +325,32 @@
 
         /* ===== VITRINE ===== */
         .vitrine-amostas { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
-        .card-amostra {
-            position: relative; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden;
-            cursor: pointer; border: 1px solid rgba(255,255,255,0.08);
-            background: #0a0a0f; transition: 0.4s cubic-bezier(0.25,1,0.5,1);
-        }
+        .card-amostra { position: relative; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden; cursor: pointer; border: 1px solid rgba(255,255,255,0.08); background: #0a0a0f; transition: 0.4s cubic-bezier(0.25,1,0.5,1); }
         .card-amostra video { width: 100%; height: 100%; object-fit: cover; opacity: 0.55; transition: 0.5s; }
         .card-amostra:hover { transform: translateY(-6px) scale(1.02); border-color: rgba(229,9,20,0.5); box-shadow: 0 20px 45px rgba(229,9,20,0.25); }
         .card-amostra:hover video { opacity: 0.9; transform: scale(1.05); }
-        .card-amostra .play-overlay {
-            position: absolute; inset: 0; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; gap: 10px; z-index: 2;
-            background: radial-gradient(circle, rgba(0,0,0,0.2), rgba(6,6,8,0.75));
-        }
-        .card-amostra .icone-play {
-            width: 56px; height: 56px; border-radius: 50%;
-            background: rgba(229,9,20,0.85); display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 0 25px rgba(229,9,20,0.6); transition: 0.3s; font-size: 20px; padding-left: 4px;
-        }
+        .card-amostra .play-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; z-index: 2; background: radial-gradient(circle, rgba(0,0,0,0.2), rgba(6,6,8,0.75)); }
+        .card-amostra .icone-play { width: 56px; height: 56px; border-radius: 50%; background: rgba(229,9,20,0.85); display: flex; justify-content: center; align-items: center; box-shadow: 0 0 25px rgba(229,9,20,0.6); transition: 0.3s; font-size: 20px; padding-left: 4px; }
         .card-amostra:hover .icone-play { transform: scale(1.15); box-shadow: 0 0 40px rgba(229,9,20,0.9); }
         .card-amostra .titulo-amostra { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 6px #000; text-align: center; padding: 0 10px; }
-        .duracao-badge {
-            position: absolute; top: 12px; right: 12px; z-index: 3;
-            background: rgba(0,0,0,0.7); border: 1px solid rgba(229,9,20,0.4);
-            padding: 3px 10px; border-radius: 100px; font-size: 10px;
-            font-family: monospace; letter-spacing: 1px; color: var(--vermelho);
-        }
-        .btn-som-card {
-            position: absolute; bottom: 12px; right: 12px; z-index: 4;
-            width: 40px; height: 40px; border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            color: #fff; font-size: 16px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.25s;
-        }
+        .duracao-badge { position: absolute; top: 12px; right: 12px; z-index: 3; background: rgba(0,0,0,0.7); border: 1px solid rgba(229,9,20,0.4); padding: 3px 10px; border-radius: 100px; font-size: 10px; font-family: monospace; letter-spacing: 1px; color: var(--vermelho); }
+        .btn-som-card { position: absolute; bottom: 12px; right: 12px; z-index: 4; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #fff; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.25s; }
         .btn-som-card:hover { border-color: var(--vermelho); transform: scale(1.12); }
-        .btn-som-card.ligado {
-            border-color: var(--vermelho); background: rgba(229,9,20,0.3);
-            box-shadow: 0 0 18px rgba(229,9,20,0.7);
-        }
+        .btn-som-card.ligado { border-color: var(--vermelho); background: rgba(229,9,20,0.3); box-shadow: 0 0 18px rgba(229,9,20,0.7); }
+        .palmas-badge { position: absolute; bottom: 12px; left: 12px; z-index: 4; font-family: monospace; font-size: 10px; color: #fff; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15); padding: 4px 12px; border-radius: 100px; display: none; letter-spacing: 1px; }
+        .palmas-badge.visivel { display: block; }
         @media (hover: none) { .btn-som-card { width: 46px; height: 46px; font-size: 18px; } }
 
         /* ===== MODAL PLAYER ===== */
         .modal-cinema { position: fixed; inset: 0; z-index: 2000; display: none; background: rgba(0,0,0,0.97); justify-content: center; align-items: center; }
         .modal-cinema.aberto { display: flex; animation: fadeInModal 0.4s ease; }
         @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
-
         .palco-cinema { position: relative; width: 90vw; max-width: 1100px; aspect-ratio: 2.35/1; background: #000; }
-        .palco-inner {
-            position: relative; width: 100%; height: 100%; overflow: hidden;
-            box-shadow: 0 0 120px rgba(229,9,20,0.15), 0 40px 80px rgba(0,0,0,0.9);
-            border: 1px solid rgba(255,255,255,0.06);
-        }
+        .palco-inner { position: relative; width: 100%; height: 100%; overflow: hidden; box-shadow: 0 0 120px rgba(229,9,20,0.15), 0 40px 80px rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.06); }
         .palco-cinema video { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
-
-        .viz-player {
-            position: absolute; bottom: 62px; left: 20px; z-index: 7;
-            display: flex; align-items: flex-end; gap: 3px; height: 22px; opacity: 0; transition: 0.4s;
-        }
+        .viz-player { position: absolute; bottom: 62px; left: 20px; z-index: 7; display: flex; align-items: flex-end; gap: 3px; height: 22px; opacity: 0; transition: 0.4s; }
         .palco-cinema.som-on .viz-player { opacity: 1; }
-        .viz-player i {
-            width: 3px; background: var(--vermelho); border-radius: 2px; height: 20%;
-            box-shadow: 0 0 6px var(--vermelho);
-            animation: vizDanca 0.7s ease-in-out infinite alternate;
-        }
+        .viz-player i { width: 3px; background: var(--vermelho); border-radius: 2px; height: 20%; box-shadow: 0 0 6px var(--vermelho); animation: vizDanca 0.7s ease-in-out infinite alternate; }
         .viz-player i:nth-child(1) { animation-duration: 0.5s; }
         .viz-player i:nth-child(2) { animation-duration: 0.8s; animation-delay: 0.1s; }
         .viz-player i:nth-child(3) { animation-duration: 0.6s; animation-delay: 0.2s; }
@@ -449,84 +358,39 @@
         .viz-player i:nth-child(5) { animation-duration: 0.55s; animation-delay: 0.15s; }
         .viz-player i:nth-child(6) { animation-duration: 0.75s; animation-delay: 0.25s; }
         @keyframes vizDanca { from { height: 15%; } to { height: 100%; } }
-
+        .palmas-fly { position: absolute; bottom: 70px; font-size: 24px; z-index: 9; pointer-events: none; animation: flyUp 1.3s ease-out forwards; }
+        @keyframes flyUp { to { transform: translateY(-180px) scale(1.5) rotate(20deg); opacity: 0; } }
         .countdown-cinema { position: absolute; inset: 0; z-index: 10; display: flex; justify-content: center; align-items: center; background: #050507; }
-        .countdown-cinema .numero {
-            font-size: 8rem; font-weight: 900; color: var(--vermelho);
-            text-shadow: 0 0 40px rgba(229,9,20,0.8); font-family: monospace;
-            animation: pulsarNum 1s ease infinite;
-        }
+        .countdown-cinema .numero { font-size: 8rem; font-weight: 900; color: var(--vermelho); text-shadow: 0 0 40px rgba(229,9,20,0.8); font-family: monospace; animation: pulsarNum 1s ease infinite; }
         @keyframes pulsarNum { 0% { transform: scale(1.3); opacity: 0; } 30% { transform: scale(1); opacity: 1; } 100% { opacity: 0.6; } }
-        .countdown-cinema .circulo-guia {
-            position: absolute; width: 260px; height: 260px; border-radius: 50%;
-            border: 2px solid rgba(229,9,20,0.3); border-top-color: var(--vermelho);
-            animation: girarClaquete 1s linear infinite;
-        }
+        .countdown-cinema .circulo-guia { position: absolute; width: 260px; height: 260px; border-radius: 50%; border: 2px solid rgba(229,9,20,0.3); border-top-color: var(--vermelho); animation: girarClaquete 1s linear infinite; }
         @keyframes girarClaquete { to { transform: rotate(360deg); } }
         .countdown-cinema.oculto { display: none; }
-
-        .controles-cinema {
-            position: absolute; bottom: 0; left: 0; width: 100%; z-index: 8;
-            padding: 40px 20px 14px;
-            background: linear-gradient(to top, rgba(0,0,0,0.92), transparent);
-            opacity: 0; transition: opacity 0.35s; display: flex; flex-direction: column; gap: 10px;
-        }
-        .palco-cinema:hover .controles-cinema,
-        .palco-cinema.pausado .controles-cinema { opacity: 1; }
-
+        .controles-cinema { position: absolute; bottom: 0; left: 0; width: 100%; z-index: 8; padding: 40px 20px 14px; background: linear-gradient(to top, rgba(0,0,0,0.92), transparent); opacity: 0; transition: opacity 0.35s; display: flex; flex-direction: column; gap: 10px; }
+        .palco-cinema:hover .controles-cinema, .palco-cinema.pausado .controles-cinema { opacity: 1; }
         .barra-progresso { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 4px; cursor: pointer; position: relative; transition: height 0.2s; }
         .barra-progresso:hover { height: 7px; }
         .barra-preenchida { height: 100%; width: 0%; background: var(--vermelho); border-radius: 4px; position: relative; box-shadow: 0 0 10px var(--vermelho); }
-        .barra-preenchida::after {
-            content: ""; position: absolute; right: -6px; top: 50%; transform: translateY(-50%) scale(0);
-            width: 13px; height: 13px; background: #fff; border-radius: 50%;
-            box-shadow: 0 0 12px var(--vermelho); transition: transform 0.2s;
-        }
+        .barra-preenchida::after { content: ""; position: absolute; right: -6px; top: 50%; transform: translateY(-50%) scale(0); width: 13px; height: 13px; background: #fff; border-radius: 50%; box-shadow: 0 0 12px var(--vermelho); transition: transform 0.2s; }
         .barra-progresso:hover .barra-preenchida::after { transform: translateY(-50%) scale(1); }
-
-        .linha-controles { display: flex; align-items: center; gap: 16px; }
-        .btn-ctrl {
-            background: none; border: none; color: #fff; cursor: pointer;
-            font-size: 18px; width: 38px; height: 38px; border-radius: 50%;
-            display: flex; justify-content: center; align-items: center; transition: 0.25s;
-        }
+        .linha-controles { display: flex; align-items: center; gap: 14px; }
+        .btn-ctrl { background: none; border: none; color: #fff; cursor: pointer; font-size: 18px; width: 38px; height: 38px; border-radius: 50%; display: flex; justify-content: center; align-items: center; transition: 0.25s; }
         .btn-ctrl:hover { background: rgba(229,9,20,0.25); color: var(--vermelho); transform: scale(1.1); }
-
         .grupo-volume { display: flex; align-items: center; gap: 8px; }
-        .slider-volume {
-            -webkit-appearance: none; appearance: none; width: 0; height: 4px;
-            background: rgba(255,255,255,0.3); border-radius: 4px; cursor: pointer;
-            transition: width 0.35s cubic-bezier(0.25,1,0.5,1); outline: none;
-        }
+        .slider-volume { -webkit-appearance: none; appearance: none; width: 0; height: 4px; background: rgba(255,255,255,0.3); border-radius: 4px; cursor: pointer; transition: width 0.35s cubic-bezier(0.25,1,0.5,1); outline: none; }
         .grupo-volume:hover .slider-volume { width: 90px; }
         .slider-volume::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: var(--vermelho); border-radius: 50%; box-shadow: 0 0 8px var(--vermelho); }
         .slider-volume::-moz-range-thumb { width: 12px; height: 12px; background: var(--vermelho); border: none; border-radius: 50%; }
-
         .titulo-player { font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-right: auto; color: #ddd; }
         .tempo-player { font-family: monospace; font-size: 12px; color: #999; letter-spacing: 1px; }
-
-        .fechar-cinema {
-            position: absolute; top: -50px; right: 0; background: none; border: 1px solid rgba(255,255,255,0.2);
-            color: #fff; width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
-            font-size: 18px; transition: 0.3s; z-index: 11;
-        }
+        .fechar-cinema { position: absolute; top: -50px; right: 0; background: none; border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 18px; transition: 0.3s; z-index: 11; }
         .fechar-cinema:hover { border-color: var(--vermelho); color: var(--vermelho); transform: rotate(90deg); }
-
         .indicador-rec { position: absolute; top: 16px; left: 18px; z-index: 8; display: flex; align-items: center; gap: 8px; font-family: monospace; font-size: 10px; letter-spacing: 2px; color: rgba(255,255,255,0.7); opacity: 0; transition: 0.3s; }
         .palco-cinema.tocando .indicador-rec { opacity: 1; }
         .ponto-rec { width: 8px; height: 8px; background: var(--vermelho); border-radius: 50%; animation: piscar-cursor 1s infinite; box-shadow: 0 0 8px var(--vermelho); }
 
         /* ===== BOTÃO GLOBAL DE SOM ===== */
-        .btn-som-global {
-            position: fixed; bottom: 25px; left: 25px; z-index: 900;
-            background: rgba(10,10,15,0.85); backdrop-filter: blur(12px);
-            border: 1px solid rgba(229,9,20,0.4); color: #fff;
-            padding: 12px 22px; border-radius: 100px; cursor: pointer;
-            display: flex; align-items: center; gap: 12px;
-            font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-            box-shadow: 0 0 25px rgba(229,9,20,0.25); transition: 0.3s;
-            animation: flutuar 3s ease-in-out infinite;
-        }
+        .btn-som-global { position: fixed; bottom: 25px; left: 25px; z-index: 900; background: rgba(10,10,15,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(229,9,20,0.4); color: #fff; padding: 12px 22px; border-radius: 100px; cursor: pointer; display: flex; align-items: center; gap: 12px; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; box-shadow: 0 0 25px rgba(229,9,20,0.25); transition: 0.3s; animation: flutuar 3s ease-in-out infinite; }
         .btn-som-global:hover { border-color: var(--vermelho); box-shadow: 0 0 40px rgba(229,9,20,0.5); }
         .btn-som-global .ondas { display: flex; align-items: flex-end; gap: 2px; height: 16px; }
         .btn-som-global .ondas i { width: 3px; background: var(--vermelho); border-radius: 2px; animation: ondaSom 0.9s ease-in-out infinite; height: 30%; }
@@ -537,61 +401,50 @@
         @keyframes ondaSom { 0%, 100% { height: 25%; } 50% { height: 100%; } }
         @keyframes flutuar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
+        /* ===== NOVO: INGRESSO DIGITAL ===== */
+        .modal-ingresso { position: fixed; inset: 0; z-index: 2100; display: none; background: rgba(0,0,0,0.95); justify-content: center; align-items: center; flex-direction: column; gap: 16px; padding: 20px; }
+        .modal-ingresso.aberto { display: flex; animation: fadeInModal 0.4s ease; }
+        #canvasIngresso { max-width: 92vw; border-radius: 12px; box-shadow: 0 0 60px rgba(229,9,20,0.3); }
+        .ingresso-linha { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+        #nomeIngresso { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 14px; outline: none; min-width: 200px; }
+        #nomeIngresso:focus { border-color: var(--vermelho); }
+        .btn-ingresso { background: var(--vermelho); border: none; color: #fff; padding: 12px 22px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; transition: 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-ingresso:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(229,9,20,0.5); }
+        .btn-ingresso.verde { background: linear-gradient(135deg, #25d366, #1ebd58); }
+        .btn-ingresso.fechar { background: rgba(255,255,255,0.1); }
+
+        /* ===== NOVO: CRÉDITOS DA SESSÃO ===== */
+        #creditos { position: fixed; inset: 0; z-index: 2200; display: none; background: #000; overflow: hidden; }
+        #creditos.aberto { display: block; }
+        .creditos-roll { position: absolute; top: 100%; left: 0; width: 100%; text-align: center; font-family: monospace; letter-spacing: 3px; line-height: 2.4; color: #ccc; font-size: 14px; text-transform: uppercase; animation: rolar 22s linear forwards; }
+        .creditos-roll b { color: var(--vermelho); display: block; font-size: 20px; letter-spacing: 6px; margin: 18px 0; }
+        @keyframes rolar { to { transform: translateY(-240vh); } }
+        .fechar-creditos { position: fixed; top: 20px; right: 20px; z-index: 2210; background: none; border: 1px solid rgba(255,255,255,0.3); color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 16px; }
+
         /* ===== FOOTER ===== */
-        footer {
-            background: linear-gradient(to top, #030304, rgba(6,6,8,0.8));
-            padding: 60px 7%; text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.05); position: relative; z-index: 10;
-        }
+        footer { background: linear-gradient(to top, #030304, rgba(6,6,8,0.8)); padding: 60px 7%; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); position: relative; z-index: 10; }
         .logo-rodape-container img { height: 65px; max-width: 250px; object-fit: contain; margin-bottom: 25px; filter: drop-shadow(0 0 15px rgba(229,9,20,0.4)); }
         .footer-texto { color: #888; margin-bottom: 30px; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.6; }
         .footer-wrap { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-
-        .btn-whatsapp {
-            background: linear-gradient(135deg, #25d366, #1ebd58);
-            color: #fff !important; text-decoration: none; padding: 12px 25px;
-            border-radius: 8px; display: inline-flex; align-items: center; gap: 15px;
-            text-align: left; min-width: 280px;
-            box-shadow: 0 4px 15px rgba(37,211,102,0.3); transition: all 0.3s ease;
-        }
+        .btn-whatsapp { background: linear-gradient(135deg, #25d366, #1ebd58); color: #fff !important; text-decoration: none; padding: 12px 25px; border-radius: 8px; display: inline-flex; align-items: center; gap: 15px; text-align: left; min-width: 280px; box-shadow: 0 4px 15px rgba(37,211,102,0.3); transition: all 0.3s ease; }
         .btn-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(37,211,102,0.6); }
         .btn-whatsapp .icon { font-size: 24px; }
         .btn-whatsapp .text-btn { display: flex; flex-direction: column; }
         .btn-whatsapp small { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; }
         .btn-whatsapp strong { font-size: 16px; }
-        .link-humor {
-            display: inline-block; margin-top: 22px; background: none; border: none;
-            color: #555; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-            cursor: pointer; transition: 0.3s; font-family: monospace;
-        }
+        .link-humor { display: inline-block; margin-top: 22px; margin-left: 10px; margin-right: 10px; background: none; border: none; color: #555; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: 0.3s; font-family: monospace; }
         .link-humor:hover { color: var(--vermelho); }
         .copyright { margin-top: 25px; font-size: 12px; color: #555; letter-spacing: 1px; }
         .copyright .legado { color: var(--vermelho); font-family: monospace; letter-spacing: 3px; }
-
-        .coordenada-secreta {
-            position: fixed; bottom: 15px; right: 20px;
-            font-family: monospace; font-size: 10px; color: rgba(229,9,20,0.3);
-            letter-spacing: 2px; pointer-events: none; z-index: 899;
-            animation: glitchTexto 4s infinite;
-        }
-        @keyframes glitchTexto {
-            0%, 95%, 100% { opacity: 0.3; }
-            96% { opacity: 1; text-shadow: 2px 0 #00ffff, -2px 0 #ff00ff; }
-        }
-
+        .coordenada-secreta { position: fixed; bottom: 15px; right: 20px; font-family: monospace; font-size: 10px; color: rgba(229,9,20,0.3); letter-spacing: 2px; pointer-events: none; z-index: 899; animation: glitchTexto 4s infinite; }
+        @keyframes glitchTexto { 0%, 95%, 100% { opacity: 0.3; } 96% { opacity: 1; text-shadow: 2px 0 #00ffff, -2px 0 #ff00ff; } }
         .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.25,1,0.5,1); }
         .reveal.visivel { opacity: 1; transform: translateY(0); }
 
         /* ===== RESPONSIVO ===== */
         @media (max-width: 768px) {
             .menu-toggle { display: block; }
-            .nav-links {
-                position: fixed; top: 0; right: -100%; height: 100vh; width: 70%; max-width: 300px;
-                background: rgba(6,6,8,0.97); backdrop-filter: blur(15px);
-                flex-direction: column; justify-content: center; gap: 35px;
-                transition: right 0.4s cubic-bezier(0.25,1,0.5,1);
-                border-left: 1px solid rgba(229,9,20,0.2);
-            }
+            .nav-links { position: fixed; top: 0; right: -100%; height: 100vh; width: 70%; max-width: 300px; background: rgba(6,6,8,0.97); backdrop-filter: blur(15px); flex-direction: column; justify-content: center; gap: 35px; transition: right 0.4s cubic-bezier(0.25,1,0.5,1); border-left: 1px solid rgba(229,9,20,0.2); }
             .nav-links.aberto { right: 0; }
             .nav-links a { font-size: 18px; }
             .mural-disruptivo { grid-template-columns: 1fr; gap: 25px; }
@@ -599,7 +452,9 @@
             .container { padding: 60px 6%; }
             .manifesto { padding: 90px 6%; }
             .coordenada-secreta { display: none; }
-            #hudEmocao { top: 62px; right: 12px; font-size: 8px; }
+            #hudWrap { top: 62px; right: 12px; }
+            #hudEmocao { font-size: 8px; }
+            #fraseEmocao { font-size: 9px; max-width: 150px; }
             .palco-cinema { width: 96vw; aspect-ratio: 16/9; }
             .fechar-cinema { top: 10px; right: 10px; background: rgba(0,0,0,0.6); }
             .controles-cinema { opacity: 1; padding-top: 25px; }
@@ -612,7 +467,6 @@
             .btn-whatsapp { min-width: 260px; }
             .capsula { padding: 40px 7%; }
         }
-
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
             *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -623,7 +477,6 @@
 </head>
 <body>
 
-    <!-- ===== PRELOADER ===== -->
     <div id="preloader">
         <div class="pre-apresenta">Apolinário Studio apresenta</div>
         <div class="pre-nome">APOLINÁRIO <b>STUDIO</b></div>
@@ -636,57 +489,52 @@
         var preloader   = document.getElementById("preloader");
         var preFill     = document.getElementById("preBarraFill");
         var preContador = document.getElementById("preContador");
-        var progresso = 0;
-        var terminado = false;
-
+        var progresso = 0, terminado = false;
         var timer = setInterval(function () {
             progresso = Math.min(progresso + Math.random() * 9, 92);
             pintar();
         }, 140);
-
         function pintar() {
             preFill.style.width = progresso + "%";
             preContador.textContent = String(Math.floor(progresso)).padStart(3, "0") + "%";
         }
-
         function finalizar() {
             if (terminado) return;
             terminado = true;
             clearInterval(timer);
-            progresso = 100;
-            pintar();
+            progresso = 100; pintar();
             setTimeout(function () {
                 preloader.classList.add("oculto");
                 var hv = document.getElementById("player-emocional");
                 if (hv) { var p = hv.play(); if (p && p.catch) p.catch(function(){}); }
             }, 700);
         }
-
         setTimeout(finalizar, 5000);
         window.addEventListener("load", function () { setTimeout(finalizar, 2200); });
     })();
     </script>
 
-    <!-- Cursor -->
     <div class="cursor-dot" id="cursorDot"></div>
     <div class="cursor-ring" id="cursorRing"></div>
 
-    <!-- NOVO: pulso emocional + letterbox + hud + espectro -->
     <div class="pulso-site" aria-hidden="true"></div>
     <div class="lb top" aria-hidden="true"></div>
     <div class="lb bottom" aria-hidden="true"></div>
-    <div id="hudEmocao">SYNC_EMOCIONAL // CATARSE</div>
+    <div id="hudWrap">
+        <span id="hudEmocao">SYNC_EMOCIONAL // CATARSE</span>
+        <span id="fraseEmocao"></span>
+    </div>
     <canvas id="espectro" aria-hidden="true"></canvas>
-    <div id="toastDiretor">🎬 MODO DIRETOR ATIVADO — BEM-VINDO AO SET, APOLINÁRIO</div>
+    <div class="toast-flutuante" id="toastDiretor">🎬 MODO DIRETOR ATIVADO — BEM-VINDO AO SET, APOLINÁRIO</div>
+    <div class="toast-flutuante" id="toastAviso">🔊 SOM ATIVADO — USE O BOTÃO VERMELHO PARA SILENCIAR</div>
 
     <div class="scroll-progress" id="scrollProgress"></div>
     <div class="glitch-flash" id="glitchFlash">⚠ SYS_NEXUS DESBLOQUEADO ⚠</div>
     <div class="coordenada-secreta" aria-hidden="true">SYS_NEXUS_//_DATA_LOCKED</div>
 
-    <!-- ===== NOVO: PORTAL DE HUMOR ===== -->
     <div id="portalHumor" role="dialog" aria-modal="true" aria-label="Escolha seu humor">
         <div class="portal-caixa">
-            <span class="portal-tag">SYS_NEXUS // CURADORIA EMPÁTICA v5.0</span>
+            <span class="portal-tag">SYS_NEXUS // CURADORIA EMPÁTICA v6.0</span>
             <h2 class="portal-pergunta">Antes de entrar:<br>como você <b>sente</b> hoje?</h2>
             <p class="portal-sub">Este site não exibe conteúdo — ele responde emoções.<br>Sua escolha define por qual sentimento a experiência começa.</p>
             <div class="portal-opcoes">
@@ -699,17 +547,14 @@
         </div>
     </div>
 
-    <!-- ===== NAVBAR ===== -->
     <nav>
-        <div class="logo-container" id="logoContainer" title="">
+        <div class="logo-container" id="logoContainer">
             <img src="logo_topo.png" alt="Apolinário Studio" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
             <div class="logo-fallback" style="display:none;">Apolinário Studio</div>
         </div>
-
         <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">
             <span></span><span></span><span></span>
         </button>
-
         <div class="nav-links" id="navLinks">
             <a href="#inicio">Início</a>
             <a href="#manifesto">Manifesto</a>
@@ -720,16 +565,13 @@
         </div>
     </nav>
 
-    <!-- ===== HERO ===== -->
     <section class="hero" id="inicio">
         <video class="video-background" id="player-emocional"
                autoplay muted loop playsinline webkit-playsinline
-               preload="metadata" disablepictureinpicture disableRemotePlayback
-               aria-hidden="true">
+               preload="metadata" disablepictureinpicture disableRemotePlayback aria-hidden="true">
             <source src="catarse.mp4" type="video/mp4">
         </video>
         <div class="overlay"></div>
-
         <div class="revelacao-lenta" id="revelacaoLenta">
             <h1 class="titulo-efeito">
                 Apolinário Studio: <span class="texto-digitado" id="textoDigitado"></span><span class="cursor-matrix">|</span>
@@ -741,7 +583,6 @@
         </div>
     </section>
 
-    <!-- ===== MARQUEE ===== -->
     <div class="marquee-emocoes" aria-hidden="true">
         <div class="marquee-track">
             <span>Catarse <i>✦</i> Curiosidade <i>✦</i> Felicidade <i>✦</i> Perda <i>✦</i> Tristeza <i>✦</i></span>
@@ -749,7 +590,6 @@
         </div>
     </div>
 
-    <!-- ===== MANIFESTO ===== -->
     <section class="manifesto" id="manifesto">
         <div class="manifesto-selo reveal">◆ Um legado em construção ◆</div>
         <h2 class="manifesto-titulo reveal scramble" data-texto="NÓS NÃO CRIAMOS VÍDEOS. NÓS ESCULPIMOS EMOÇÕES.">
@@ -764,11 +604,9 @@
         <div class="manifesto-assinatura reveal">APOLINÁRIO STUDIO <b>//</b> ENTRETENIMENTOS &amp; PRODUÇÕES <b>//</b> LEGADO 001</div>
     </section>
 
-    <!-- ===== INOVAÇÃO ===== -->
     <section class="container" id="producoes">
         <h2 class="reveal">Inovação Suprema</h2>
         <p class="subtitulo-unico reveal">Formatos disruptivos e narrativas originais concebidas para quebrar os padrões tradicionais do entretenimento.</p>
-
         <div class="mural-disruptivo">
             <div class="bloco-supremo grande reveal">
                 <div class="tag-exclusiva">Conceito Original</div>
@@ -780,7 +618,6 @@
                     <p>A desconstrução do cinema tradicional. Histórias profundas feitas para telas imersivas.</p>
                 </div>
             </div>
-
             <div class="bloco-supremo reveal">
                 <div class="tag-exclusiva azul">Digital First</div>
                 <div class="filtro-neon azul"></div>
@@ -791,7 +628,6 @@
                     <p>Formatos nativos para plataformas digitais que capturam a atenção em segundos.</p>
                 </div>
             </div>
-
             <div class="bloco-supremo reveal">
                 <div class="tag-exclusiva roxo">Experiência</div>
                 <div class="filtro-neon roxo"></div>
@@ -805,65 +641,43 @@
         </div>
     </section>
 
-    <!-- ===== VITRINE DE AMOSTRAS ===== -->
     <section class="container" id="amostras">
         <h2 class="reveal">Amostras Exclusivas</h2>
         <p class="subtitulo-unico reveal">Cinco emoções. Cinco fragmentos do nosso universo. Cada amostra: 10 segundos de imersão total com áudio. Clique para a experiência cinematográfica completa.</p>
-
         <div class="vitrine-amostas" id="vitrineAmostas">
             <div class="card-amostra reveal" data-video="catarse.mp4" data-titulo="Catarse — A Liberação">
                 <span class="duracao-badge">0:10 ● REC</span>
                 <video src="catarse.mp4" muted loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>
-                <div class="play-overlay">
-                    <div class="icone-play">▶</div>
-                    <div class="titulo-amostra">Catarse — A Liberação</div>
-                </div>
-                <button class="btn-som-card" aria-label="Ativar som deste vídeo">🔇</button>
+                <div class="play-overlay"><div class="icone-play">▶</div><div class="titulo-amostra">Catarse — A Liberação</div></div>
+                <button class="btn-som-card" aria-label="Som deste vídeo">🔇</button>
             </div>
-
             <div class="card-amostra reveal" data-video="curiosidade.mp4" data-titulo="Curiosidade — O Chamado">
                 <span class="duracao-badge">0:10 ● REC</span>
                 <video src="curiosidade.mp4" muted loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>
-                <div class="play-overlay">
-                    <div class="icone-play">▶</div>
-                    <div class="titulo-amostra">Curiosidade — O Chamado</div>
-                </div>
-                <button class="btn-som-card" aria-label="Ativar som deste vídeo">🔇</button>
+                <div class="play-overlay"><div class="icone-play">▶</div><div class="titulo-amostra">Curiosidade — O Chamado</div></div>
+                <button class="btn-som-card" aria-label="Som deste vídeo">🔇</button>
             </div>
-
             <div class="card-amostra reveal" data-video="felicidade.mp4" data-titulo="Felicidade — O Êxtase">
                 <span class="duracao-badge">0:10 ● REC</span>
                 <video src="felicidade.mp4" muted loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>
-                <div class="play-overlay">
-                    <div class="icone-play">▶</div>
-                    <div class="titulo-amostra">Felicidade — O Êxtase</div>
-                </div>
-                <button class="btn-som-card" aria-label="Ativar som deste vídeo">🔇</button>
+                <div class="play-overlay"><div class="icone-play">▶</div><div class="titulo-amostra">Felicidade — O Êxtase</div></div>
+                <button class="btn-som-card" aria-label="Som deste vídeo">🔇</button>
             </div>
-
             <div class="card-amostra reveal" data-video="perda.mp4" data-titulo="Perda — O Vazio">
                 <span class="duracao-badge">0:10 ● REC</span>
                 <video src="perda.mp4" muted loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>
-                <div class="play-overlay">
-                    <div class="icone-play">▶</div>
-                    <div class="titulo-amostra">Perda — O Vazio</div>
-                </div>
-                <button class="btn-som-card" aria-label="Ativar som deste vídeo">🔇</button>
+                <div class="play-overlay"><div class="icone-play">▶</div><div class="titulo-amostra">Perda — O Vazio</div></div>
+                <button class="btn-som-card" aria-label="Som deste vídeo">🔇</button>
             </div>
-
             <div class="card-amostra reveal" data-video="tristeza.mp4" data-titulo="Tristeza — O Abismo">
                 <span class="duracao-badge">0:10 ● REC</span>
                 <video src="tristeza.mp4" muted loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>
-                <div class="play-overlay">
-                    <div class="icone-play">▶</div>
-                    <div class="titulo-amostra">Tristeza — O Abismo</div>
-                </div>
-                <button class="btn-som-card" aria-label="Ativar som deste vídeo">🔇</button>
+                <div class="play-overlay"><div class="icone-play">▶</div><div class="titulo-amostra">Tristeza — O Abismo</div></div>
+                <button class="btn-som-card" aria-label="Som deste vídeo">🔇</button>
             </div>
         </div>
     </section>
 
-    <!-- ===== NOVO: CÁPSULA DO TEMPO ===== -->
     <section class="container capsula-sec" id="capsula">
         <div class="capsula reveal">
             <span class="capsula-selo">🕯️ CÁPSULA DO TEMPO // LEGADO 001</span>
@@ -880,7 +694,6 @@
         </div>
     </section>
 
-    <!-- ===== FOOTER ===== -->
     <footer id="contato">
         <div class="logo-rodape-container">
             <img src="logo_topo.png" alt="Apolinário Studio" onerror="this.style.display='none';">
@@ -889,48 +702,41 @@
         <div class="footer-wrap">
             <a class="btn-whatsapp" href="https://wa.me/5511987422647?text=Ol%C3%A1!%20Vim%20pelo%20site%20do%20Apolin%C3%A1rio%20Studio" target="_blank" rel="noopener noreferrer">
                 <span class="icon" aria-hidden="true">💬</span>
-                <span class="text-btn">
-                    <small>WhatsApp 01</small>
-                    <strong>(11) 98742-2647</strong>
-                </span>
+                <span class="text-btn"><small>WhatsApp 01</small><strong>(11) 98742-2647</strong></span>
             </a>
             <a class="btn-whatsapp" href="https://wa.me/5515998064681?text=Ol%C3%A1!%20Vim%20pelo%20site%20do%20Apolin%C3%A1rio%20Studio" target="_blank" rel="noopener noreferrer">
                 <span class="icon" aria-hidden="true">💬</span>
-                <span class="text-btn">
-                    <small>WhatsApp 02</small>
-                    <strong>(15) 99806-4681</strong>
-                </span>
+                <span class="text-btn"><small>WhatsApp 02</small><strong>(15) 99806-4681</strong></span>
             </a>
         </div>
-        <button class="link-humor" id="linkHumor">↺ mudar meu humor de hoje</button>
+        <div>
+            <button class="link-humor" id="linkHumor">↺ mudar meu humor</button>
+            <button class="link-humor" id="linkCreditos">🎬 créditos da minha sessão</button>
+        </div>
         <p class="copyright">© 2026 Apolinário Studio — Todos os direitos reservados. <span class="legado">// O LEGADO É ETERNO</span></p>
     </footer>
 
-    <!-- ===== MODAL PLAYER ===== -->
     <div class="modal-cinema" id="modalCinema" role="dialog" aria-modal="true" aria-label="Player de vídeo">
         <div class="palco-cinema" id="palcoCinema">
             <button class="fechar-cinema" id="fecharCinema" aria-label="Fechar player">✕</button>
             <div class="palco-inner">
                 <video id="videoModal" muted playsinline webkit-playsinline preload="auto" disableRemotePlayback></video>
                 <div class="indicador-rec"><span class="ponto-rec"></span> SYS_NEXUS // PLAYING</div>
-
                 <div class="viz-player" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-
                 <div class="countdown-cinema" id="countdownCinema">
                     <div class="circulo-guia"></div>
                     <div class="numero" id="numeroCountdown">3</div>
                 </div>
-
                 <div class="controles-cinema">
-                    <div class="barra-progresso" id="barraProgresso">
-                        <div class="barra-preenchida" id="barraPreenchida"></div>
-                    </div>
+                    <div class="barra-progresso" id="barraProgresso"><div class="barra-preenchida" id="barraPreenchida"></div></div>
                     <div class="linha-controles">
                         <button class="btn-ctrl" id="btnPlayPause" aria-label="Play/Pause">▶</button>
-                        <div class="grupo-volume" id="grupoVolume">
+                        <div class="grupo-volume">
                             <button class="btn-ctrl" id="btnMute" aria-label="Mudo">🔇</button>
                             <input type="range" class="slider-volume" id="sliderVolume" min="0" max="1" step="0.01" value="0.8" aria-label="Volume">
                         </div>
+                        <button class="btn-ctrl" id="btnAplaudir" aria-label="Aplaudir" title="Aplaudir">👏</button>
+                        <button class="btn-ctrl" id="btnIngresso" aria-label="Gerar ingresso" title="Gerar meu ingresso">🎟️</button>
                         <span class="tempo-player" id="tempoPlayer">0:00 / 0:10</span>
                         <span class="titulo-player" id="tituloPlayer"></span>
                         <button class="btn-ctrl" id="btnFullscreen" aria-label="Tela cheia">⛶</button>
@@ -940,27 +746,45 @@
         </div>
     </div>
 
-    <!-- ===== BOTÃO GLOBAL DE SOM ===== -->
-    <button class="btn-som-global" id="btnSomGlobal" aria-label="Ativar som do site">
+    <div class="modal-ingresso" id="modalIngresso">
+        <canvas id="canvasIngresso" width="640" height="320"></canvas>
+        <input type="text" id="nomeIngresso" placeholder="Digite seu nome para o ingresso" maxlength="24">
+        <div class="ingresso-linha">
+            <button class="btn-ingresso" id="btnBaixarIngresso">⬇ Baixar ingresso</button>
+            <a class="btn-ingresso verde" id="btnShareIngresso" href="#" target="_blank" rel="noopener noreferrer">💬 Mandar no WhatsApp</a>
+            <button class="btn-ingresso fechar" id="btnFecharIngresso">✕ Fechar</button>
+        </div>
+    </div>
+
+    <div id="creditos">
+        <button class="fechar-creditos" id="fecharCreditos" aria-label="Fechar créditos">✕</button>
+        <div class="creditos-roll" id="creditosRoll"></div>
+    </div>
+
+    <button class="btn-som-global" id="btnSomGlobal" aria-label="Controle de som">
         <span class="ondas"><i></i><i></i><i></i><i></i></span>
         <span id="textoSomGlobal">Ativar Som</span>
     </button>
 
     <script>
     // ================================================
-    // 🎬 APOLINÁRIO STUDIO — SISTEMA v5.0 "O SITE QUE SENTE"
+    // 🎬 APOLINÁRIO STUDIO — v6.0 "O SITE QUE SENTE"
     // ================================================
 
-    // ----- NOVO: MAPA DE EMOÇÕES (cor + batimento) -----
+    function getLS(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    function setLS(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+    // ----- EMOÇÕES: cor + pulso + frase-poema -----
     var EMOCOES = {
-        catarse:     { cor: "#e50914", pulso: "0.9s" },
-        curiosidade: { cor: "#00e5ff", pulso: "1.2s" },
-        felicidade:  { cor: "#ffb300", pulso: "0.7s" },
-        perda:       { cor: "#bb00ff", pulso: "1.6s" },
-        tristeza:    { cor: "#4d7cff", pulso: "2.4s" }
+        catarse:     { cor: "#e50914", pulso: "0.9s", frase: "Quando a tensão vira liberdade, o corpo inteiro agradece." },
+        curiosidade: { cor: "#00e5ff", pulso: "1.2s", frase: "Toda grande história começa com um passo no escuro." },
+        felicidade:  { cor: "#ffb300", pulso: "0.7s", frase: "A alegria é o único luxo que não envelhece." },
+        perda:       { cor: "#bb00ff", pulso: "1.6s", frase: "O vazio também é uma forma de presença." },
+        tristeza:    { cor: "#4d7cff", pulso: "2.4s", frase: "Chorar em câmera lenta também é arte." }
     };
     var corAtual = "#e50914";
     var hudEmocao = document.getElementById("hudEmocao");
+    var fraseEmocao = document.getElementById("fraseEmocao");
 
     function nomeDeSrc(src) { return (src || "").replace(/^.*\//, "").replace(".mp4", ""); }
 
@@ -971,13 +795,22 @@
         document.documentElement.style.setProperty("--vermelho", e.cor);
         document.documentElement.style.setProperty("--pulso", e.pulso);
         hudEmocao.textContent = "SYNC_EMOCIONAL // " + nome.toUpperCase();
+        fraseEmocao.classList.remove("visivel");
+        setTimeout(function () {
+            fraseEmocao.textContent = "“" + e.frase + "”";
+            fraseEmocao.classList.add("visivel");
+        }, 300);
     }
+
+    // ----- SESSÃO (para os créditos finais) -----
+    var sessaoInicio = Date.now();
+    var sessaoEmocoes = {};
+    var humorEscolhido = getLS("apolinario_humor");
 
     // ----- CURSOR -----
     var cursorDot  = document.getElementById("cursorDot");
     var cursorRing = document.getElementById("cursorRing");
     var mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
-
     document.addEventListener("mousemove", function (e) {
         mouseX = e.clientX; mouseY = e.clientY;
         cursorDot.style.left = mouseX + "px";
@@ -1028,7 +861,7 @@
         });
     }
 
-    // ----- MENU MOBILE -----
+    // ----- MENU -----
     var toggle = document.getElementById("menuToggle");
     var navLinks = document.getElementById("navLinks");
     toggle.addEventListener("click", function () {
@@ -1044,7 +877,7 @@
         });
     });
 
-    // ----- SCRAMBLE -----
+    // ----- SCRAMBLE + REVEAL -----
     var charsScramble = "!<>-_\\/[]{}=+*^?#01";
     function scramble(el) {
         var htmlOriginal = el.innerHTML;
@@ -1054,8 +887,7 @@
             return { c: c, inicio: Math.floor(Math.random() * 20), fim: Math.floor(Math.random() * 20) + i };
         });
         var intervalo = setInterval(function () {
-            var saida = "";
-            var prontos = 0;
+            var saida = "", prontos = 0;
             queue.forEach(function (q) {
                 if (frame >= q.fim) { saida += q.c; prontos++; }
                 else if (frame >= q.inicio) { saida += charsScramble[Math.floor(Math.random() * charsScramble.length)]; }
@@ -1066,7 +898,6 @@
             frame++;
         }, 35);
     }
-
     var observador = new IntersectionObserver(function (entradas) {
         entradas.forEach(function (e) {
             if (e.isIntersecting) {
@@ -1079,7 +910,7 @@
     document.querySelectorAll(".reveal").forEach(function (el) { observador.observe(el); });
 
     // ================================================
-    // 🎥 SISTEMA DE REPRODUÇÃO v4.1 (mantido) + v5.0
+    // 🎥 SISTEMA DE REPRODUÇÃO + SOM AUTO-ATIVADO
     // ================================================
     var heroVideo  = document.getElementById("player-emocional");
     var videoModal = document.getElementById("videoModal");
@@ -1099,44 +930,38 @@
     var btnFechar  = document.getElementById("fecharCinema");
     var btnSomGlobal = document.getElementById("btnSomGlobal");
     var textoSom   = document.getElementById("textoSomGlobal");
+    var toastAviso = document.getElementById("toastAviso");
     var vitrine    = document.getElementById("vitrineAmostas");
 
-    // ----- NOVO: PORTAL DE HUMOR (reordena tudo) -----
     var BASE_VIDEOS = ["catarse.mp4", "curiosidade.mp4", "felicidade.mp4", "perda.mp4", "tristeza.mp4"];
     var fontesHero = BASE_VIDEOS.slice();
     var portalHumor = document.getElementById("portalHumor");
 
     function rotacionar(arr, n) { return arr.slice(n).concat(arr.slice(0, n)); }
-
     function aplicarHumor(idx) {
         fontesHero = rotacionar(BASE_VIDEOS, idx);
-        // reordena os cards no DOM
         var todos = Array.prototype.slice.call(vitrine.querySelectorAll(".card-amostra"));
         var porNome = {};
         todos.forEach(function (c) { porNome[c.dataset.video] = c; });
         fontesHero.forEach(function (src) { vitrine.appendChild(porNome[src]); });
     }
-
-    var humorSalvo = null;
-    try { humorSalvo = localStorage.getItem("apolinario_humor"); } catch (e) {}
-
-    if (humorSalvo !== null) {
-        aplicarHumor(parseInt(humorSalvo, 10) || 0);
+    if (humorEscolhido !== null) {
+        aplicarHumor(parseInt(humorEscolhido, 10) || 0);
     } else {
         setTimeout(function () { portalHumor.classList.add("aberto"); }, 3000);
     }
-
     portalHumor.querySelectorAll(".portal-btn").forEach(function (b) {
         b.addEventListener("click", function () {
             var idx = parseInt(b.dataset.humor, 10);
-            try { localStorage.setItem("apolinario_humor", String(idx)); } catch (e) {}
+            setLS("apolinario_humor", String(idx));
+            humorEscolhido = String(idx);
             aplicarHumor(idx);
             recarregarListas();
+            ligarCards();
             portalHumor.classList.remove("aberto");
             trocarHero(0, true);
         });
     });
-
     document.getElementById("linkHumor").addEventListener("click", function () {
         portalHumor.classList.add("aberto");
     });
@@ -1154,10 +979,9 @@
     var cardsVisiveis = [];
     var timerCountdown = null;
     var indiceAtual = 0;
+    var somAutoFeito = false;
 
-    function fmt(s) {
-        return Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0");
-    }
+    function fmt(s) { return Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0"); }
 
     function playSeguro(v) {
         if (!v) return;
@@ -1173,18 +997,13 @@
         }
     }
 
-    // ----- NOVO: ÁUDIO REAL (Web Audio API) -----
+    // ----- ÁUDIO REAL (Web Audio) -----
     var ctxAudio = null;
     var canvasEsp = document.getElementById("espectro");
     var ctxCanvas = canvasEsp.getContext("2d");
-
-    function redimensionarCanvas() {
-        canvasEsp.width = window.innerWidth;
-        canvasEsp.height = 46;
-    }
+    function redimensionarCanvas() { canvasEsp.width = window.innerWidth; canvasEsp.height = 46; }
     redimensionarCanvas();
     window.addEventListener("resize", redimensionarCanvas);
-
     function ensureAudio(v) {
         try {
             if (!ctxAudio) {
@@ -1197,19 +1016,16 @@
                 var src = ctxAudio.createMediaElementSource(v);
                 var an = ctxAudio.createAnalyser();
                 an.fftSize = 64;
-                src.connect(an);
-                an.connect(ctxAudio.destination);
+                src.connect(an); an.connect(ctxAudio.destination);
                 v._an = an;
             }
             return v._an;
         } catch (e) { return null; }
     }
-
     function hexToRgba(hex, a) {
         var r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
         return "rgba(" + r + "," + g + "," + b + "," + a + ")";
     }
-
     var espectroAtivo = false;
     (function loopEspectro() {
         requestAnimationFrame(loopEspectro);
@@ -1222,8 +1038,7 @@
         var dados = new Uint8Array(an.frequencyBinCount);
         an.getByteFrequencyData(dados);
         ctxCanvas.clearRect(0, 0, canvasEsp.width, canvasEsp.height);
-        var n = dados.length;
-        var larg = canvasEsp.width / n;
+        var n = dados.length, larg = canvasEsp.width / n;
         for (var i = 0; i < n; i++) {
             var h = (dados[i] / 255) * canvasEsp.height;
             ctxCanvas.fillStyle = hexToRgba(corAtual, 0.75);
@@ -1243,19 +1058,14 @@
         todosVideos.forEach(function (x) { x.muted = true; });
         sincronizarUI();
     }
-
     function syncCards() {
         cards.forEach(function (c, i) {
             var v = cardVideos[i];
             var visivel = cardsVisiveis.indexOf(v) !== -1;
-            if (modalAberto || document.hidden || !visivel) {
-                v.pause();
-            } else {
-                playSeguro(v);
-            }
+            if (modalAberto || document.hidden || !visivel) v.pause();
+            else playSeguro(v);
         });
     }
-
     var obsCards = new IntersectionObserver(function (entradas) {
         entradas.forEach(function (e) {
             var v = e.target.querySelector("video");
@@ -1270,7 +1080,7 @@
     function sincronizarUI() {
         if (comSomAtual) {
             btnSomGlobal.classList.add("som-ativo");
-            textoSom.textContent = "Som Ativo";
+            textoSom.textContent = "Silenciar";
             document.body.classList.add("som-live");
         } else {
             btnSomGlobal.classList.remove("som-ativo");
@@ -1283,30 +1093,61 @@
             if (!b) return;
             b.textContent = v.muted ? "🔇" : "🔊";
             b.classList.toggle("ligado", !v.muted);
-            b.setAttribute("aria-label", v.muted ? "Ativar som deste vídeo" : "Silenciar este vídeo");
         });
         btnMute.textContent = (videoModal.muted || videoModal.volume === 0) ? "🔇" : (videoModal.volume < 0.5 ? "🔉" : "🔊");
         palco.classList.toggle("som-on", !videoModal.muted && videoModal.volume > 0);
+        atualizarPalmasCards();
     }
 
-    // ----- SOM INDIVIDUAL DOS CARDS -----
+    // ----- PALMAS -----
+    function chavePalmas(nome) { return "apolinario_palmas_" + nome; }
+    function totalPalmas(nome) { return parseInt(getLS(chavePalmas(nome)) || "0", 10); }
+    function atualizarPalmasCards() {
+        cards.forEach(function (c) {
+            var nome = nomeDeSrc(c.dataset.video);
+            var badge = c.querySelector(".palmas-badge");
+            if (!badge) {
+                badge = document.createElement("span");
+                badge.className = "palmas-badge";
+                c.appendChild(badge);
+            }
+            var n = totalPalmas(nome);
+            badge.textContent = "👏 " + n;
+            badge.classList.toggle("visivel", n > 0);
+        });
+    }
+    function burstPalmas() {
+        for (var i = 0; i < 10; i++) {
+            var s = document.createElement("span");
+            s.className = "palmas-fly";
+            s.textContent = "";
+            s.style.left = (10 + Math.random() * 80) + "%";
+            s.style.animationDelay = (Math.random() * 0.4) + "s";
+            palcoInner.appendChild(s);
+            setTimeout(function (el) { return function () { el.remove(); }; }(s), 1900);
+        }
+    }
+    document.getElementById("btnAplaudir").addEventListener("click", function () {
+        var nome = nomeDeSrc(videoModal.currentSrc || videoModal.src);
+        if (!nome) return;
+        setLS(chavePalmas(nome), String(totalPalmas(nome) + 1));
+        burstPalmas();
+        atualizarPalmasCards();
+    });
+
+    // ----- CARDS: som individual + abrir player -----
     function ligarCards() {
         cards.forEach(function (c, i) {
             var b = c.querySelector(".btn-som-card");
             var v = cardVideos[i];
-            if (!b || b._ligado) return;
-            b._ligado = true;
-            b.addEventListener("click", function (e) {
-                e.stopPropagation();
-                if (v.muted) {
-                    darSomPara(v);
-                    playSeguro(v);
-                } else {
-                    v.muted = true;
-                    if (comSomAtual === v) comSomAtual = null;
-                    sincronizarUI();
-                }
-            });
+            if (b && !b._ligado) {
+                b._ligado = true;
+                b.addEventListener("click", function (e) {
+                    e.stopPropagation();
+                    if (v.muted) { darSomPara(v); playSeguro(v); }
+                    else { v.muted = true; if (comSomAtual === v) comSomAtual = null; sincronizarUI(); }
+                });
+            }
             if (!c._ligado) {
                 c._ligado = true;
                 c.addEventListener("click", function () {
@@ -1324,23 +1165,22 @@
         modalAberto = true;
         modal.classList.add("aberto");
         document.body.style.overflow = "hidden";
-
         heroVideo.pause();
         syncCards();
-
         videoModal.src = src;
         videoModal.volume = sliderVol.value;
-        setEmocao(nomeDeSrc(src));
-
+        var nome = nomeDeSrc(src);
+        setEmocao(nome);
+        sessaoEmocoes[nome] = (sessaoEmocoes[nome] || 0) + 1;
         if (comSomAtual === cardVideos[indice]) {
             comSomAtual = videoModal;
             todosVideos.forEach(function (x) { x.muted = (x !== videoModal); });
             ensureAudio(videoModal);
         } else {
-            videoModal.muted = true;
+            videoModal.muted = !comSomAtual;
+            if (comSomAtual) { comSomAtual = videoModal; todosVideos.forEach(function (x) { x.muted = (x !== videoModal); }); ensureAudio(videoModal); }
         }
         sincronizarUI();
-
         if (timerCountdown) clearInterval(timerCountdown);
         countdown.classList.remove("oculto");
         var n = 3;
@@ -1365,11 +1205,9 @@
         modal.classList.remove("aberto");
         palco.classList.remove("tocando", "pausado");
         document.body.style.overflow = "";
-
         if (comSomAtual === videoModal) comSomAtual = heroVideo;
         videoModal.muted = true;
         todosVideos.forEach(function (x) { x.muted = (x === comSomAtual); });
-
         playSeguro(heroVideo);
         syncCards();
         sincronizarUI();
@@ -1383,12 +1221,10 @@
     videoModal.addEventListener("click", alternarPlay);
     videoModal.addEventListener("play",  function () { btnPlay.textContent = "⏸"; palco.classList.add("tocando"); palco.classList.remove("pausado"); });
     videoModal.addEventListener("pause", function () { btnPlay.textContent = "▶"; palco.classList.remove("tocando"); palco.classList.add("pausado"); });
-
     videoModal.addEventListener("ended", function () {
         var proximo = (indiceAtual + 1) % cards.length;
         abrirPlayer(cards[proximo].dataset.video, cards[proximo].dataset.titulo, proximo);
     });
-
     videoModal.addEventListener("timeupdate", function () {
         var dur = videoModal.duration || 10;
         preenchida.style.width = ((videoModal.currentTime / dur) * 100) + "%";
@@ -1398,60 +1234,140 @@
         var rect = barra.getBoundingClientRect();
         videoModal.currentTime = ((e.clientX - rect.left) / rect.width) * (videoModal.duration || 10);
     });
-
     btnMute.addEventListener("click", function () {
-        if (videoModal.muted) { darSomPara(videoModal); }
-        else {
-            videoModal.muted = true;
-            if (comSomAtual === videoModal) comSomAtual = null;
-            sincronizarUI();
-        }
+        if (videoModal.muted) darSomPara(videoModal);
+        else { videoModal.muted = true; if (comSomAtual === videoModal) comSomAtual = null; sincronizarUI(); }
     });
     sliderVol.addEventListener("input", function () {
         videoModal.volume = sliderVol.value;
-        if (sliderVol.value > 0) {
-            if (videoModal.muted) darSomPara(videoModal);
-            else sincronizarUI();
-        } else {
-            videoModal.muted = true;
-            if (comSomAtual === videoModal) comSomAtual = null;
-            sincronizarUI();
-        }
+        if (sliderVol.value > 0) { if (videoModal.muted) darSomPara(videoModal); else sincronizarUI(); }
+        else { videoModal.muted = true; if (comSomAtual === videoModal) comSomAtual = null; sincronizarUI(); }
     });
-
     btnSomGlobal.addEventListener("click", function () {
-        if (comSomAtual) {
-            silenciarTudo();
-        } else {
-            var v = modalAberto ? videoModal : heroVideo;
-            darSomPara(v);
-            playSeguro(v);
-        }
+        if (comSomAtual) silenciarTudo();
+        else { var v = modalAberto ? videoModal : heroVideo; darSomPara(v); playSeguro(v); }
     });
-
     btnFull.addEventListener("click", function () {
-        if (!document.fullscreenElement) {
-            if (palcoInner.requestFullscreen) palcoInner.requestFullscreen();
-        } else if (document.exitFullscreen) {
-            document.exitFullscreen();
-        }
+        if (!document.fullscreenElement) { if (palcoInner.requestFullscreen) palcoInner.requestFullscreen(); }
+        else if (document.exitFullscreen) document.exitFullscreen();
     });
-
     btnFechar.addEventListener("click", fecharPlayer);
     modal.addEventListener("click", function (e) { if (e.target === modal) fecharPlayer(); });
 
-    // ----- ATALHOS + EASTER EGGS (APOLINARIO e LEGADO) -----
+    // ----- 🔊 SOM AUTO-ATIVADO NO 1º TOQUE (resolve a reclamação) -----
+    function mostrarToast(el) {
+        el.classList.add("visivel");
+        setTimeout(function () { el.classList.remove("visivel"); }, 4000);
+    }
+    function somAutoAtivar() {
+        if (somAutoFeito) return;
+        somAutoFeito = true;
+        if (!comSomAtual) {
+            var v = modalAberto ? videoModal : heroVideo;
+            darSomPara(v);
+            playSeguro(v);
+            mostrarToast(toastAviso);
+        }
+    }
+    ["touchend", "click", "keydown"].forEach(function (ev) {
+        document.addEventListener(ev, function () {
+            playSeguro(heroVideo);
+            syncCards();
+            somAutoAtivar();
+        }, { once: true, passive: true });
+    });
+
+    // ----- 🎟️ INGRESSO DIGITAL -----
+    var modalIngresso = document.getElementById("modalIngresso");
+    var canvasIng = document.getElementById("canvasIngresso");
+    var ctxIng = canvasIng.getContext("2d");
+    var nomeIngresso = document.getElementById("nomeIngresso");
+    var btnShare = document.getElementById("btnShareIngresso");
+    var codigoIngresso = "AP-" + Math.random().toString(36).slice(2, 6).toUpperCase() + "-" + String(Date.now()).slice(-4);
+
+    function desenharIngresso() {
+        var nome = (nomeIngresso.value || "VISITANTE ANÔNIMO").toUpperCase();
+        var titulo = tituloPlayer.textContent || "SESSÃO APOLINÁRIO";
+        var W = canvasIng.width, H = canvasIng.height;
+        ctxIng.fillStyle = "#0a0a0f"; ctxIng.fillRect(0, 0, W, H);
+        ctxIng.strokeStyle = corAtual; ctxIng.lineWidth = 3; ctxIng.strokeRect(8, 8, W - 16, H - 16);
+        ctxIng.setLineDash([6, 6]); ctxIng.beginPath(); ctxIng.moveTo(W - 170, 12); ctxIng.lineTo(W - 170, H - 12); ctxIng.stroke(); ctxIng.setLineDash([]);
+        ctxIng.fillStyle = corAtual; ctxIng.font = "bold 26px monospace"; ctxIng.fillText("APOLINÁRIO STUDIO", 30, 60);
+        ctxIng.fillStyle = "#888"; ctxIng.font = "12px monospace"; ctxIng.fillText("ENTRETENIMENTOS & PRODUÇÕES // INGRESSO DIGITAL", 30, 82);
+        ctxIng.fillStyle = "#fff"; ctxIng.font = "bold 22px Segoe UI"; ctxIng.fillText(titulo.toUpperCase(), 30, 140);
+        ctxIng.fillStyle = corAtual; ctxIng.font = "bold 18px monospace"; ctxIng.fillText("ESPECTADOR: " + nome, 30, 180);
+        ctxIng.fillStyle = "#888"; ctxIng.font = "13px monospace";
+        ctxIng.fillText("DATA: " + new Date().toLocaleDateString("pt-BR"), 30, 215);
+        ctxIng.fillText("SESSÃO: EMOCIONAL // SALA: SYS_NEXUS", 30, 238);
+        ctxIng.fillText("CÓDIGO: " + codigoIngresso, 30, 261);
+        // canhoto com "código de barras"
+        for (var x = W - 150; x < W - 30; x += 6) {
+            ctxIng.fillStyle = Math.random() > 0.4 ? "#fff" : corAtual;
+            ctxIng.fillRect(x, 40, 3, H - 120);
+        }
+        ctxIng.fillStyle = corAtual; ctxIng.font = "bold 14px monospace";
+        ctxIng.save(); ctxIng.translate(W - 85, H - 40); ctxIng.fillText("ADMITE 1", -35, 0); ctxIng.restore();
+        btnShare.href = "https://wa.me/?text=" + encodeURIComponent(
+            "🎟️ INGRESSO APOLINÁRIO STUDIO — " + nome + " sentiu \"" + titulo + "\". Sinta você também: " + location.href
+        );
+    }
+    document.getElementById("btnIngresso").addEventListener("click", function () {
+        modalIngresso.classList.add("aberto");
+        desenharIngresso();
+    });
+    nomeIngresso.addEventListener("input", desenharIngresso);
+    document.getElementById("btnBaixarIngresso").addEventListener("click", function () {
+        var a = document.createElement("a");
+        a.download = "ingresso-apolinario-studio.png";
+        a.href = canvasIng.toDataURL("image/png");
+        a.click();
+    });
+    document.getElementById("btnFecharIngresso").addEventListener("click", function () {
+        modalIngresso.classList.remove("aberto");
+    });
+
+    // ----- 🎬 CRÉDITOS DA SESSÃO -----
+    var creditos = document.getElementById("creditos");
+    var creditosRoll = document.getElementById("creditosRoll");
+    var NOMES_BASE = ["Catarse", "Curiosidade", "Felicidade", "Perda", "Tristeza"];
+    document.getElementById("linkCreditos").addEventListener("click", function () {
+        var seg = Math.round((Date.now() - sessaoInicio) / 1000);
+        var linhas = "";
+        linhas += "<b>APOLINÁRIO STUDIO</b>apresenta os créditos da sua sessão<br><br>";
+        linhas += "DATA DA SESSÃO<br>" + new Date().toLocaleString("pt-BR") + "<br><br>";
+        if (humorEscolhido !== null) linhas += "HUMOR INICIAL DECLARADO<br>" + NOMES_BASE[parseInt(humorEscolhido, 10) || 0].toUpperCase() + "<br><br>";
+        linhas += "EMOÇÕES EXPERIENCIADAS<br>";
+        var vistas = Object.keys(sessaoEmocoes);
+        if (vistas.length === 0) linhas += "(nenhuma amostra assistida ainda… o destino aguarda)<br>";
+        vistas.forEach(function (k) { linhas += k.toUpperCase() + " ×" + sessaoEmocoes[k] + "<br>"; });
+        linhas += "<br>PALMAS DADAS PELO PÚBLICO<br>";
+        var tp = 0;
+        BASE_VIDEOS.forEach(function (v) { tp += totalPalmas(nomeDeSrc(v)); });
+        linhas += "👏 " + tp + "<br><br>";
+        linhas += "TEMPO DE SESSÃO<br>" + fmt(seg) + "<br><br>";
+        linhas += "DIREÇÃO<br>APOLINÁRIO STUDIO<br><br>";
+        linhas += "OBRIGADO POR SENTIR COM A GENTE<br><br>";
+        linhas += "<b>SYS_NEXUS // FIM</b>";
+        creditosRoll.innerHTML = linhas;
+        creditosRoll.style.animation = "none";
+        void creditosRoll.offsetWidth;
+        creditosRoll.style.animation = "";
+        creditos.classList.add("aberto");
+    });
+    document.getElementById("fecharCreditos").addEventListener("click", function () {
+        creditos.classList.remove("aberto");
+    });
+
+    // ----- ATALHOS + EASTER EGGS -----
     var glitchFlash = document.getElementById("glitchFlash");
     var sequencia = "";
     var capsulaAberta = false;
-
     function abrirCapsula() {
         if (capsulaAberta) return;
         capsulaAberta = true;
         document.getElementById("capsulaMsg").classList.remove("selado");
         document.getElementById("capsulaContagem").textContent = "🔓 CÁPSULA ABERTA ANTES DO TEMPO";
     }
-
     document.addEventListener("keydown", function (e) {
         if (e.key && e.key.length === 1) {
             sequencia = (sequencia + e.key.toUpperCase()).slice(-10);
@@ -1464,10 +1380,7 @@
                     glitchFlash.classList.remove("ativo");
                 }, 2600);
             }
-            if (sequencia.slice(-6) === "LEGADO") {
-                sequencia = "";
-                abrirCapsula();
-            }
+            if (sequencia.slice(-6) === "LEGADO") { sequencia = ""; abrirCapsula(); }
         }
         if (!modal.classList.contains("aberto")) return;
         switch (e.key) {
@@ -1482,7 +1395,7 @@
         }
     });
 
-    // ----- NOVO: CÁPSULA DO TEMPO (contagem regressiva) -----
+    // ----- CÁPSULA -----
     var ALVO_CAPSULA = new Date("2030-12-31T00:00:00-03:00").getTime();
     var elContagem = document.getElementById("capsulaContagem");
     function tickCapsula() {
@@ -1498,7 +1411,7 @@
     tickCapsula();
     setInterval(tickCapsula, 1000);
 
-    // ----- NOVO: MODO DIRETOR (7 cliques na logo) -----
+    // ----- MODO DIRETOR -----
     var cliquesLogo = 0;
     var toastDiretor = document.getElementById("toastDiretor");
     document.getElementById("logoContainer").addEventListener("click", function () {
@@ -1506,16 +1419,12 @@
         if (cliquesLogo >= 7) {
             cliquesLogo = 0;
             document.body.classList.toggle("modo-diretor");
-            if (document.body.classList.contains("modo-diretor")) {
-                toastDiretor.classList.add("visivel");
-                setTimeout(function () { toastDiretor.classList.remove("visivel"); }, 4200);
-            }
+            if (document.body.classList.contains("modo-diretor")) mostrarToast(toastDiretor);
         }
     });
 
     // ----- HERO ROTATIVO -----
     var heroAtual = 0;
-
     var navCaps = document.createElement("div");
     navCaps.className = "capitulos-hero";
     fontesHero.forEach(function (_, i) {
@@ -1542,37 +1451,21 @@
             if (idx === i) { void c.offsetWidth; c.classList.add("ativo"); }
         });
     }
-
     setInterval(function () {
         if (document.visibilityState === "visible" && !modalAberto && !heroVideo.paused) {
             trocarHero((heroAtual + 1) % fontesHero.length, false);
         }
     }, 10000);
 
-    // ----- ABA OCULTA -----
     document.addEventListener("visibilitychange", function () {
-        if (document.hidden) {
-            heroVideo.pause();
-            cardVideos.forEach(function (v) { v.pause(); });
-        } else if (!modalAberto) {
-            playSeguro(heroVideo);
-            syncCards();
-        }
-    });
-
-    // ----- DESBLOQUEIO 1º TOQUE -----
-    function desbloquearAutoplay() {
-        playSeguro(heroVideo);
-        syncCards();
-    }
-    ["touchend", "click", "keydown"].forEach(function (ev) {
-        document.addEventListener(ev, desbloquearAutoplay, { once: true, passive: true });
+        if (document.hidden) { heroVideo.pause(); cardVideos.forEach(function (v) { v.pause(); }); }
+        else if (!modalAberto) { playSeguro(heroVideo); syncCards(); }
     });
 
     // ----- INICIALIZAÇÃO -----
     heroVideo.muted = true;
     setEmocao(nomeDeSrc(fontesHero[0]));
-    if (humorSalvo !== null) trocarHero(0, true);
+    if (humorEscolhido !== null) trocarHero(0, true);
     playSeguro(heroVideo);
     sincronizarUI();
     </script>
