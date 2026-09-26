@@ -63,6 +63,31 @@
         .pre-barra-fill { height: 100%; width: 0%; background: var(--vermelho); box-shadow: 0 0 10px var(--vermelho); transition: width 0.3s; }
         .pre-contador { font-family: monospace; font-size: 12px; color: var(--vermelho); letter-spacing: 3px; }
 
+        /* ===== NOVO v6.1: PORTA DE ENTRADA COM SOM ===== */
+        #gateSom {
+            position: fixed; inset: 0; z-index: 99995; display: none;
+            background: rgba(2,2,4,0.96); backdrop-filter: blur(10px);
+            justify-content: center; align-items: center; text-align: center; padding: 20px;
+        }
+        #gateSom.aberto { display: flex; animation: fadeInModal 0.6s ease; }
+        .gate-caixa { max-width: 620px; }
+        .gate-titulo { font-size: clamp(1.5rem, 4.5vw, 2.6rem); font-weight: 900; text-transform: uppercase; letter-spacing: 1px; line-height: 1.25; margin-bottom: 14px; }
+        .gate-titulo b { color: var(--vermelho); text-shadow: 0 0 25px rgba(229,9,20,0.7); }
+        .gate-sub { color: #888; font-size: 14px; margin-bottom: 8px; }
+        .gate-botoes { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+        .gate-btn {
+            padding: 18px 34px; border-radius: 100px; font-weight: 800; letter-spacing: 2px;
+            text-transform: uppercase; font-size: 14px; cursor: pointer; transition: 0.3s; border: 1px solid;
+        }
+        .gate-btn.som {
+            background: var(--vermelho); border-color: var(--vermelho); color: #fff;
+            box-shadow: 0 0 35px rgba(229,9,20,0.5); animation: flutuar 2.5s ease-in-out infinite;
+        }
+        .gate-btn.som:hover { transform: scale(1.07); box-shadow: 0 0 55px rgba(229,9,20,0.8); }
+        .gate-btn.sil { background: transparent; border-color: rgba(255,255,255,0.25); color: #aaa; }
+        .gate-btn.sil:hover { border-color: #fff; color: #fff; }
+        .gate-nota { margin-top: 24px; font-size: 10px; color: #555; font-family: monospace; letter-spacing: 2px; text-transform: uppercase; }
+
         /* ===== PULSO EMOCIONAL ===== */
         .pulso-site {
             position: fixed; inset: 0; pointer-events: none; z-index: 3;
@@ -91,7 +116,7 @@
         }
         body.som-live #espectro { opacity: 0.9; }
 
-        /* ===== LETTERBOX (MODO DIRETOR) ===== */
+        /* ===== LETTERBOX ===== */
         .lb { position: fixed; left: 0; width: 100%; height: 0; background: #000; z-index: 950; pointer-events: none; transition: height 0.9s cubic-bezier(0.25,1,0.5,1); }
         .lb.top { top: 0; }
         .lb.bottom { bottom: 0; }
@@ -100,7 +125,7 @@
         body.modo-diretor .lb.bottom { border-top: 1px solid rgba(229,9,20,0.35); }
         body.modo-diretor::after { opacity: 0.12; }
 
-        /* ===== TOASTS FLUTUANTES ===== */
+        /* ===== TOASTS ===== */
         .toast-flutuante {
             position: fixed; top: 12vh; left: 50%; transform: translateX(-50%) translateY(-20px);
             z-index: 9960; background: rgba(0,0,0,0.88); border: 1px solid var(--vermelho);
@@ -203,7 +228,6 @@
             transition: 0.3s; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); padding: 6px 2px;
         }
         .nav-links a:hover { color: var(--vermelho); }
-
         .menu-toggle { display: none; background: none; border: none; cursor: pointer; width: 32px; height: 24px; position: relative; z-index: 102; }
         .menu-toggle span { display: block; width: 100%; height: 2px; background: #fff; position: absolute; left: 0; transition: 0.3s; }
         .menu-toggle span:nth-child(1) { top: 0; }
@@ -401,7 +425,7 @@
         @keyframes ondaSom { 0%, 100% { height: 25%; } 50% { height: 100%; } }
         @keyframes flutuar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-        /* ===== NOVO: INGRESSO DIGITAL ===== */
+        /* ===== INGRESSO ===== */
         .modal-ingresso { position: fixed; inset: 0; z-index: 2100; display: none; background: rgba(0,0,0,0.95); justify-content: center; align-items: center; flex-direction: column; gap: 16px; padding: 20px; }
         .modal-ingresso.aberto { display: flex; animation: fadeInModal 0.4s ease; }
         #canvasIngresso { max-width: 92vw; border-radius: 12px; box-shadow: 0 0 60px rgba(229,9,20,0.3); }
@@ -413,7 +437,7 @@
         .btn-ingresso.verde { background: linear-gradient(135deg, #25d366, #1ebd58); }
         .btn-ingresso.fechar { background: rgba(255,255,255,0.1); }
 
-        /* ===== NOVO: CRÉDITOS DA SESSÃO ===== */
+        /* ===== CRÉDITOS ===== */
         #creditos { position: fixed; inset: 0; z-index: 2200; display: none; background: #000; overflow: hidden; }
         #creditos.aberto { display: block; }
         .creditos-roll { position: absolute; top: 100%; left: 0; width: 100%; text-align: center; font-family: monospace; letter-spacing: 3px; line-height: 2.4; color: #ccc; font-size: 14px; text-transform: uppercase; animation: rolar 22s linear forwards; }
@@ -466,6 +490,7 @@
             .cap-hero { width: 40px; }
             .btn-whatsapp { min-width: 260px; }
             .capsula { padding: 40px 7%; }
+            .gate-btn { padding: 16px 26px; font-size: 12px; }
         }
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
@@ -507,6 +532,7 @@
                 preloader.classList.add("oculto");
                 var hv = document.getElementById("player-emocional");
                 if (hv) { var p = hv.play(); if (p && p.catch) p.catch(function(){}); }
+                window.dispatchEvent(new Event("apolinarioPreFim"));
             }, 700);
         }
         setTimeout(finalizar, 5000);
@@ -526,15 +552,29 @@
     </div>
     <canvas id="espectro" aria-hidden="true"></canvas>
     <div class="toast-flutuante" id="toastDiretor">🎬 MODO DIRETOR ATIVADO — BEM-VINDO AO SET, APOLINÁRIO</div>
-    <div class="toast-flutuante" id="toastAviso">🔊 SOM ATIVADO — USE O BOTÃO VERMELHO PARA SILENCIAR</div>
+    <div class="toast-flutuante" id="toastAviso">🔊 SOM ATIVADO — USE O BOTÃO FLUTUANTE PARA SILENCIAR</div>
 
     <div class="scroll-progress" id="scrollProgress"></div>
     <div class="glitch-flash" id="glitchFlash">⚠ SYS_NEXUS DESBLOQUEADO ⚠</div>
     <div class="coordenada-secreta" aria-hidden="true">SYS_NEXUS_//_DATA_LOCKED</div>
 
+    <!-- ===== NOVO v6.1: PORTA DE ENTRADA COM SOM ===== -->
+    <div id="gateSom" role="dialog" aria-modal="true" aria-label="Escolha de som">
+        <div class="gate-caixa">
+            <span class="portal-tag">SYS_NEXUS // PORTA DE ENTRADA</span>
+            <h2 class="gate-titulo">Esta experiência <b>tem som</b>.<br>Como deseja entrar?</h2>
+            <p class="gate-sub">Recomendamos fones de ouvido. 🎧</p>
+            <div class="gate-botoes">
+                <button class="gate-btn som" id="gateBtnSom">🔊 Entrar com som</button>
+                <button class="gate-btn sil" id="gateBtnSil">🔇 Entrar em silêncio</button>
+            </div>
+            <p class="gate-nota">Você pode mudar a qualquer momento no botão flutuante</p>
+        </div>
+    </div>
+
     <div id="portalHumor" role="dialog" aria-modal="true" aria-label="Escolha seu humor">
         <div class="portal-caixa">
-            <span class="portal-tag">SYS_NEXUS // CURADORIA EMPÁTICA v6.0</span>
+            <span class="portal-tag">SYS_NEXUS // CURADORIA EMPÁTICA v6.1</span>
             <h2 class="portal-pergunta">Antes de entrar:<br>como você <b>sente</b> hoje?</h2>
             <p class="portal-sub">Este site não exibe conteúdo — ele responde emoções.<br>Sua escolha define por qual sentimento a experiência começa.</p>
             <div class="portal-opcoes">
@@ -768,13 +808,15 @@
 
     <script>
     // ================================================
-    // 🎬 APOLINÁRIO STUDIO — v6.0 "O SITE QUE SENTE"
+    // 🎬 APOLINÁRIO STUDIO — v6.1 "PORTA DE ENTRADA COM SOM"
     // ================================================
 
     function getLS(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
     function setLS(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+    function getSS(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
+    function setSS(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
 
-    // ----- EMOÇÕES: cor + pulso + frase-poema -----
+    // ----- EMOÇÕES -----
     var EMOCOES = {
         catarse:     { cor: "#e50914", pulso: "0.9s", frase: "Quando a tensão vira liberdade, o corpo inteiro agradece." },
         curiosidade: { cor: "#00e5ff", pulso: "1.2s", frase: "Toda grande história começa com um passo no escuro." },
@@ -802,7 +844,6 @@
         }, 300);
     }
 
-    // ----- SESSÃO (para os créditos finais) -----
     var sessaoInicio = Date.now();
     var sessaoEmocoes = {};
     var humorEscolhido = getLS("apolinario_humor");
@@ -828,7 +869,7 @@
         el.addEventListener("mouseleave", function () { cursorRing.classList.remove("grande"); });
     });
 
-    // ----- SCROLL PROGRESS -----
+    // ----- SCROLL -----
     var scrollProgress = document.getElementById("scrollProgress");
     window.addEventListener("scroll", function () {
         var total = document.body.scrollHeight - window.innerHeight;
@@ -910,7 +951,7 @@
     document.querySelectorAll(".reveal").forEach(function (el) { observador.observe(el); });
 
     // ================================================
-    // 🎥 SISTEMA DE REPRODUÇÃO + SOM AUTO-ATIVADO
+    // 🎥 REPRODUÇÃO + SOM
     // ================================================
     var heroVideo  = document.getElementById("player-emocional");
     var videoModal = document.getElementById("videoModal");
@@ -936,6 +977,7 @@
     var BASE_VIDEOS = ["catarse.mp4", "curiosidade.mp4", "felicidade.mp4", "perda.mp4", "tristeza.mp4"];
     var fontesHero = BASE_VIDEOS.slice();
     var portalHumor = document.getElementById("portalHumor");
+    var gateSom = document.getElementById("gateSom");
 
     function rotacionar(arr, n) { return arr.slice(n).concat(arr.slice(0, n)); }
     function aplicarHumor(idx) {
@@ -945,11 +987,8 @@
         todos.forEach(function (c) { porNome[c.dataset.video] = c; });
         fontesHero.forEach(function (src) { vitrine.appendChild(porNome[src]); });
     }
-    if (humorEscolhido !== null) {
-        aplicarHumor(parseInt(humorEscolhido, 10) || 0);
-    } else {
-        setTimeout(function () { portalHumor.classList.add("aberto"); }, 3000);
-    }
+    if (humorEscolhido !== null) aplicarHumor(parseInt(humorEscolhido, 10) || 0);
+
     portalHumor.querySelectorAll(".portal-btn").forEach(function (b) {
         b.addEventListener("click", function () {
             var idx = parseInt(b.dataset.humor, 10);
@@ -966,6 +1005,10 @@
         portalHumor.classList.add("aberto");
     });
 
+    function maybePortalHumor() {
+        if (humorEscolhido === null) portalHumor.classList.add("aberto");
+    }
+
     var cards = [], cardVideos = [], todosVideos = [];
     function recarregarListas() {
         cards = Array.prototype.slice.call(document.querySelectorAll(".card-amostra"));
@@ -979,7 +1022,6 @@
     var cardsVisiveis = [];
     var timerCountdown = null;
     var indiceAtual = 0;
-    var somAutoFeito = false;
 
     function fmt(s) { return Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0"); }
 
@@ -997,7 +1039,7 @@
         }
     }
 
-    // ----- ÁUDIO REAL (Web Audio) -----
+    // ----- ÁUDIO REAL -----
     var ctxAudio = null;
     var canvasEsp = document.getElementById("espectro");
     var ctxCanvas = canvasEsp.getContext("2d");
@@ -1120,7 +1162,7 @@
         for (var i = 0; i < 10; i++) {
             var s = document.createElement("span");
             s.className = "palmas-fly";
-            s.textContent = "";
+            s.textContent = "👏";
             s.style.left = (10 + Math.random() * 80) + "%";
             s.style.animationDelay = (Math.random() * 0.4) + "s";
             palcoInner.appendChild(s);
@@ -1135,7 +1177,7 @@
         atualizarPalmasCards();
     });
 
-    // ----- CARDS: som individual + abrir player -----
+    // ----- CARDS -----
     function ligarCards() {
         cards.forEach(function (c, i) {
             var b = c.querySelector(".btn-som-card");
@@ -1172,13 +1214,12 @@
         var nome = nomeDeSrc(src);
         setEmocao(nome);
         sessaoEmocoes[nome] = (sessaoEmocoes[nome] || 0) + 1;
-        if (comSomAtual === cardVideos[indice]) {
+        if (comSomAtual) {
             comSomAtual = videoModal;
             todosVideos.forEach(function (x) { x.muted = (x !== videoModal); });
             ensureAudio(videoModal);
         } else {
-            videoModal.muted = !comSomAtual;
-            if (comSomAtual) { comSomAtual = videoModal; todosVideos.forEach(function (x) { x.muted = (x !== videoModal); }); ensureAudio(videoModal); }
+            videoModal.muted = true;
         }
         sincronizarUI();
         if (timerCountdown) clearInterval(timerCountdown);
@@ -1254,30 +1295,77 @@
     btnFechar.addEventListener("click", fecharPlayer);
     modal.addEventListener("click", function (e) { if (e.target === modal) fecharPlayer(); });
 
-    // ----- 🔊 SOM AUTO-ATIVADO NO 1º TOQUE (resolve a reclamação) -----
+    // ================================================
+    // 🔊 v6.1 PORTA DE ENTRADA COM SOM
+    // ================================================
+    var prefSom = getSS("apolinario_som_pref"); // 'som' | 'silencio' | null
+    var permitirAutoNoToque = false;
+
     function mostrarToast(el) {
         el.classList.add("visivel");
         setTimeout(function () { el.classList.remove("visivel"); }, 4000);
     }
-    function somAutoAtivar() {
-        if (somAutoFeito) return;
-        somAutoFeito = true;
-        if (!comSomAtual) {
-            var v = modalAberto ? videoModal : heroVideo;
-            darSomPara(v);
-            playSeguro(v);
-            mostrarToast(toastAviso);
+
+    function fecharGateSom() { gateSom.classList.remove("aberto"); }
+
+    document.getElementById("gateBtnSom").addEventListener("click", function () {
+        setSS("apolinario_som_pref", "som");
+        fecharGateSom();
+        darSomPara(modalAberto ? videoModal : heroVideo);
+        playSeguro(heroVideo);
+        mostrarToast(toastAviso);
+        maybePortalHumor();
+    });
+    document.getElementById("gateBtnSil").addEventListener("click", function () {
+        setSS("apolinario_som_pref", "silencio");
+        fecharGateSom();
+        maybePortalHumor();
+    });
+
+    // Quando a abertura termina: decide o fluxo de som
+    window.addEventListener("apolinarioPreFim", function () {
+        if (prefSom === null) {
+            // Primeira vez nesta sessão: mostra a porta de entrada
+            setTimeout(function () { gateSom.classList.add("aberto"); }, 400);
+        } else if (prefSom === "som") {
+            // Já escolheu som antes: tenta abrir direto com som (funciona se o navegador confiar no site)
+            heroVideo.muted = false;
+            var p = heroVideo.play();
+            var ok = false;
+            if (p && p.then) {
+                p.then(function () {
+                    ok = true;
+                    darSomPara(heroVideo);
+                    mostrarToast(toastAviso);
+                }).catch(function () {
+                    heroVideo.muted = true;
+                    playSeguro(heroVideo);
+                    permitirAutoNoToque = true; // liga no primeiro toque, sem perguntar
+                });
+            } else {
+                permitirAutoNoToque = true;
+            }
+            setTimeout(maybePortalHumor, 600);
+        } else {
+            // Escolheu silêncio: respeita
+            setTimeout(maybePortalHumor, 600);
         }
-    }
+    });
+
+    // Se o som ficou pendente (navegador bloqueou), liga no primeiro toque do usuário
     ["touchend", "click", "keydown"].forEach(function (ev) {
         document.addEventListener(ev, function () {
             playSeguro(heroVideo);
             syncCards();
-            somAutoAtivar();
+            if (permitirAutoNoToque && !comSomAtual) {
+                permitirAutoNoToque = false;
+                darSomPara(modalAberto ? videoModal : heroVideo);
+                mostrarToast(toastAviso);
+            }
         }, { once: true, passive: true });
     });
 
-    // ----- 🎟️ INGRESSO DIGITAL -----
+    // ----- 🎟️ INGRESSO -----
     var modalIngresso = document.getElementById("modalIngresso");
     var canvasIng = document.getElementById("canvasIngresso");
     var ctxIng = canvasIng.getContext("2d");
@@ -1300,13 +1388,12 @@
         ctxIng.fillText("DATA: " + new Date().toLocaleDateString("pt-BR"), 30, 215);
         ctxIng.fillText("SESSÃO: EMOCIONAL // SALA: SYS_NEXUS", 30, 238);
         ctxIng.fillText("CÓDIGO: " + codigoIngresso, 30, 261);
-        // canhoto com "código de barras"
         for (var x = W - 150; x < W - 30; x += 6) {
             ctxIng.fillStyle = Math.random() > 0.4 ? "#fff" : corAtual;
             ctxIng.fillRect(x, 40, 3, H - 120);
         }
         ctxIng.fillStyle = corAtual; ctxIng.font = "bold 14px monospace";
-        ctxIng.save(); ctxIng.translate(W - 85, H - 40); ctxIng.fillText("ADMITE 1", -35, 0); ctxIng.restore();
+        ctxIng.fillText("ADMITE 1", W - 120, H - 40);
         btnShare.href = "https://wa.me/?text=" + encodeURIComponent(
             "🎟️ INGRESSO APOLINÁRIO STUDIO — " + nome + " sentiu \"" + titulo + "\". Sinta você também: " + location.href
         );
@@ -1326,7 +1413,7 @@
         modalIngresso.classList.remove("aberto");
     });
 
-    // ----- 🎬 CRÉDITOS DA SESSÃO -----
+    // ----- 🎬 CRÉDITOS -----
     var creditos = document.getElementById("creditos");
     var creditosRoll = document.getElementById("creditosRoll");
     var NOMES_BASE = ["Catarse", "Curiosidade", "Felicidade", "Perda", "Tristeza"];
