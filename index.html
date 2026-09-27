@@ -23,6 +23,26 @@
             overflow-x: hidden;
         }
 
+        /* ===== NOVO: INTRO CINEMATOGRÁFICA ===== */
+        #introCinema {
+            position: fixed; inset: 0; z-index: 100000; background: #000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            gap: 20px; transition: opacity 1.2s ease;
+        }
+        #introCinema.oculto { opacity: 0; visibility: hidden; pointer-events: none; }
+        .intro-texto {
+            font-size: clamp(1.5rem, 5vw, 3rem); font-weight: 900; letter-spacing: 8px;
+            text-transform: uppercase; color: #fff; text-align: center;
+            opacity: 0; animation: introFade 4s ease-in-out forwards;
+        }
+        .intro-texto b { color: var(--vermelho); text-shadow: 0 0 40px rgba(229,9,20,0.9); }
+        .intro-sub { font-size: 14px; letter-spacing: 6px; color: #666; opacity: 0; animation: introFade 4s ease-in-out 0.5s forwards; }
+        @keyframes introFade {
+            0%, 20% { opacity: 0; transform: translateY(20px); }
+            30%, 70% { opacity: 1; transform: translateY(0); }
+            80%, 100% { opacity: 0; transform: translateY(-20px); }
+        }
+
         /* ===== CURSOR ===== */
         @media (hover: hover) and (pointer: fine) {
             body, a, button, .card-amostra, .barra-progresso, input { cursor: none !important; }
@@ -155,6 +175,52 @@
             font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; transition: 0.3s;
         }
         .portal-btn:hover { transform: translateY(-3px) scale(1.05); border-color: var(--vermelho); color: var(--vermelho); box-shadow: 0 0 25px rgba(229,9,20,0.4); }
+
+        /* ===== NOVO: PÁGINA DE CONTATO ===== */
+        .contato-form {
+            max-width: 600px; margin: 0 auto; background: rgba(14,14,20,0.4);
+            backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px; padding: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+        .contato-form h3 {
+            font-size: 1.8rem; font-weight: 800; margin-bottom: 25px; text-align: center;
+            background: linear-gradient(to right, #fff, #888);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .form-grupo { margin-bottom: 20px; }
+        .form-grupo label {
+            display: block; font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+            color: #aaa; margin-bottom: 8px; font-weight: 700;
+        }
+        .form-grupo input, .form-grupo textarea {
+            width: 100%; padding: 14px 18px; background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.15); border-radius: 8px;
+            color: #fff; font-size: 14px; font-family: inherit; transition: 0.3s;
+        }
+        .form-grupo input:focus, .form-grupo textarea:focus {
+            outline: none; border-color: var(--vermelho); box-shadow: 0 0 15px rgba(229,9,20,0.3);
+        }
+        .form-grupo textarea { resize: vertical; min-height: 120px; }
+        .btn-enviar {
+            width: 100%; padding: 16px; background: var(--vermelho); color: #fff;
+            border: none; border-radius: 8px; font-size: 14px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
+            transition: 0.3s; box-shadow: 0 4px 20px rgba(229,9,20,0.4);
+        }
+        .btn-enviar:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(229,9,20,0.6); }
+        .emails-diretos {
+            margin-top: 30px; text-align: center; padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .emails-diretos p { font-size: 12px; color: #888; margin-bottom: 15px; letter-spacing: 1px; }
+        .email-link {
+            display: inline-block; margin: 8px 12px; padding: 10px 20px;
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 100px; color: var(--vermelho); text-decoration: none;
+            font-family: monospace; font-size: 13px; transition: 0.3s;
+        }
+        .email-link:hover { background: rgba(229,9,20,0.1); border-color: var(--vermelho); }
 
         /* ===== CÁPSULA ===== */
         .capsula-sec { padding-top: 40px; }
@@ -491,6 +557,7 @@
             .btn-whatsapp { min-width: 260px; }
             .capsula { padding: 40px 7%; }
             .gate-btn { padding: 16px 26px; font-size: 12px; }
+            .contato-form { padding: 30px 20px; }
         }
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
@@ -502,7 +569,13 @@
 </head>
 <body>
 
-    <div id="preloader">
+    <!-- ===== INTRO CINEMATOGRÁFICA ===== -->
+    <div id="introCinema">
+        <div class="intro-texto">UM <b>LEGADO</b> EM CONSTRUÇÃO</div>
+        <div class="intro-sub">APOLINÁRIO STUDIO APRESENTA</div>
+    </div>
+
+    <div id="preloader" style="display:none;">
         <div class="pre-apresenta">Apolinário Studio apresenta</div>
         <div class="pre-nome">APOLINÁRIO <b>STUDIO</b></div>
         <div class="pre-barra"><div class="pre-barra-fill" id="preBarraFill"></div></div>
@@ -511,32 +584,41 @@
 
     <script>
     (function () {
-        var preloader   = document.getElementById("preloader");
-        var preFill     = document.getElementById("preBarraFill");
+        var intro = document.getElementById("introCinema");
+        var preloader = document.getElementById("preloader");
+        var preFill = document.getElementById("preBarraFill");
         var preContador = document.getElementById("preContador");
         var progresso = 0, terminado = false;
-        var timer = setInterval(function () {
-            progresso = Math.min(progresso + Math.random() * 9, 92);
-            pintar();
-        }, 140);
-        function pintar() {
-            preFill.style.width = progresso + "%";
-            preContador.textContent = String(Math.floor(progresso)).padStart(3, "0") + "%";
-        }
-        function finalizar() {
-            if (terminado) return;
-            terminado = true;
-            clearInterval(timer);
-            progresso = 100; pintar();
-            setTimeout(function () {
-                preloader.classList.add("oculto");
-                var hv = document.getElementById("player-emocional");
-                if (hv) { var p = hv.play(); if (p && p.catch) p.catch(function(){}); }
-                window.dispatchEvent(new Event("apolinarioPreFim"));
-            }, 700);
-        }
-        setTimeout(finalizar, 5000);
-        window.addEventListener("load", function () { setTimeout(finalizar, 2200); });
+
+        // Intro dura 5 segundos
+        setTimeout(function () {
+            intro.classList.add("oculto");
+            preloader.style.display = "flex";
+            
+            var timer = setInterval(function () {
+                progresso = Math.min(progresso + Math.random() * 9, 92);
+                preFill.style.width = progresso + "%";
+                preContador.textContent = String(Math.floor(progresso)).padStart(3, "0") + "%";
+            }, 140);
+
+            function finalizar() {
+                if (terminado) return;
+                terminado = true;
+                clearInterval(timer);
+                progresso = 100;
+                preFill.style.width = "100%";
+                preContador.textContent = "100%";
+                setTimeout(function () {
+                    preloader.classList.add("oculto");
+                    var hv = document.getElementById("player-emocional");
+                    if (hv) { var p = hv.play(); if (p && p.catch) p.catch(function(){}); }
+                    window.dispatchEvent(new Event("apolinarioPreFim"));
+                }, 700);
+            }
+
+            setTimeout(finalizar, 5000);
+            window.addEventListener("load", function () { setTimeout(finalizar, 2200); });
+        }, 5000);
     })();
     </script>
 
@@ -556,7 +638,7 @@
 
     <div class="scroll-progress" id="scrollProgress"></div>
     <div class="glitch-flash" id="glitchFlash">⚠ SYS_NEXUS DESBLOQUEADO ⚠</div>
-    <div class="coordenada-secreta" aria-hidden="true">SYS_NEXUS_//_v6.2</div>
+    <div class="coordenada-secreta" aria-hidden="true">SYS_NEXUS_//_v7.0</div>
 
     <div id="gateSom" role="dialog" aria-modal="true" aria-label="Escolha de som">
         <div class="gate-caixa">
@@ -733,7 +815,42 @@
         </div>
     </section>
 
-    <footer id="contato">
+    <!-- ===== NOVO: PÁGINA DE CONTATO ===== -->
+    <section class="container" id="contato">
+        <h2 class="reveal">Entre em Contato</h2>
+        <p class="subtitulo-unico reveal">Pronto para criar algo que o mundo nunca viu? Envie sua mensagem ou escreva diretamente para nossos e-mails oficiais.</p>
+        
+        <div class="contato-form reveal">
+            <h3>Envie sua Mensagem</h3>
+            <form id="formContato" action="mailto:apolinariostudio@gmail.com" method="POST" enctype="text/plain">
+                <div class="form-grupo">
+                    <label for="nome">Seu Nome</label>
+                    <input type="text" id="nome" name="nome" required placeholder="Como devemos te chamar?">
+                </div>
+                <div class="form-grupo">
+                    <label for="email">Seu E-mail</label>
+                    <input type="email" id="email" name="email" required placeholder="seu@email.com">
+                </div>
+                <div class="form-grupo">
+                    <label for="assunto">Assunto</label>
+                    <input type="text" id="assunto" name="assunto" required placeholder="Sobre o que quer falar?">
+                </div>
+                <div class="form-grupo">
+                    <label for="mensagem">Mensagem</label>
+                    <textarea id="mensagem" name="mensagem" required placeholder="Conte-nos sobre seu projeto, ideia ou pergunta..."></textarea>
+                </div>
+                <button type="submit" class="btn-enviar">📧 Enviar Mensagem</button>
+            </form>
+            
+            <div class="emails-diretos">
+                <p>Ou escreva diretamente para:</p>
+                <a href="mailto:apolinariostudio@gmail.com" class="email-link">apolinariostudio@gmail.com</a>
+                <a href="mailto:apolinariostudio.oficial@gmail.com" class="email-link">apolinariostudio.oficial@gmail.com</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
         <div class="logo-rodape-container">
             <img src="logo_topo.png" alt="Apolinário Studio" onerror="this.style.display='none';">
         </div>
@@ -807,7 +924,7 @@
 
     <script>
     // ================================================
-    // 🎬 APOLINÁRIO STUDIO — v6.2 (som: porta de entrada + memória permanente)
+    // 🎬 APOLINÁRIO STUDIO — v7.0 COMPLETO
     // ================================================
 
     function getLS(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -836,7 +953,7 @@
         hudEmocao.textContent = "SYNC_EMOCIONAL // " + nome.toUpperCase();
         fraseEmocao.classList.remove("visivel");
         setTimeout(function () {
-            fraseEmocao.textContent = "“" + e.frase + "”";
+            fraseEmocao.textContent = """ + e.frase + """;
             fraseEmocao.classList.add("visivel");
         }, 300);
     }
@@ -1295,9 +1412,9 @@
     modal.addEventListener("click", function (e) { if (e.target === modal) fecharPlayer(); });
 
     // ================================================
-    // 🔊 v6.2 — PORTA DE ENTRADA + MEMÓRIA PERMANENTE DO SOM
+    // 🔊 PORTA DE ENTRADA
     // ================================================
-    var prefSom = getLS("apolinario_som_pref"); // 'som' | 'silencio' | null
+    var prefSom = getLS("apolinario_som_pref");
     var gateResolvido = false;
     var permitirAutoNoToque = false;
 
@@ -1349,23 +1466,21 @@
 
     window.addEventListener("apolinarioPreFim", function () {
         if (prefSom === null) {
-            abrirGateSePrecisa();               // mostra a porta IMEDIATAMENTE
-            setTimeout(abrirGateSePrecisa, 1500); // trava de segurança 1
-            setTimeout(abrirGateSePrecisa, 4000); // trava de segurança 2
+            abrirGateSePrecisa();
+            setTimeout(abrirGateSePrecisa, 1500);
+            setTimeout(abrirGateSePrecisa, 4000);
         } else if (prefSom === "som") {
-            tentarSomDireto();                   // já escolheu som antes: tenta abrir com som direto
+            tentarSomDireto();
             setTimeout(talvezPortal, 600);
         } else {
-            setTimeout(talvezPortal, 600);       // escolheu silêncio: respeita
+            setTimeout(talvezPortal, 600);
         }
     });
 
-    // Trava de segurança 3 (independente do preloader)
     window.addEventListener("load", function () {
         setTimeout(abrirGateSePrecisa, 3500);
     });
 
-    // Se o navegador bloqueou mesmo assim: som no primeiro toque, sem procurar botão
     ["touchend", "click", "keydown"].forEach(function (ev) {
         document.addEventListener(ev, function () {
             playSeguro(heroVideo);
@@ -1378,7 +1493,7 @@
         }, { once: true, passive: true });
     });
 
-    // ----- 🎟️ INGRESSO -----
+    // ----- INGRESSO -----
     var modalIngresso = document.getElementById("modalIngresso");
     var canvasIng = document.getElementById("canvasIngresso");
     var ctxIng = canvasIng.getContext("2d");
@@ -1426,7 +1541,7 @@
         modalIngresso.classList.remove("aberto");
     });
 
-    // ----- 🎬 CRÉDITOS -----
+    // ----- CRÉDITOS -----
     var creditos = document.getElementById("creditos");
     var creditosRoll = document.getElementById("creditosRoll");
     var NOMES_BASE = ["Catarse", "Curiosidade", "Felicidade", "Perda", "Tristeza"];
@@ -1458,7 +1573,7 @@
         creditos.classList.remove("aberto");
     });
 
-    // ----- ATALHOS + EASTER EGGS -----
+    // ----- EASTER EGGS -----
     var glitchFlash = document.getElementById("glitchFlash");
     var sequencia = "";
     var capsulaAberta = false;
@@ -1566,7 +1681,7 @@
     heroVideo.muted = true;
     setEmocao(nomeDeSrc(fontesHero[0]));
     if (humorEscolhido !== null) trocarHero(0, true);
-    if (prefSom === "som") tentarSomDireto(); // visitante recorrente que já escolheu som
+    if (prefSom === "som") tentarSomDireto();
     playSeguro(heroVideo);
     sincronizarUI();
     </script>
